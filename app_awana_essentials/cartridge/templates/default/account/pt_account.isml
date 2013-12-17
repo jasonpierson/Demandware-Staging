@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
         <isinclude template="util/modules"/>
         <head>
-                <iscomment>Include all important information globally , e.g. meta-data, link information, javascript.</iscomment>
+                <iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
                 <isinclude template="components/header/htmlhead">
         </head>
         <body>
