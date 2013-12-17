@@ -1,0 +1,220 @@
+/**
+* PaypalExit
+*
+* We have set billing and shipping informations and have checked all, so we can submit
+* the sale. This script calls Paypal with DoExpressCheckoutRequest to start the payment
+* transaction.
+* 
+* @input Basket : dw.order.Basket The current Basket from which the order will be created.
+* @input OrderNo : String The created OrderNo.
+* @input PaymentProcessor : dw.order.PaymentProcessor The needed paymentprocessor.
+* @input ButtonSource : String Flow - PayPal payment source
+* @input GiroRedirectURL : String, redirect url to PayPal
+*
+* @output Error : Object The Error object
+* @output Location : String The redirect location.
+* @output PaypalError : String If a Paypal call fails or doesn't return Success
+* @output WSResponse : Object
+* @output ReturnCode : Number The returned token from Paypal
+* @output GiroRedirect : String Giro redirect from PayPal
+* @output GiroLocation : String The redirect location.
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.order );
+importPackage( dw.rpc );
+importScript("int_awana_paypal:cart/Credentials.ds");
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+
+	var basket : Basket = pdict.Basket;
+	var orderNo : String = pdict.OrderNo;
+	var PAYPAL_PAYMENT : String = "PayPal";
+	var paymentInstruments : Collection = basket.getPaymentInstruments( PAYPAL_PAYMENT );
+	var paymentInstrument : OrderPaymentInstrument = null;
+	paymentInstrument = paymentInstruments.iterator().next();
+	
+	var paymentProcessor : PaymentProcessor = pdict.PaymentProcessor;
+	var paypalPayerID : String = paymentInstrument.custom.paypalPayerID;
+	var paymentAction : String = paymentInstrument.custom.paypalPaymentAction;
+
+	if( basket == null ){
+		return PIPELET_ERROR;
+	}
+	if( paypalPayerID == null || paypalPayerID.length < 2 ){
+		return PIPELET_ERROR;
+	}
+	try {
+		var paypalExpress : WebReference = webreferences.PayPalSvcDev;
+		if (dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) {
+			paypalExpress = webreferences.PayPalSvc;
+		}
+		var ppxService : Stub = paypalExpress.getService("PayPalAPIInterfaceService", "PayPalAPIAA");
+
+		// security header
+		SetCredentials( paymentProcessor, ppxService );
+
+		var details = new paypalExpress.PaymentDetailsType();
+		var currencyID = paypalExpress.CurrencyCodeType.fromString( basket.getCurrencyCode() );
+
+		//  Sets the invoiceID value for this PaymentDetailsType.
+		details.setInvoiceID( orderNo );
+
+        // Sets the purchased items for this PaymentDetailsType.
+        var items : Collection = basket.getAllProductLineItems();
+        var itemType;
+        var item : ProductLineItem;
+        var array : Array = new Array();
+
+        for( var i = 0; i < items.size(); i++ ) {
+        	item = items[i];
+        	itemType = new paypalExpress.PaymentDetailsItemType();
+
+			// Sets the name value for this PaymentDetailsItemType.
+        	itemType.setName( item.getProductName() );
+			// Sets the number value for this PaymentDetailsItemType.
+			itemType.setNumber( item.getProductID() );
+ 			// Sets the quantity value for this PaymentDetailsItemType.
+			itemType.setQuantity( item.quantity.value );
+			amount = new paypalExpress.BasicAmountType( item.basePrice );
+        	amount.currencyID = currencyID;
+   	    	itemType.setAmount( amount );
+ 
+ 			array.push( itemType );
+
+			var adjustments : Collection = item.getPriceAdjustments();
+			var adjust : PriceAdjustment = null;
+			var lineItem : LineItem = null
+			for each( adjust in adjustments ) {
+				itemType = new paypalExpress.PaymentDetailsItemType();
+				itemType.setName( 
+					adjust.promotion == null ? "PriceAdjustment" : adjust.promotion.description );
+				itemType.setQuantity( 1 );
+				amount = new paypalExpress.BasicAmountType( adjust.netPrice.value );
+				amount.currencyID = currencyID;
+				itemType.setAmount( amount );
+				array.push( itemType );
+			}
+ 		}
+		// Basket Price adjustments
+		var basketAdjustments : Collection = basket.getPriceAdjustments();
+		var basketAdjust : PriceAdjustment = null;
+		for each( basketAdjust in basketAdjustments ) {
+ 			if (basketAdjust.netPrice.value != null) {
+				itemType = new paypalExpress.PaymentDetailsItemType();
+				itemType.setName("Basket Discount");
+				itemType.setQuantity( 1 );
+				amount = new paypalExpress.BasicAmountType( basketAdjust.netPrice.value );
+				amount.currencyID = currencyID;
+				itemType.setAmount( amount );
+				array.push( itemType );
+ 			}
+		}
+ 		
+ 		details.setPaymentDetailsItem( array );
+		
+		// Send Shipping Address to PayPal if process originated from Payment page 
+		if (paymentInstrument.custom.paypalOrigination == "PaymentPage") {
+		}
+ 		
+		// Sets the itemTotal value for this PaymentDetailsType.
+		amount = new paypalExpress.BasicAmountType( basket.getAdjustedMerchandizeTotalNetPrice().getValue() );
+		amount.currencyID = currencyID; 
+ 		details.setItemTotal( amount );
+
+        // Sets the shippingTotal value for this PaymentDetailsType.
+		amount = new paypalExpress.BasicAmountType( basket.getAdjustedShippingTotalNetPrice() );
+		amount.currencyID = currencyID;
+ 		details.setShippingTotal( amount );
+       	
+        // Sets the taxTotal value for this PaymentDetailsType
+        amount = new paypalExpress.BasicAmountType( basket.getTotalTax() );
+        amount.currencyID = currencyID;
+ 		details.setTaxTotal( amount ); 
+       	
+        // Sets the orderTotal value for this PaymentDetailsType.
+        amount = new paypalExpress.BasicAmountType( basket.getTotalGrossPrice().getValue() );
+        amount.currencyID = currencyID;
+ 		details.setOrderTotal( amount );
+    
+       	//Button Source ButtonSource
+ 		details.setButtonSource( pdict.ButtonSource ); 
+
+		// in the end we pack all the information together ...
+ 		var doRequest = new paypalExpress.DoExpressCheckoutPaymentRequestDetailsType();
+ 		doRequest.setPaymentDetails( details );
+ 		doRequest.setPayerID( paypalPayerID );
+
+		// set the paypal token from payment instrument that was set in GetExpressCheckout script
+ 		doRequest.setToken( paymentInstrument.getCustom().paypalToken );
+		
+		//Payment Action Authorization/Sale/Order
+ 		doRequest.setPaymentAction( paypalExpress.PaymentActionCodeType.Authorization );
+		if (paymentAction != null && paymentAction == "Order") {
+			doRequest.setPaymentAction(paypalExpress.PaymentActionCodeType.Order);
+		} else 	if (paymentAction != null && paymentAction == "Sale") {
+			doRequest.setPaymentAction(paypalExpress.PaymentActionCodeType.Sale);
+		}
+
+ 		var request = new paypalExpress.DoExpressCheckoutPaymentRequestType();
+ 		// never forget the version
+ 		request.setVersion( "56.0" );
+ 		request.setDoExpressCheckoutPaymentRequestDetails( doRequest );
+ 		var req = new paypalExpress.DoExpressCheckoutPaymentReq();
+ 		req.setDoExpressCheckoutPaymentRequest( request );
+ 		
+ 		var response = ppxService.doExpressCheckoutPayment( req );
+ 		pdict.WSResponse = response;
+		Logger.debug('Ack  -- ' + response.getAck().toString() );
+		if( response.getAck() != null && ( response.getAck().equals(paypalExpress.AckCodeType.Success) || response.getAck().equals(paypalExpress.AckCodeType.SuccessWithWarning ) )) {
+					var details = response.getDoExpressCheckoutPaymentResponseDetails();
+			var mytoken : String = details.getToken();
+			var paymentInfo = details.getPaymentInfo();
+			var transactionID = paymentInfo.getTransactionID();
+			pdict.ReturnCode = 1; 
+			pdict.GiroRedirect = details.redirectRequired;
+			if (pdict.GiroRedirectURL != null)
+				pdict.GiroLocation = pdict.GiroRedirectURL.toString() + mytoken;
+
+			Logger.debug( 'Writing Transaction ID to DB - ' + transactionID);
+			paymentInstrument.paymentTransaction.transactionID = transactionID;
+			paymentInstrument.paymentTransaction.amount = basket.getTotalGrossPrice();
+			paymentInstrument.getPaymentTransaction().setPaymentProcessor( paymentProcessor );
+			paymentInstrument.custom.paypalTransactionID = transactionID;
+
+		} else {
+			//Logger.debug('looping thru response object  -- ');
+			//for (i in response){
+  			//	Logger.debug("object has property -- " + i);
+			//}
+			//Logger.debug('looping thru error object in response object  -- ');
+			//for (j in response.getErrors() ){
+  			//	Logger.debug("object has property ------- " + j);
+			//}
+			
+			Logger.error('Corelation ID  --' + response.correlationID );
+			Logger.error('Error Message Short Message  -- ' + response.getErrors()[0].getShortMessage() );
+			Logger.error('Error Message Long Message  -- ' + response.getErrors()[0].getLongMessage() );
+			Logger.error('Error Message ErrorCode  -- ' + response.getErrors()[0].getErrorCode() );
+			
+			pdict.ReturnCode = new Number(response.getErrors()[0].getErrorCode().toString()); 
+			//pdict.PaypalError = response.getErrors()[0].getLongMessage() + " (" + response.getErrors()[0].getErrorCode() + ")";
+			pdict.PaypalError = response.getErrors()[0].getLongMessage() + " (" + response.getErrors()[0].getErrorCode() + ")" + "-(" + response.correlationID + ")";
+		}
+
+	} catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		pdict.Error = e;
+		pdict.PaypalError = e.toString();
+		return PIPELET_ERROR;
+	}
+
+    return PIPELET_NEXT;
+}
