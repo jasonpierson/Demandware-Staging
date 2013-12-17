@@ -1,0 +1,22 @@
+<!--- TEMPLATENAME: accountdropped.isml --->
+<iscomment>B2B Account Dropped Error Message</iscomment>
+<isif condition="${pdict.CurrentCustomer != null && pdict.CurrentCustomer.profile.custom.AccountStatus == 'Dropped'}">
+	<div id="hideBox" style="display:none;">
+		<div id="acctHoldBox" style="width:640px; height:150px; padding:10px;">
+			<br />
+			<p>Your church has dropped Awana. You may create an account to shop as an individual, but you can no longer shop using this account or e-mail address. Please chat with or call Customer Care and let us help. We're available Mondays, Tuesdays, Thursdays and Fridays from 8:15 a.m. to 4:30 p.m. CST and Wednesdays from 10 a.m. to 4:30 p.m. CST.</p>
+			<br />
+			<br />
+			<div id="boxLeft" style="width:290px; float:left;">
+				Call Customer Care at (866)&nbsp;292-6227
+			</div>
+			<div id="boxCenter" style="width:20px; margin:0 10px; float:left;">
+				-or-
+			</div>
+			<div id="boxRight" style="width:290px; float:left; text-align:center;">
+    			
+			</div>
+			<br class="last" style="clear:both; width:0; height:0; margin:0; padding:0; visibility:hidden;" />
+		</div>
+	</div>	
+</isif>

@@ -1,0 +1,55 @@
+/**
+ * Returns the amount of order total that is not covered by any gift certificate.
+ *
+ * @input Basket : dw.order.Basket The basket.
+ * @input CallingPipe : String 
+ * @output Amount : Number The amount to pay that is not covered by any gift certificate.
+ * @output SplitOrder : Boolean
+ */
+importPackage( dw.order );
+importPackage( dw.system );
+importPackage( dw.util);
+importPackage( dw.value );
+
+importScript("checkout/Utils.ds");
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	// get basket from pipeline dictionary
+    var basket : Basket = pdict.Basket;
+
+    // calculate non-gift-certificate payment amount
+    var money : Money = calculateNonGiftCertificateAmount( basket );
+    
+	/***********************************************************************************************************************
+	 BEGIN CODE TO SPLIT ORDERS
+	***********************************************************************************************************************/
+	var splitOrder : Boolean = false;
+	if (!empty(arguments[0].CallingPipe) && arguments[0].CallingPipe == 'COBilling-ValidatePayment' && !empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) {
+		var totalDonationAmount = 0;
+		var items : dw.util.Collection = basket.getAllProductLineItems();
+		var item;
+		var hasNonDonationLineItems : Boolean = false; 
+		
+	    for( var i = 0; i < items.size(); i++ ) {
+	    	item = items[i];
+	    	if (item.product.custom.ProductType.value == 'Donation') {
+	    		totalDonationAmount = totalDonationAmount + item.basePrice.value;
+	    	} else {
+	    		hasNonDonationLineItems = true;
+	    	}
+	    }
+	    //determine if there is a need to split the order
+	    if (totalDonationAmount > 0 && hasNonDonationLineItems) {
+	    	splitOrder = true;
+	    	//money = Money(money-totalDonationAmount, dw.system.Site.getCurrent().currencyCode);
+	    }
+	}
+	arguments[0].SplitOrder = splitOrder;
+	/***********************************************************************************************************************
+	 END CODE TO SPLIT ORDERS
+	***********************************************************************************************************************/    
+    pdict["Amount"] = money.available ? money.value : null;
+    
+    return PIPELET_NEXT;
+}

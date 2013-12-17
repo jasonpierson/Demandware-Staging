@@ -1,0 +1,35 @@
+<isinclude template="util/modules">
+
+		<iscomment>
+			Tell the user they dont have enough points for this product
+		</iscomment>
+
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				jQuery.fn.colorbox({ width:"400px", inline:true, href:"#noPointsIDMsg"});
+
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					jQuery.fn.colorbox.close();
+				});
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					window.location.reload();
+				});
+				jQuery("#cboxClose").click(function() {
+					window.location.reload();
+				});
+				
+			});
+		</script>
+
+		<div style='display:none'>
+			<div id="noPointsIDMsg">
+				<div class="colorboxDialogHeader">
+					<h3>More Points Required</h3>
+					<div id="colorboxDialogCloseButton"></div>
+				</div>
+				<div style="margin:20px; padding:20px; font-size:12px;">
+				You have <span style="font-weight:bold;">${StringUtils.formatInteger(pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchPointsAvailable)}</span> points.<br/><br/>
+				You need <span style="font-weight:bold;">${StringUtils.formatInteger(pdict.Product.custom.ChurchRewardsPointsCategory*pdict.CurrentHttpParameterMap.Quantity)}</span> points to purchase this product.
+				</div>
+			</div>
+		</div>	

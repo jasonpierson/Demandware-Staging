@@ -1,0 +1,74 @@
+<iscache type="relative" hour="24" varyby="price_promotion" />
+
+<iscomment>
+	This template displays a 3-level category tree as top navigation.
+	Only categories marked with showInMenu are shown.
+</iscomment>
+
+<isscript>
+	importPackage( dw.catalog );
+	
+	// get root category of current site's navigation catalog
+	var siteCatalog : Catalog = CatalogMgr.getSiteCatalog();
+	var root : Catalog = null;
+	
+	if(siteCatalog != null) {
+		root = siteCatalog.getRoot();
+	}
+	
+	// get the "sale" category
+	//var saleCategory : Catalog = CatalogMgr.getCategory('sale');
+</isscript>
+
+<isif condition="${root != null}">
+	<div class="categorymenu">
+		<ul>
+		<isloop items="${root.getOnlineSubCategories()}" var="topCat">
+			<isif condition="${('showInMenu' in topCat.custom) && topCat.custom.showInMenu.valueOf()}">
+				<li><a href="${URLUtils.http('Search-Show', 'cgid', topCat.getID())}"><isprint value="${topCat.getDisplayName()}"/></a>
+					<isif condition="${topCat.getOnlineSubCategories().length > 0}">
+						<!--[if lte IE 6]><table><tr><td><![endif]-->
+						<ul class="drop">
+							<li>
+								<ul>
+								<isloop items="${topCat.getOnlineSubCategories()}" var="subCat">
+									<isif condition="${('showInMenu' in subCat.custom) && subCat.custom.showInMenu.valueOf()}">
+										<li>
+											<a href="${URLUtils.http('Search-Show', 'cgid', subCat.getID())}"><isprint value="${subCat.getDisplayName()}"/></a>
+											<isloop items="${subCat.getOnlineSubCategories()}" var="subCatsub">
+												<isif condition="${('showInMenu' in subCatsub.custom) && subCatsub.custom.showInMenu.valueOf()}">
+													<isif condition="${('Hidden' in subCatsub.custom) && !subCatsub.custom.Hidden.valueOf()}">
+														<div class="subcategories">
+															<a href="${URLUtils.http('Search-Show', 'cgid', subCatsub.getID())}">
+																<isprint value="${subCatsub.getDisplayName()}"/>
+															</a>
+														</div>
+													<iselseif condition="${('Hidden' in subCatsub.custom) && subCatsub.custom.Hidden.valueOf() && pdict.CurrentCustomer.authenticated}">
+														<isloop items="${pdict.CurrentCustomer.customerGroups}" var="custGroup">
+															<isif condition="${custGroup.ID == subCatsub.custom.CustomerGroupHiddenCategoryIsVisibleTo}">
+																<div class="subcategories">
+																	<a href="${URLUtils.http('Search-Show', 'cgid', subCatsub.getID())}">
+																		<isprint value="${subCatsub.getDisplayName()}"/>
+																	</a>
+																</div>		
+															</isif>
+														</isloop>
+													</isif>													
+												</isif>
+											</isloop>
+					                    </li>
+					                </isif>
+								</isloop>
+			                    </ul>
+		                    </li>
+	                   	</ul>
+		            	<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+	            	</isif>
+	            </li>
+	    	</isif>
+		</isloop>
+		</ul>
+	    <div class="clear"></div>
+	</div>
+	
+</isif>

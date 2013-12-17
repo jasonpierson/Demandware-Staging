@@ -1,0 +1,89 @@
+<isdecorate template="account/pt_account"/>
+<div id="getsat-widget-52"></div>
+<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+<script type="text/javascript">
+if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+</script>
+<style type="text/css">
+.gsfn-left {
+	left:inherit !important;
+	right:-80px !important;
+}
+</style>
+<isinclude template="util/modules">
+
+		<iscomment>
+			We need to display the user's new open id that was generated during registration.
+			This should be a dialog with the open id displayed with some content 
+			describing it.  For now this is just a placeholder until we can style it.
+		</iscomment>
+		<isif condition="${pdict.OpenID != null && pdict.OpenID != ''}">
+			<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery.fn.colorbox({ width:"400px", inline:true, href:"#openIDMsg"});
+	
+					jQuery("#colorboxDialogCloseButton").click(function() {
+						jQuery.fn.colorbox.close();
+					});
+					jQuery("#cboxClose").hide();
+				});
+			</script>
+		</isif>
+		<isif condition="${pdict.CurrentCustomer.profile.custom.AccountOnHold}">
+			<div id="hideBox" style="display:none;">
+				<div class="colorboxDialogHeader" style="text-align:center;">
+					<h3>Church Account On Hold</h3>
+				</div>			
+				<div id="acctHoldBox" style="width:640px; height:150px; padding:10px;">
+					<br />
+					<p>Your account is on hold. You cannot checkout until your hold has been removed. Please chat with or call Customer Care and let us help. We're available Mondays, Tuesdays, Thursdays and Fridays from 8:15 a.m. to 4:30 p.m. CST and Wednesdays from 10 a.m. to 4:30 p.m. CST.</p>
+					<br />
+					<br class="last" style="clear:both; width:0; height:0; margin:0; padding:0; visibility:hidden;" />
+				</div>
+			</div>	
+			<script type="text/javascript" language="javascript">
+			$(document).ready(function(){
+				$("#hideBox").colorbox({inline:true,href:"#acctHoldBox",open:true,innerWidth:"680px",innerHeight:"170px"});
+				$("#cboxClose").css("top",0);
+				var alcBadge = unescape("%23__ALC_BADGE_ONLINE").concat(__ALC_BADGE_SUFFIX.toString());
+				var alcDisplay = $(alcBadge).css("display");
+				$(alcBadge).css("display",alcDisplay);
+			});
+			</script>			
+		</isif>
+
+		<div style='display:none'>
+			<div id="openIDMsg">
+				<div class="colorboxDialogHeader">
+					<h3>Registration Successful</h3>
+					<div id="colorboxDialogCloseButton"></div>
+				</div>
+				<div style="margin:20px; padding:20px; font-size:12px;">
+				Your Awana Portal E-Mail is: <span style="font-weight:bold;">${pdict.OpenID}</span>.<br/><br/>
+				Please make a note of it as you will use it to log onto other Awana sites.
+				</div>
+			</div>
+		</div>	
+		
+	<div class="accountoverview">
+	
+		<isslot id="account-banner" description="Banner for My Account pages" context="global" />
+
+		<isif condition="${!empty(pdict.CurrentCustomer.profile.custom) && pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+			<ischurchrewards pointsgained="0" />
+		</isif>
+				
+		<h3>${Resource.msg('account.header','account',null)}</h3>
+		<div class="accountwelcome">
+			<div class="welcomemessage">
+				${Resource.msg('accountoverview.welcome','account',null)} <isprint value="${pdict.CurrentCustomer.profile.firstName}">${Resource.msg('accountoverview.welcome2','account',null)}
+			</div>
+			<div class="not_user">
+				${Resource.msg('accountoverview.not','account',null)} <span class="username"><isprint value="${pdict.CurrentCustomer.profile.firstName}">&nbsp;<isprint value="${pdict.CurrentCustomer.profile.lastName}"></span> (<a title="Logout" href="${URLUtils.url('Login-Logout')}">${Resource.msg('global.logout','locale',null)}</a>)   
+			</div>
+		</div>
+		<div class="accountlanding">
+			<iscontentasset aid="account-landing">
+		</div>
+	</div>
+</isdecorate>

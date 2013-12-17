@@ -1,0 +1,23 @@
+<script type="text/javascript">
+<!--
+	var searchSuggestURL = "${URLUtils.url('Search-GetSuggestions')}";
+	
+	jQuery(document).ready(function() {
+		app.searchsuggest.init("SimpleSearchForm", "searchinput", "${Resource.msg('simplesearch.searchtext','search',null)}", "suggestions", searchSuggestURL);
+	});
+//-->
+</script>
+
+<div class="sitesearch">
+	<form action="${URLUtils.http('Search-Show')}" method="get" id="SimpleSearchForm" class="simplesearch">
+		<fieldset>
+			<label>${Resource.msg('simplesearch.searchlabel','search',null)}</label>
+			<input type="text" maxlength="50" name="q" value="${Resource.msg('simplesearch.searchtext','search',null)}" class="simplesearchinput" id="searchinput" />
+			<iscomment>
+			    Please do not use a image based button here, because it will prevent caching due to its dynamic
+			    image click coordinates in the url. It is possible but might hurt the performance.
+			</iscomment>
+			<button type="submit" value="${Resource.msg('global.go','locale',null)}" name="simplesearch"><span>${Resource.msg('global.go','locale',null)}</span></button>
+		</fieldset>
+	</form>
+</div>

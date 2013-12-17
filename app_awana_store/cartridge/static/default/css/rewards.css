@@ -1,0 +1,17 @@
+/* Church Rewards Thermometer */
+.churchrewards { width:214px;border:2px solid #ffe191;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;background-color:#fff8e4;font-family: Arial, Helvetica, sans-serif;font-weight:bold;overflow:hidden; }
+
+.toprewardmessage { background-color:#d85226;color:#fff;font-size:14px;padding:13px 20px; }
+.toprewardmessage .totalpointslabel { padding-right:20px; }
+.toprewardmessage .totalpoints { color:#ffc423;font-size:26px; }
+
+.rewardmeter { height:320px;margin:20px; }
+.rewardmeter .meterbar { -webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;background-color:#efddac;width:62px;height:320px;overflow:hidden;position:relative;float:left; }
+.rewardmeter .meterbarprogress { background-color:#d85226;width:62px;position:absolute;bottom:0;}
+.rewardmeter .metergraduationmarks { background:url('../images/rewards_meter.png') no-repeat left top; width:76px; height:320px;margin-left:10px;float:left; }
+
+.bottomrewardmessage { color:#8a8c84;font-size:14px;padding:0 20px 15px; }
+.bottomrewardmessage .totalpointslabel { padding-right:20px; }
+.bottomrewardmessage .totalpoints { color:#d85226;font-size:26px; }
+button.loadingrewardssearch { cursor:pointer; width:100px; height:20px; background:url(../images/loading.gif) no-repeat center center; }
+button.rewardsworking { position:absolute; left:470px; cursor:pointer; width:40px; height:40px; background:url(../images/loading.gif) no-repeat left center;}

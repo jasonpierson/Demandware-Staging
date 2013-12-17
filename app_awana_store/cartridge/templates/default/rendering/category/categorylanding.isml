@@ -1,0 +1,27 @@
+<isset name="DecoratorTemplate" value="search/pt_productsearchresult" scope="page"/>
+<isif condition="${pdict.CurrentHttpParameterMap.format.stringValue == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+
+<isdecorate template="${DecoratorTemplate}">
+
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+<isinclude template="util/modules"/>
+
+<iscomment>
+	Configured as rendering template for the general category landing page.
+	Displays two category specific slots containing static html with promotional
+	banner in the first slot and either up to four featured products or promotional
+	content in the second slot.
+</iscomment>
+
+<div class="categorylanding">
+	
+	<isslot id="cat-landing-slotbanner" context="category" description="Large Category Landing Banner" context-object="${pdict.ProductSearchResult.category}"/>
+	<h2>${pdict.ProductSearchResult.category.displayName} Favorites</h2>
+	<isslot id="cat-landing-slotbottom" context="category" description="Category Landing Featured Products or Promotional Content" context-object="${pdict.ProductSearchResult.category}"/>
+		
+</div>
+
+<isinclude template="search/components/jsrefinementsupdate"/>
+</isdecorate>

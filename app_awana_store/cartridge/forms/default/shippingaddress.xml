@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+
+	<field formid="firstName" label="forms.orderaddress.001" type="string" mandatory="false" binding="firstName" max-length="50" missing-error="forms.address.firstname.missing" range-error="forms.address.field.invalid" />
+	<field formid="lastName" label="forms.orderaddress.002" type="string" mandatory="true" binding="lastName" max-length="50" missing-error="forms.address.lastname.missing" range-error="forms.address.field.invalid" />
+	<field formid="address1" label="forms.orderaddress.003" type="string" mandatory="true" binding="address1" max-length="50" missing-error="forms.address.address1.missing" range-error="forms.address.field.invalid" parse-error="forms.address.address1.invalid" />
+	<field formid="address2" label="forms.orderaddress.005" type="string" mandatory="false" binding="address2" max-length="50" range-error="forms.address.field.invalid" />
+	<field formid="city" label="forms.city" type="string" mandatory="true" binding="city" max-length="50" missing-error="forms.address.city.missing" range-error="forms.address.field.invalid" />
+	<field formid="zip" label="forms.orderaddress.015" type="string" mandatory="true" min-length="5" max-length="10" regexp="[-0-9]*" binding="postalCode" missing-error="forms.address.zip.missing" range-error="forms.address.field.invalid" parse-error="forms.address.field.invalid" />
+
+	<!-- use set of supported shipping countries -->
+	<field formid="country" label="forms.country" type="string" mandatory="true" binding="countryCode" missing-error="forms.address.country.missing" value-error="forms.address.field.invalid">
+		<options>
+			<option optionid="" 	label="forms.select.pleaseselect"	value=""/>
+			<option optionid="US" 	label="country.unitedstates"	value="US"/>
+			<!-- <option optionid="CA" 	label="country.canada"			value="CA"/> -->
+		</options>	
+	</field>
+
+	<!-- use global state list -->
+	<include formid="states" name="states"/>
+
+	<!-- phone is mandatory for shipping addresses -->
+	<field formid="phone" label="forms.orderaddress.021" type="string" mandatory="true" binding="phone" max-length="20" missing-error="forms.address.phone.missing" range-error="forms.address.field.invalid" />
+
+	<!-- actions provided by the edit shipping address dialog -->
+	<action formid="apply" valid-form="true"/>
+	<action formid="remove" valid-form="false"/>
+</form>

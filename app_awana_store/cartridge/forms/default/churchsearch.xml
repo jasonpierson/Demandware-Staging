@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	<field formid="churchname" label="forms.churchsearch.name" type="string" mandatory="false"/>
+	<field formid="zip" label="forms.orderaddress.015" type="string" mandatory="false" regexp="[-0-9]*"/>	
+	<field formid="selectedChurch" type="string" mandatory="false"/>
+	<!-- list of available churches to select from -->
+	<list formid="churchList">
+		<!-- action for actually selecting the church -->
+		<action formid="useThisChurch" valid-form="false"/>
+	</list>
+	<action formid="search" label="forms.churchsearch.search" valid-form="true"/>
+	<action formid="select" label="forms.churchsearch.select" valid-form="true"/>
+	<action formid="cancel" label="forms.churchsearch.cancel" valid-form="false"/>
+</form>

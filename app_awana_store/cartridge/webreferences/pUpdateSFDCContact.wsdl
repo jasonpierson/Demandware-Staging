@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="UpdateSFDCContact" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns="" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="http://www.approuter.com/connectors/request/388/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://www.approuter.com/connectors/response/388/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/request/388/" xmlns:tns="http://www.approuter.com/connectors/request/388/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="CreateSFDCAccountAddressRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                            <xs:element name="FirstName" type="xs:string"/>
+                            <xs:element name="LastName" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="County" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="AccountType" type="xs:string"/>
+                            <xs:element name="Password" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AccountName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ShippingCountry" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ShippingStreet" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ShippingCity" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ShippingState" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ShippingZipCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Salutation" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Phone" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Email" type="xs:string"/>
+                            <xs:element minOccurs="0" name="BillingCountry" type="xs:string"/>
+                            <xs:element minOccurs="0" name="BillingStreet" type="xs:string"/>
+                            <xs:element minOccurs="0" name="BillingCity" type="xs:string"/>
+                            <xs:element minOccurs="0" name="BillingState" type="xs:string"/>
+                            <xs:element minOccurs="0" name="BillingZipCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Opportunity" nillable="false">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="0" name="AddressNumber" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="BillingAddressAge" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="BillingAddressID" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="BillingCounty" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingStreet" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingCity" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingFirstName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingCountry" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingLastName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFABillingPhone" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingState" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingZip" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFAEmail" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFATransactionTotal" nillable="false" type="xs:decimal"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardYear" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardMonth" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardType" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardSecurity" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardNumber" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="PurchaseOrder" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ShippingAddressAge" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ShippingAddressID" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShipToFirstName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShipToLastName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShippingCity" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ShippingCounty" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShippingState" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShippingStreet" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShippingZipCode" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ShippingCountry" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ShippingType" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="OpportunityLineItem" nillable="false">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="1" minOccurs="1" name="ItemNumber" nillable="false" type="xs:string"/>
+                            <xs:element maxOccurs="1" minOccurs="1" name="Quantity" nillable="true" type="xs:integer"/>
+                            <xs:element maxOccurs="1" minOccurs="1" name="UnitPrice" nillable="true" type="xs:decimal"/>
+                            <xs:element maxOccurs="1" minOccurs="1" name="LineType" nillable="false" type="xs:string"/>
+                            <xs:element maxOccurs="1" minOccurs="0" name="PriceAfterDiscount" nillable="false" type="xs:string"/>
+                            <xs:element maxOccurs="1" minOccurs="0" name="PromoCode" nillable="false" type="xs:string"/>
+                            <xs:element maxOccurs="1" minOccurs="0" name="PromoName" nillable="false" type="xs:string"/>
+                            <xs:element default="0" maxOccurs="1" minOccurs="0" name="QuantityGivenAway" nillable="false" type="xs:integer"/>
+                            <xs:element default="0" maxOccurs="1" minOccurs="0" name="ChurchRewardsPointsGained" nillable="false" type="xs:integer"/>
+                            <xs:element default="0" maxOccurs="1" minOccurs="0" name="ChurchRewardsPointsRedeemed" nillable="false" type="xs:integer"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="1" minOccurs="0" name="AccountID" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="PaymentType" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="AuthCode" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="AuthTransID" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="AuthResponse" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ExternalOrderNumber" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="LoginEMail" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="CustomerType" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="CurrencyCode" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="CampaignCode" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="GroupCode" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="HasDiscounts" nillable="false" type="xs:boolean"/>
+                <xs:element maxOccurs="1" minOccurs="0" name="ChurchRewardsSponsoredChurch" nillable="false" type="xs:string"/>
+                <xs:element default="0" maxOccurs="1" minOccurs="0" name="TotalChurchRewardsPointsGained" nillable="false" type="xs:integer"/>
+                <xs:element default="0" maxOccurs="1" minOccurs="0" name="TotalChurchRewardsPointsRedeemed" nillable="false" type="xs:integer"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCAccountExistRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAccountID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="RegistrationNumber" type="xs:string"/>
+                            <xs:element minOccurs="0" name="EMail" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ZipCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCAddressExistRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCID" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAllSFDCAccountAddressesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountAddressRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                            <xs:element name="AddressType" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountIDRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="OpenID" type="xs:string"/>
+                            <xs:element name="Password" type="xs:string"/>
+                            <xs:element name="AccountLocation" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountProfileRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountTypeRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UpdateSFDCAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Password" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AccountName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="EMail" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UpdateSFDCContactRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Password" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="EMail" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCContactAddressRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                            <xs:element name="FirstName" type="xs:string"/>
+                            <xs:element name="LastName" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="County" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCContactExistRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCContactID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="RegistrationNumber" type="xs:string"/>
+                            <xs:element minOccurs="0" name="EMail" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ZipCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAllSFDCContactAddressesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactAddressRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                            <xs:element name="AddressType" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetChurchesInZipRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactIDRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="OpenID" type="xs:string"/>
+                            <xs:element name="ContactLocation" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactProfileRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactTypeRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetChurchInfoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="ChurchName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="PostalCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SetChurchRewardsSponsorshipInfoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="UserEMail" type="xs:string"/>
+                            <xs:element name="RegistrationNumber" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RemoveChurchRewardsSponsorshipRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="UserEMail" type="xs:string"/>
+                            <xs:element name="RegistrationNumber" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCContactRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="ChurchAccountID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ChurchAccountName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="City" type="xs:string"/>
+                            <xs:element minOccurs="0" name="State" type="xs:string"/>
+                            <xs:element minOccurs="0" name="PostalCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Phone" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Email" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeleteSFDCAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAccountID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeleteSFDCContactRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCContactID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeactivateSFDCUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCUserID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/response/388/" xmlns:tns="http://www.approuter.com/connectors/response/388/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="CreateSFDCAccountAddressResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="result">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="errors">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="fields" type="xs:string"/>
+                                    <xs:element name="Message" type="xs:string"/>
+                                    <xs:element name="StatusCode" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SFDCAddressID" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCAccountResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                            <xs:element name="OpenID" type="xs:string"/>
+                            <xs:element name="SFDCUserID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCOrderResponse" nillable="false">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="1" name="Success" nillable="true" type="xs:boolean"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="OpportunityName" nillable="false" type="xs:string"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ErrorCode" nillable="true" type="xs:integer"/>
+                <xs:element maxOccurs="1" minOccurs="1" name="ErrorMsg" nillable="false" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAllSFDCAccountAddressesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Name" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element minOccurs="0" name="City" type="xs:string"/>
+                            <xs:element minOccurs="0" name="County" type="xs:string"/>
+                            <xs:element minOccurs="0" name="State" type="xs:string"/>
+                            <xs:element minOccurs="0" name="ZipCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCAccountExistResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Exist" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCAddressExistResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Exist" type="xs:boolean"/>
+                            <xs:element maxOccurs="unbounded" name="AccountType" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountAddressResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                            <xs:element name="Name" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element name="County" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element name="Country" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountIDResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:string"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" name="AccountInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCAccountID" type="xs:string"/>
+                                    <xs:element name="AccountName" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountProfileResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="Success" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Message" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="AccountInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element minOccurs="0" name="SFDCAccountID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="MailingAddressBookID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="EMail" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="CustomerType" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="AuthorizedPurchaser" type="xs:boolean"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="CustomerGroupInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="CustomerGroupID" type="xs:string"/>
+                                    <xs:element name="GroupName" type="xs:string"/>
+                                    <xs:element name="AccountOnHold" type="xs:boolean"/>
+                                    <xs:element name="AccountStatus" type="xs:string"/>
+                                    <xs:element name="RegistrationNumber" type="xs:string"/>
+                                    <xs:element name="ChurchRewardsPointsAvailable" type="xs:integer"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="ShippingAddress">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="AddressLine1" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="City" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="County" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="State" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="PostalCode" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="BillingAddress">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="FirstName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="LastName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="AddressLine1" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="City" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="County" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="State" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="PostalCode" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="DWCustomerGroup">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="DWGroupName" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="ChurchRewardsInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element minOccurs="0" name="IsChurchRewardsSponsor" type="xs:boolean"/>
+                                    <xs:element minOccurs="0" name="ChurchRewardsSponsoredChurchID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="ChurchRewardsSponsoredChurchSFDCAccountID" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="ChurchRewardsSponsoredChurchName" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="ChurchRewardsSponsoredChurchPointsAvailable" type="xs:integer"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCAccountTypeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="AccountType" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UpdateSFDCAccountResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UpdateSFDCContactResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCContactAddressResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="result">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="errors">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="fields" type="xs:string"/>
+                                    <xs:element name="Message" type="xs:string"/>
+                                    <xs:element name="StatusCode" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SFDCAddressID" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetAllSFDCContactAddressesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                            <xs:element name="Name" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element minOccurs="0" name="County" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element minOccurs="0" name="Country" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DoesSFDCContactExistResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Exist" type="xs:boolean"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactAddressResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAddressID" type="xs:string"/>
+                            <xs:element name="Name" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element name="County" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element name="Country" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetChurchesInZipResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="SFDCAccountID" type="xs:string"/>
+                            <xs:element name="RegistrationNumber" type="xs:string"/>
+                            <xs:element name="Name" type="xs:string"/>
+                            <xs:element name="AddressLine1" type="xs:string"/>
+                            <xs:element minOccurs="0" name="AddressLine2" type="xs:string"/>
+                            <xs:element name="City" type="xs:string"/>
+                            <xs:element name="County" type="xs:string"/>
+                            <xs:element name="State" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                            <xs:element name="Country" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactIDResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:string"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" name="ContactInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCContactID" type="xs:string"/>
+                                    <xs:element name="ContactName" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactProfileResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:string"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" name="ContactInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCContactID" type="xs:string"/>
+                                    <xs:element name="FirstName" type="xs:string"/>
+                                    <xs:element name="LastName" type="xs:string"/>
+                                    <xs:element name="EMail" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="CustomerType" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="CustomerGroupInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="CustomerGroupID" type="xs:string"/>
+                                    <xs:element name="GroupName" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" name="ShippingAddress">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCAddressID" type="xs:string"/>
+                                    <xs:element name="FirstName" type="xs:string"/>
+                                    <xs:element name="LastName" type="xs:string"/>
+                                    <xs:element name="AddressLine1" type="xs:string"/>
+                                    <xs:element name="AddressLine2" type="xs:string"/>
+                                    <xs:element name="City" type="xs:string"/>
+                                    <xs:element name="County" type="xs:string"/>
+                                    <xs:element name="State" type="xs:string"/>
+                                    <xs:element name="PostalCode" type="xs:string"/>
+                                    <xs:element name="Country" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" name="BillingAddress">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCAddressID" type="xs:string"/>
+                                    <xs:element name="FirstName" type="xs:string"/>
+                                    <xs:element name="LastName" type="xs:string"/>
+                                    <xs:element name="AddressLine1" type="xs:string"/>
+                                    <xs:element name="AddressLine2" type="xs:string"/>
+                                    <xs:element name="City" type="xs:string"/>
+                                    <xs:element name="County" type="xs:string"/>
+                                    <xs:element name="State" type="xs:string"/>
+                                    <xs:element name="PostalCode" type="xs:string"/>
+                                    <xs:element name="Country" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetSFDCContactTypeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ContactType" type="xs:string"/>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetChurchInfoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" name="ChurchInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    <xs:element name="SFDCAddressID" type="xs:string"/>
+                                    <xs:element name="RegistrationNumber" type="xs:string"/>
+                                    <xs:element name="Name" type="xs:string"/>
+                                    <xs:element name="AddressLine1" type="xs:string"/>
+                                    <xs:element name="AddressLine2" type="xs:string"/>
+                                    <xs:element name="City" type="xs:string"/>
+                                    <xs:element name="State" type="xs:string"/>
+                                    <xs:element name="PostalCode" type="xs:string"/>
+                                    <xs:element minOccurs="0" name="ChurchRewardsSponsoredChurchPointsAvailable" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SetChurchRewardsSponsorshipInfoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RemoveChurchRewardsSponsorshipResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateSFDCContactResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element name="SFDCAccountID" type="xs:string"/>
+                            <xs:element name="OpenID" type="xs:string"/>
+                            <xs:element name="SFDCContactID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeleteSFDCAccountResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeleteSFDCContactResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeactivateSFDCUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="UpdateSFDCContactResponse">
+    <wsdl:part name="response" element="tns2:UpdateSFDCContactResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UpdateSFDCContactRequest">
+    <wsdl:part name="request" element="tns1:UpdateSFDCContactRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="UpdateSFDCContactPort">
+    <wsdl:operation name="UpdateSFDCContact">
+      <wsdl:input message="tns:UpdateSFDCContactRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:UpdateSFDCContactResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UpdateSFDCContactBinding" type="tns:UpdateSFDCContactPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="UpdateSFDCContact">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UpdateSFDCContactService">
+    <wsdl:port name="UpdateSFDCContactPort" binding="tns:UpdateSFDCContactBinding">
+      <soap:address location="https://ci4.awana.org:443/pUpdateSFDCContact"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

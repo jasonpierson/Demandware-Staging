@@ -1,0 +1,57 @@
+<!--- TEMPLATENAME: googleAnalytics.isml --->
+<iscontent type="text/html" charset="UTF-8" compact="true">
+
+<isscript>
+	var ganalytics_key = dw.system.Site.getCurrent().getCustomPreferenceValue('googleAccountID');
+	var ganalytics_active = dw.system.Site.getCurrent().getCustomPreferenceValue('enableGoogleAnalytics');
+</isscript>
+<isif condition="${!empty(ganalytics_key) && ganalytics_active}">
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+		_gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+		_gaq.push(['_setAccount', '${ganalytics_key}']);
+
+		_gaq.push(['_trackPageview']);
+
+		<isif condition="${!empty(pdict.Order) && pdict.Order instanceof dw.order.Order && !empty(pdict.OrderSubmitted)}">
+
+		  _gaq.push(['_addTrans',
+		    "${pdict.Order.externalOrderNo}",							// transaction ID - required
+		    "${dw.system.Site.getCurrent().ID}",						// affiliation or store name
+		    "${pdict.Order.totalGrossPrice.value}",						// total - required
+		    "${pdict.Order.totalTax.value}",							// tax
+		    "${pdict.Order.adjustedShippingTotalNetPrice.value}",		// shipping
+		    "${pdict.Order.billingAddress.city}",						// city
+		    "${pdict.Order.billingAddress.stateCode}",					// state or province
+		    "${pdict.Order.billingAddress.countryCode}"					// country
+		  ]);
+
+		   // add item might be called for every item in the shopping cart
+		   // where your ecommerce engine loops through each item in the cart and
+		   // prints out _addItem for each
+
+		   <isloop iterator="${pdict.Order.productLineItems}" alias="productLineItem" status="loopstatus">
+		  _gaq.push(['_addItem',
+		    "${pdict.Order.externalOrderNo}",							// transaction ID - required
+		    "${productLineItem.productID}",								// SKU/code - required
+		    "${productLineItem.productName}",							// product name
+		    "${productLineItem.categoryID}",							// category or variation
+		    "<isprint value="${productLineItem.adjustedPrice.divide(new Number(productLineItem.quantity))}">",		// unit price - required
+		    "<isprint value="${productLineItem.quantity}">"				// quantity - required
+		  ]);
+		  </isloop>
+
+		  _gaq.push(['_trackTrans']); //submits transaction to the Analytics servers
+		
+		</isif>
+		
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</isif>
+

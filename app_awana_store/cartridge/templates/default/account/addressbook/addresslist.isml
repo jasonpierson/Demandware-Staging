@@ -1,0 +1,48 @@
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+
+<isif condition="${pdict.CurrentHttpParameterMap.format.stringValue == 'ajax' || pdict.CurrentHttpParameterMap.pwr.stringValue == 'true' || pdict.CurrentHttpParameterMap.source.stringValue == 'search' || pdict.CurrentHttpParameterMap.source.stringValue == 'quickview' || pdict.CurrentHttpParameterMap.source.stringValue == 'cart'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+
+<iscomment>
+	Check to see if this is a b2b user or a b2c, only b2c and commander can edit these values here.  
+	Commander can only set preferred addresses
+</iscomment>
+
+<isset name="allowSetDefault" value="${true}" scope="page"/>
+
+	<isif condition="${!empty(pdict.CurrentCustomer) && pdict.CurrentCustomer.authenticated && pdict.CurrentCustomer.profile.custom.CustomerType == 'Individual' || !empty(pdict.CurrentCustomer) && pdict.CurrentCustomer.authenticated && pdict.CurrentCustomer.profile.custom.CustomerType == 'Commander'}">
+		<isset name="allowSetDefault" value="${true}" scope="page"/>
+		<isset name="allowEdit" value="${false}" scope="page"/>
+	<iselse>
+		<isset name="allowSetDefault" value="${false}" scope="page"/>
+		<isset name="allowEdit" value="${false}" scope="page"/>
+	</isif>
+
+<iscomment>The code does not call SFDC to complete the changes. Therefore, we are not allowing edit/delete until we have the time to code it completely.</iscomment>
+<isset name="allowEdit" value="${false}" scope="page"/>	
+<isdecorate template="${DecoratorTemplate}">
+	
+	<div class="accounteditaddress">
+		<isslot id="account-banner" description="Banner for My Account pages" context="global" />
+		<h4>${Resource.msg('addresslist.header','account',null)}</h4>
+		<isif condition="${allowEdit}">
+			<a class="createaddress" href="${URLUtils.url('Address-Add')}" title="${Resource.msg('addresslist.create','account',null)}"><span>${Resource.msg('addresslist.create','account',null)}</span></a>
+		</isif>
+		<div id="address_list" class="address_list">
+			<isinclude template="account/addressbook/addressinclude"/>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	<!--
+	    jQuery(document).ready(function() {
+		    //jQuery(".createaddress").colorbox({title:true, width:650, scrolling:false});
+	    	jQuery(".createaddress").click(function() {
+	    		window.location.href = "${URLUtils.url('Address-Add')}";
+	    	});
+		});
+	//-->
+	</script>
+	
+</isdecorate>

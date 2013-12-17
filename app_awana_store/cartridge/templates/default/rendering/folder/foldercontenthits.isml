@@ -1,0 +1,136 @@
+<isdecorate template="search/pt_contentsearchresult">
+	<isinclude template="util/modules"/>
+	
+	<isinclude template="util/reporting/ReportSearch.isml"/>
+	
+	<isscript>
+		/*
+			Small function to realize odd and even recognition of rows across multiple
+		   	loops
+		*/
+		function RowClass()
+		{
+			// define the counter
+			var rowCounter = 0;
+	
+			RowClass.prototype.getName = function()
+			{
+				// increase counter
+				rowCounter++;
+	
+				if (rowCounter % 2 == 0)
+				{
+					return 'even';
+				}
+				else
+				{
+					return 'odd';
+				}
+			}
+		};
+	
+		/* create a new instance to name our rows 'odd' or 'even' */
+		var rowNaming = new RowClass();
+	</isscript>
+	
+	<div class="contenthits">
+		
+		<iscomment>same content asset for top promo found on search results page</iscomment>
+		<div class="subbannercontainer">
+			<div class="subbannercontainerlayertop">
+				<!---<a href=""><img src="${URLUtils.staticURL('/images/placeholder-searchresults-top_promo.gif')}" alt="" title="" width="738" height="100" /></a>--->
+				<isslot id="search-result-banner" description="Promotional Search Result Banner" context="global"/>
+			</div>
+		</div>
+		
+		
+		<h2>${Resource.msgf('foldercontenthits.yoursearch','rendering',null,pdict.ContentSearchResult.count)}</h2>
+	
+		<isif condition="${!pdict.ContentPagingModel.empty}">
+
+		<div class="pagingheadline">
+			<iscomment>link back to product search result</iscomment>
+			<isif condition="${!empty(pdict.ProductSearchResult) && !empty(pdict.ProductSearchResult.searchPhrase)}" />
+				<isif condition="${pdict.ProductSearchResult.count > 0}">
+					<a class="return" href="${pdict.ProductSearchResult.url('Search-Show')}">${Resource.msg('foldercontenthits.backtoproducts','rendering',null)}</a>
+				<iselse/>
+					<p>${Resource.msgf('foldercontenthits.noproducts','rendering',null,pdict.ProductSearchResult.searchPhrase)}</p>
+				</isif>
+			</isif>
+			
+			<iscomment>sorting and hits info</iscomment>
+			<ispaginginformation pagingmodel="${pdict.ContentPagingModel}">
+			<iscomment>pagination</iscomment>
+			
+			<ispagingbar pageurl="${pdict.ContentSearchResult.url('Search-ShowContent')}"  pagingmodel="${pdict.ContentPagingModel}">
+			<div class="clear"></div>
+		</div>
+
+			<isif condition="${!empty(pdict.ProductSearchResult) && !empty(pdict.ProductSearchResult.searchPhrase)}" />
+				<h3>${Resource.msg('foldercontenthits.relatedarticles','rendering',null)}</h3>
+			</isif>
+			
+			<iscomment>calculated correct index position to separate the result columns</iscomment>
+			<isscript>
+				var count = pdict.ContentPagingModel.end + 1;
+				var cutIndex = Math.ceil( count / 2 ) - 1;
+				var endIndex = cutIndex + (cutIndex + 1);
+			</isscript>
+
+			<iscomment>render the results as two column layout</iscomment>
+			<isloop items="${pdict.ContentPagingModel.pageElements}" var="asset" status="loopstate" end="${endIndex}">
+
+
+				<iscomment>append the search parameters to the article URL</iscomment>
+				<isset name="articleURL" value="${pdict.ContentSearchResult.url( URLUtils.url('Page-Show','cid', asset.ID) )}" scope="page"/>
+				
+				<div class="article ${rowNaming.getName()}">
+					<div class="articlename">
+						<a href="${articleURL}">
+							<isprint value="${asset.name}"/>
+						</a>
+					</div>
+					<div class="description">
+						<isprint value="${asset.description}"/><span class="articlelink">&nbsp;<a href="${articleURL}" class="readmore">${Resource.msg('foldercontenthits.readmore','rendering',null)}</a></span>
+					</div>
+				</div>
+
+
+			</isloop>
+
+			<div class="clear"></div>
+
+		<div class="pagingheadline bottom">
+			<iscomment>link back to product search result</iscomment>
+				<isif condition="${!empty(pdict.ProductSearchResult) && pdict.ProductSearchResult.count > 0}">
+					<a class="return" href="${pdict.ProductSearchResult.url('Search-Show')}">${Resource.msg('foldercontenthits.backtoproducts','rendering',null)}</a>
+				</isif>
+			<iscomment>sorting and hits info</iscomment>
+			<ispaginginformation pagingmodel="${pdict.ContentPagingModel}">
+			<iscomment>pagination</iscomment>
+			<ispagingbar pageurl="${pdict.ContentSearchResult.url('Search-ShowContent')}"  pagingmodel="${pdict.ContentPagingModel}">
+			<div class="clear"></div>
+		</div>
+
+	</isif>
+	</div>
+	<div class="clear"></div>
+	<iscomment>bottom promo content assets (same as on the search results page)</iscomment>
+	<div class="searchpromos">
+		<!---
+			<a href=""><img src="${URLUtils.staticURL('/images/placeholder-searchresults-promo.gif')}" alt="" title="" width="225" height="100" /></a>
+			<a href=""><img src="${URLUtils.staticURL('/images/placeholder-searchresults-promo.gif')}" alt="" title="" width="225" height="100" /></a>
+			<a href="" class="end"><img src="${URLUtils.staticURL('/images/placeholder-searchresults-promo.gif')}" alt="" title="" width="225" height="100" /></a>--->
+		<div class="fl" style="padding:5px;">
+			<isslot id="search-promo-bottom-left" description="Promotional Content at the bottom-left of Search Results" context="global"/>
+		</div>
+		<div class="fl" style="padding:5px;">
+			<isslot id="search-promo-bottom-center" description="Promotional Content at the bottom-center of Search Results" context="global"/>
+		</div>
+		<div class="fl" style="padding:5px;">
+			<isslot id="search-promo-bottom-right" description="Promotional Content at the bottom-right of Search Results" context="global"/>
+		</div>
+		<div class="clear"></div>
+		
+	</div>
+</isdecorate>

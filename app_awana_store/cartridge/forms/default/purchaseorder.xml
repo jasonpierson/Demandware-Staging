@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+
+	<!-- field for purchase order number -->
+    <field formid="account" label="purchaseorder.label" type="string" mandatory="false" max-length="25" binding="custom.poAccountID"/>
+<!--      	missing-error="purchaseorder.missingerror"/>  -->
+
+	<!-- confirm action to save the po details -->
+    <action formid="confirm" valid-form="true"/>
+
+</form>

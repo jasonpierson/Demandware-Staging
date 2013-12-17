@@ -1,0 +1,4 @@
+<!--- TEMPLATENAME: discontinuedproductslist.isml --->
+<isloop items="${pdict.EMailContent}" var="product" status="loopStatus">
+	<isprint value="${product}"/><br/>
+</isloop>

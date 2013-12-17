@@ -1,0 +1,94 @@
+<iscomment>
+	Produces a product listing as a matrix.
+	Expects to see productsperrow and productrows in dictionary.
+	The value productstoskip has to be set to start with a product later
+	in the iterator not with the first one.
+
+	Examples:
+		producthits		    , an iterator with products to display
+		productstoskip 	= 1 , means the first product will be skipped, we start with the second one
+		productrows		= 3 , display three product rows
+		productsperrow	= 3 , display three products in a row
+
+		productprices   = productprices
+		category		= current category
+
+	Of course, this works only as expected when the number of products is sufficient. In all other cases
+	you will see less rows and less products in the last row.
+</iscomment>
+
+<iscomment>Check definition in case they are missing</iscomment>
+
+<isif condition="${pdict.productstoskip == null}">
+	<isset name="productstoskip" value="${0}" scope="page"/>
+<iselse>
+	<isset name="productstoskip" value="${pdict.productstoskip}" scope="page"/>
+</isif>
+
+<isif condition="${pdict.productrows == null}">
+	<isset name="productrows" value="${3}" scope="page"/>
+<iselse>
+	<isset name="productrows" value="${pdict.productrows}" scope="page"/>
+</isif>
+
+<isif condition="${pdict.productsperrow == null}">
+	<isset name="productsperrow" value="${3}" scope="page"/>
+<iselse>
+	<isset name="productsperrow" value="${pdict.productsperrow}" scope="page"/>
+</isif>
+
+<iscomment>Counter for product determination</iscomment>
+<isset name="templateRowCounter" value="${0}" scope="page"/>
+<isset name="templateProductPerRowCounter" value="${0}" scope="page"/>
+<isset name="templateClosingMarker" value="${0}" scope="page"/> <iscomment>0 not set, 1 set</iscomment>
+
+<iscomment>Uses the paging model to identify the product offset. This value is used to with the loop counter to generate the correct start number.</iscomment>
+<isset name="startingOffset"  value="${(pdict.pagingmodel.start)}" scope="page"/>
+
+<iscomment>Display the remaining products as list</iscomment>
+
+<isloop items="${pdict.producthits}" var="LoopProductHit" status="loopstate">
+
+	<isif condition="${loopstate.count > productstoskip}">
+
+		<!-- do we have to start a new row -->
+		<isif condition="${templateClosingMarker == 0}">
+			<div class="product-grid">
+				<div class="product-grid-row">
+					<div class="product-grid-cap">
+			<isset name="templateClosingMarker" value="${1}" scope="page"/>
+		</isif>
+
+		<isset name="ProductHit" value="${LoopProductHit}" scope="page"/>
+		<isset name="starting" value="${(loopstate.count + startingOffset)}" scope="page"/>
+		<isset name="templateProductPerRowCounter" value="${templateProductPerRowCounter + 1}" scope="page"/>
+
+		<iscomment>display a tile per product</iscomment>
+		<isinclude template="product/productsearchhittile"/>
+
+		<isif condition="${templateProductPerRowCounter == productsperrow}">
+			<iscomment>Yes, we have something to close</iscomment>
+					</div>
+				</div>
+			</div>
+
+			<iscomment>Row is done</iscomment>
+			<isset name="templateRowCounter" value="${templateRowCounter + 1}" scope="page"/>
+			<isset name="templateProductPerRowCounter" value="${0}" scope="page"/>
+			<isset name="templateClosingMarker" value="${0}" scope="page"/>
+		</isif>
+	</isif>
+	
+	<isif condition="${templateRowCounter == productrows}">
+		<isbreak/>
+	</isif>
+</isloop>
+
+<isif condition="${templateClosingMarker == 1}">
+	<iscomment>Yes, we have still something to close</iscomment>
+			</div>
+		</div>
+	</div>
+</isif>
+
+

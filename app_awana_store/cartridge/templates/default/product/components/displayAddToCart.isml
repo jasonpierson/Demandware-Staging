@@ -1,0 +1,29 @@
+<!--- TEMPLATENAME: displayAddToCart.isml --->
+<iscache status="off"/>
+<isinclude template="util/modules"/>
+<isscript>
+	importPackage(dw.util);
+	importScript('product/CanCustomerPurchase.ds');
+	var allowPurchase = execute(pdict);
+</isscript>			
+<isif condition="${!empty(allowPurchase[0]) && allowPurchase[0]}">
+	<isif condition="${!(pdict.Product.productSet || pdict.Product.bundle)}">
+		<iscomment>bundle/product set do not have a quantity box</iscomment>
+		<div class="quantity">
+			<span class="label">${Resource.msg('global.quantity','locale',null)}:&nbsp;</span><input class="quantityinput" value="${Number(empty(pdict.CurrentHttpParameterMap.Quantity.stringValue) ? 1 : pdict.CurrentHttpParameterMap.Quantity.stringValue).toFixed()}"/>
+		</div>
+	</isif>
+	<isif condition="${pdict.CurrentHttpParameterMap.action.stringValue == 'update'}">
+		<button type="button" title="${Resource.msg('global.updatecart','locale',null)}" value="${Resource.msg('global.addtocart','locale',null)}" class="addtocartbutton updatecartbutton"><span>${Resource.msg('global.updatecart','locale',null)}</span></button>
+	<iselse>
+		<isif condition="${!empty(allowPurchase[1])}">
+			<isif condition="${allowPurchase[1]==Resource.msg('product.notpublicmsg','product',null)}">
+				<div class="label">${Resource.msg('product.notpublicmsg','product',null)} <a title="${Resource.msg('global.login','locale',null)}" href="${URLUtils.https('Account-Show')}" class="userlogin">${Resource.msg('product.notpublic','product',null)}</a></div>
+			<iselse>
+				<div class="label"><a title="${Resource.msg('global.login','locale',null)}" class="userlogin"><isprint value="${allowPurchase[1]}"/></a></div>
+			</isif>
+		</isif>
+	</isif>
+<iselse>
+	<div class="label">${Resource.msg('product.notpublicmsg','product',null)} <a title="${Resource.msg('global.login','locale',null)}" href="${URLUtils.https('Account-Show')}" class="userlogin">${Resource.msg('product.notpublic','product',null)}</a></div>
+</isif>	

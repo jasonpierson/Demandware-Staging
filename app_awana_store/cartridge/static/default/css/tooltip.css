@@ -1,0 +1,28 @@
+/* TOOL TIPS
+--------------------------------------------------------------------------------------- */
+.tooltipcontainer {background-color: #efefef;border:1px solid black;color:#000;font-size:1.1em;padding:8px 4px;}
+.tooltipcontainer p strong {font-weight:bold;}
+.tooltipcontainer p {padding:0 0 8px 0;}
+/*Jquery position and style*/
+#tooltip {position: absolute; z-index: 3000;}
+#tooltip.tooltipshadow {width: 210px; padding:10px;	border: none; background-color: transparent; opacity: 0.8;}
+
+/***** PRODUCT PROMOTIONS (Recommendations/Lasted Visited/Etc...) *****/
+.productcarousel .producttile {float: none;margin:0 auto;width:160px;}
+.productcarousel .producttile .image .quickviewbutton a {display: none;}
+/* Product Cross Sell */
+.maywerecommend .jcarousel-item img {border: 1px solid #fff;height: 75px;width: 75px;}
+.maywerecommend .jcarousel-list li, .maywerecommend .jcarousel-item {height:75px;margin-left:5px;text-align:center;width:75px;}
+.maywerecommend .jcarousel-clip-horizontal {height:77px;width:270px;}
+.maywerecommend .jcarousel-container-horizontal {padding:20px 40px;width:268px;}
+.recommendationdetail {background-color:#fff6dd;opacity:1 !important;border:1px solid #ffe191;font-size:1.1em;overflow:hidden;width:300px;padding:20px;-moz-border-radius:8px;-webkit-border-radius:8px;}
+.recommendationdetail li {list-style-position:inside;list-style-type:disc;}
+.recommendationdetail .recommendationheader {border-bottom:1px solid #ffe191;}
+.recommendationdetail .productname {font-size:1.3em;font-weight:bold;padding: 5px 3px 3px;white-space:nowrap;color:#d75227;}
+.recommendationdetail .price {font-size:1.4em;font-weight:bold;font-style:normal;padding: 5px 3px 3px;}
+.recommendationdetail .price .salesprice {color:red;}
+.recommendationdetail .productshortdescription {padding: 5px 3px 3px;}
+.recommendationdetail .productmainattributes {padding: 5px 3px 3px;}
+.recommendationdetail .productmainattributes .attribute {font-size:1.0em;}
+.recommendationdetail .customerreviews {border-top:1px solid #ffe191;}
+.recommendationdetail .customerreviews .label {color:#d75227;}

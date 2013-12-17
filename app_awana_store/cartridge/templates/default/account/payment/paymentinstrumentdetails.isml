@@ -1,0 +1,89 @@
+<isinclude template="util/modules"/>
+
+<div class="colorboxDialogHeader">
+	<h3>Payment Settings</h3>
+	<div id="colorboxDialogCloseButton"></div>
+</div>
+
+<div id="CreditCardDialog" class="creditcardform" style="margin-bottom:10px;">
+
+	<form id="CreditCardForm" name="CreditCardForm" action="${URLUtils.httpsContinue()}"  method="post" id="newcreditcard">
+			<div>
+	   			<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.paymentinstruments.creditcards.newcreditcard.owner}" type="input" maxlength="40" size="40">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield cardtype">
+					<isinputfield formfield="${pdict.CurrentForms.paymentinstruments.creditcards.newcreditcard.type}" type="select">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.paymentinstruments.creditcards.newcreditcard.number}" p_dynamic="true" type="input" maxlength="16" size="17">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield expirationdate">
+					<div class="label expires">
+						<span class="requiredindicator">*</span>
+						<span>${Resource.msg('paymentinstrumentdetails.expires','account',null)}</span>
+					</div>
+
+					<span class="month">
+						<isinputfield formfield="${pdict.CurrentForms.paymentinstruments.creditcards.newcreditcard.month}" type="select">
+					</span>
+					<span class="year">
+						<isinputfield formfield="${pdict.CurrentForms.paymentinstruments.creditcards.newcreditcard.year}" type="select">
+					</span>
+					<div class="clear"></div>
+
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="actions">	
+				<div id="formaction"></div>		
+				<div class="fl" style="margin-right:5px;"><button id="applyBtn" type="button" value="${Resource.msg('global.apply','locale',null)}"></button></div>
+				<div class="fl"><button id="cancelBtn" type="button" value="${Resource.msg('global.cancel','locale',null)}"></button></div>
+			</div>
+			<div class="clear"></div>
+			<input type="hidden" name="${pdict.CurrentForms.paymentinstruments.secureKeyHtmlName}" value="${pdict.CurrentForms.paymentinstruments.secureKeyValue}"/>
+	</form>
+</div>
+<script type="text/javascript">
+
+	app.URLs.submitDialogURL = '${URLUtils.httpContinue()}';
+	
+	jQuery(document).ready(function() {		
+console.log("${pdict.colorbox}")
+		jQuery('#applyBtn').click( function() {
+			action = "${pdict.CurrentForms.paymentinstruments.creditcards.create.htmlName}";
+			jQuery('#formaction').append("<input name='" + action + "' type='hidden' />");
+			
+			var post = jQuery('#CreditCardForm').serialize();
+	  		jQuery.ajax({
+			   type: "POST",
+			   url: app.URLs.submitDialogURL,
+			   data: post,
+			   dataType: 'html',
+			   success: function(data){
+				   
+	  				//jQuery("#cboxLoadedContent").empty().html(data);
+	  				$.fn.colorbox.close();
+	  				location.href=location.href;
+			   },
+			   error: function(data) {
+			   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+			   }
+			});		
+		});
+		
+		jQuery("#cancelBtn").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#colorboxDialogCloseButton").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#cboxClose").hide();
+	});
+
+</script>

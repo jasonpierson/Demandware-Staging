@@ -1,0 +1,28 @@
+<isinclude template="util/modules"/>
+
+<div class="colorboxDialogHeader">
+	<h3 class="sponsordialogheader">Login or Register</h3>
+</div>
+
+<div class="sponsorselectiondialog">
+	<isprint value="${Resource.msg('churchrewards.mustbeloggedin','components',null)}" />
+</div>
+
+<script type="text/javascript">
+<!--
+	app.URLs.submitDialogURL = "${URLUtils.httpContinue()}";
+		
+	jQuery(document).ready(function() {	
+
+		jQuery("#colorboxDialogCloseButton").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#cboxClose").hide();
+
+		});
+
+	});
+//-->
+</script>
+		

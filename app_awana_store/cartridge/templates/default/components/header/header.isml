@@ -1,0 +1,104 @@
+<!-- Start Alexa Certify Javascript -->
+<script type="text/javascript">
+_atrk_opts = { atrk_acct:"wig7i1aoZM00GG", domain:"awana.org",dynamic: true};
+(function() { var as = document.createElement('script'); as.type = 'text/javascript'; as.async = true; as.src = "https://d31qbv1cthcecs.cloudfront.net/atrk.js"; var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(as, s); })();
+</script>
+<noscript><img src="https://d5nxst8fruw4z.cloudfront.net/atrk.gif?account=wig7i1aoZM00GG" style="display:none" height="1" width="1" alt="" /></noscript>
+<!-- End Alexa Certify Javascript -->
+
+<div id="header">
+	<div id="siteSelector">
+		<a href="http://awana.org"><img src="${URLUtils.staticURL('images/topnav/top-nav-org.gif')}" width="153" height="52" alt="Awana" /></a>
+		<img src="${URLUtils.staticURL('images/topnav/top-nav-store.gif')}" width="212" height="52" alt="Awana Store" />
+		<a href="http://shopawana.org/essentials"><img src="${URLUtils.staticURL('images/topnav/top-nav-essentials.gif')}" width="242" height="52" alt="Essentials Store" /></a>
+		<img src="${URLUtils.staticURL('images/topnav/top-nav-search.gif')}" width="6" height="52" alt="" />
+		<div class="fl">
+    		<isinclude template="search/simplesearch" />
+	    	<div id="livechat">
+	    		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'live-chat-code')}" />
+	    	</div>
+    	</div>
+	</div>
+	<div class="clear"></div>
+
+	<div class="logo">
+		<a href="${URLUtils.httpHome()}" title="${Resource.msg('global.storename','locale',null)}"></a>
+	</div>
+	 
+	<div class="fr">
+	    <ul class="generalnav">
+	        <li class="fl">
+				<isinclude url="${URLUtils.url('Home-IncludeHeaderCustomerInfo')}" />
+				<span class="divider">|</span>
+			</li>
+			
+			<isif condition="${pdict.CurrentCustomer.authenticated}">
+				<isif condition="${!empty(pdict.CurrentCustomer.profile) && pdict.CurrentCustomer.profile.custom.CustomerType == 'Commander' && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+					<li class="fl">
+						${pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchPointsAvailable} redeemable pts
+						<span class="divider">|</span>
+					</li>	
+				</isif>
+			</isif>		
+			
+			<li class="fl">
+				<a href="${URLUtils.http('CustomerService-Show')}" title="${Resource.msg('global.helplink','locale',null)}">
+					${Resource.msg('global.helplink','locale',null)}
+				</a>
+				<span class="divider">|</span>
+			</li>
+			<li class="fl">
+	   			<div id="minicart" class="minicart">
+	   				<isinclude url="${URLUtils.url('Cart-MiniCart')}" />
+	   			</div>
+			</li>
+			
+	        <div class="clear"></div>
+
+	    </ul>
+    </div>
+	<div class="clear"></div>
+	<div class="fr">
+		<ul class="generalnav">
+			<li class="fl">
+				<b><span class="welcomemessage">${Resource.msg('headercustomerinfo.holidaymessage','components',null)}</span></b>
+			</li>
+		</ul>
+	</div>
+	<div class="clear"></div>
+
+	<div class="entypo nav-show">i</div>
+
+    <isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+
+    <!---
+    <div class="headerbanner">
+    	<isslot id="header-banner" description="Header banner within the header, between the logo and search bar, width XXXpx by height XXpx." context="global" />
+    </div>
+    --->
+
+	<div style="height:10px;"></div>
+
+	<div class="headerbar">
+		<div class="fl" style="width:66.5%; height:20px;">
+			<isslot id="header-bar" description="Header bar slot below the Category Navigation" context="global" />
+		</div>
+    	<div class="clear"></div>
+    	
+	</div>
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var hBar = $(".headerbar .fl").html();
+		if(hBar === null || hBar === "" || hBar === undefined) {
+			$(".headerbar .fl").hide();
+		}
+	});
+	</script>
+    
+</div>
+
+<iscomment>Cookies and Javascript enabled check</iscomment>
+<isinclude template="components/browsertoolscheck"/>
+
+<div style="height:10px;"></div>

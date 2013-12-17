@@ -1,0 +1,51 @@
+<isdecorate template="account/pt_account">
+<isinclude template="util/modules"/>
+
+<iscomment>Report this checkout step</iscomment>
+<isset name="checkoutstep" value="${1}" scope="page"/>
+<isset name="checkoutname" value="${'CheckoutMethod'}" scope="page"/>
+<isinclude template="util/reporting/ReportCheckout.isml"/>
+
+<div class="checkoutlogin">
+
+	<iscomment>new customer</iscomment>
+	<div class="logincreate">
+		<h3>${Resource.msg('globalaccount.createheader','locale',null)}</h3>
+		<div class="createaccount">
+			<p>${Resource.msg('globalaccount.createmessage','locale',null)}</p>
+			<form action="${URLUtils.httpsContinue()}" method="post">
+				<fieldset>
+					<div class="createaccountbutton">
+						<button type="submit" value="${Resource.msg('global.createbutton','locale',null)}" name="${pdict.CurrentForms.login.register.htmlName}"><span>${Resource.msg('global.createbutton','locale',null)}</span></button>
+					</div><!-- END: createaccountbutton -->
+					<input type="hidden" name="${pdict.CurrentForms.login.secureKeyHtmlName}" value="${pdict.CurrentForms.login.secureKeyValue}"/>
+				</fieldset>
+			</form>
+			<div class="createbenefits">
+				<iscontentasset aid="create-account-benefits">
+			</div><!-- END: createbenefits -->
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div><!-- END: createaccount -->
+	</div><!-- END: logincreate -->
+
+	<iscomment>returning customer</iscomment>
+	<isinclude template="account/login/logininclude"/>
+
+	<br />
+	<div class="logingeneral">
+		<h3>${Resource.msg('checkoutlogin.guestheader','checkout',null)}</h3>
+		<div class="guestcontinue">
+			<p>${Resource.msg('checkoutlogin.guestmessage','checkout',null)}</p>
+			<form action="${URLUtils.httpsContinue()}" method="post">
+			<div class="continuecheckoutbutton">
+				<button type="submit" value="${Resource.msg('checkoutlogin.continuebutton','checkout',null)}" name="${pdict.CurrentForms.login.unregistered.htmlName}"><span>${Resource.msg('checkoutlogin.continuebutton','checkout',null)}</span></button>
+				</div><!-- END: createaccountbutton -->
+				<input type="hidden" name="${pdict.CurrentForms.login.secureKeyHtmlName}" value="${pdict.CurrentForms.login.secureKeyValue}"/>
+			</form>
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div><!-- END: checkorder -->
+	</div>
+
+</div>
+
+</isdecorate>

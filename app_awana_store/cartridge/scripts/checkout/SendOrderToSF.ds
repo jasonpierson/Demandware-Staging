@@ -1,0 +1,581 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*   @input order : dw.order.Order The order object
+*   @input ExportFailed : Boolean
+*   @input SendingSplitOrder : Boolean
+*   @output errorMessage : String
+*   @output registrationNumber : String
+*   @output hasChurchRegistration : Boolean
+*
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.rpc );
+importPackage( dw.crypto );
+importPackage( dw.campaign );
+importScript( "order/Utils.ds" );
+
+function execute( args : PipelineDictionary ) : Number
+{
+    var order : Order = args.order;  
+    var didExportFail : Boolean = args.ExportFailed;
+    
+	try {
+		if (dw.system.Site.getCurrent().ID == 'kidzmatter') {
+		    var webref : WebReference = webreferences.kmDWOrderEntryDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pKMDWOrderEntry;
+		    }			
+		} else {
+		    var webref : WebReference = webreferences.DWOrderEntryDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pDWOrderEntry;
+		    }
+		}
+		var stub : Stub = webref.defaultService; 
+		if (!empty(order.customer.profile) && !empty(order.customer.profile.addressBook)) {
+			var addressBook :dw.customer.AddressBook = order.customer.profile.addressBook;
+		}
+		var createOrder:WebReference = new webref.WSInputParams();
+		createOrder.opportunity = new webref.WSInputParamsOpportunity();
+	
+		createOrder.opportunity.addressNumber = "";
+		createOrder.opportunity.billingCounty = "";
+		createOrder.opportunity.billingAddressAge = "New";
+		createOrder.opportunity.shippingAddressAge = "New";
+		createOrder.opportunity.billingAddressID = "";
+		createOrder.opportunity.shippingAddressID = "";
+		createOrder.opportunity.currencyCode = order.currencyCode;
+		createOrder.opportunity.chargentSFABillingStreet = order.billingAddress.address1 + ((order.billingAddress.address2==null)?"":"\n" + order.billingAddress.address2);
+		createOrder.opportunity.chargentSFABillingCity = order.billingAddress.city;
+		createOrder.opportunity.chargentSFABillingCountry = order.billingAddress.countryCode.getDisplayValue().toUpperCase(); 
+		createOrder.opportunity.chargentSFABillingFirstName = order.billingAddress.firstName!=null?order.billingAddress.firstName:"";
+		createOrder.opportunity.chargentSFABillingLastName = order.billingAddress.lastName;
+		createOrder.opportunity.chargentSFABillingPhone = order.billingAddress.phone!=null?order.billingAddress.phone:order.shipments[0].shippingAddress.phone;
+		createOrder.opportunity.chargentSFABillingState = order.billingAddress.stateCode;
+		if (dw.system.Site.getCurrent().ID == 'Awana' || dw.system.Site.getCurrent().ID == 'essentials') {
+			createOrder.opportunity.chargentSFABillingZip = formatNumeric(order.billingAddress.postalCode);
+		} else {
+			createOrder.opportunity.chargentSFABillingZip = order.billingAddress.postalCode;
+		}		
+
+		createOrder.opportunity.chargentSFAEmail = order.customerEmail;
+		
+		//Order total
+		if (order.totalGrossPrice.available) 
+			createOrder.opportunity.chargentSFATransactionTotal = order.totalGrossPrice.value;
+		else
+			createOrder.opportunity.chargentSFATransactionTotal = order.getAdjustedMerchandizeTotalPrice(true).add(order.giftCertificateTotalPrice).value;
+
+		createOrder.opportunity.purchaseOrder = "";
+		createOrder.opportunity.chargentSFACardYear = "";
+		createOrder.opportunity.chargentSFACardMonth = "";
+		createOrder.opportunity.chargentSFACardType = "";
+		createOrder.opportunity.chargentSFACardSecurity = "";
+		createOrder.opportunity.chargentSFACardNumber = "";
+		createOrder.opportunity.chargentSFACardName = "";
+		createOrder.opportunity.authCode = "";
+		createOrder.opportunity.authTransID = "";
+		createOrder.opportunity.authResponse = "";
+		createOrder.opportunity.hasDiscounts = false;
+
+		//Add the DW order number to the call
+		createOrder.opportunity.externalOrderNumber = order.orderNo;
+	
+		//Default the payment type to net 30...
+		createOrder.opportunity.paymentType = "Net 30";
+
+		for each(var payment :OrderPaymentInstrument in order.paymentInstruments)
+		{
+			if (payment != null && payment.paymentMethod == dw.order.PaymentInstrument.METHOD_CREDIT_CARD) {
+				createOrder.opportunity.chargentSFACardYear = dw.util.StringUtils.formatNumber(payment.creditCardExpirationYear, "0000");
+				createOrder.opportunity.chargentSFACardMonth = dw.util.StringUtils.formatNumber(payment.creditCardExpirationMonth, "00");
+				createOrder.opportunity.chargentSFACardType = payment.creditCardType;
+				createOrder.opportunity.chargentSFACardSecurity = payment.custom.cscNumber!=null?payment.custom.cscNumber:"";
+				
+				var rsaKey = 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAM5DBABpssb61H2tP0qyzx73OaWq/IeZ2VwE83G+Dks1GKiOmb1Eb06uz5BtTLM6ouJ+Z/DLf7NgkL6jg25HeWx6pNTosUoyXyWfyu+eNiST+PMZL1s8PeMnUGY+b80lkt04v7ItpAEc4VJ1yBEPKOjJyC++WZhXPngBNKkp48xxAgMBAAECgYBniDv5+RRDzKPccZnTZO2SHYZSIgGgDxmLlvCbp0qFdaFq+ikxV6iHVjfZxwM487XO+qQxufPflhkRmAHg2P+ZDTnZQjrCF/WtyPe01wXekl1zfjlcnZ2HcJMNcjqxJ1NRka3lzHSufSlUk57R5uRJqtna2GHhqhMjSvhrsjDSAQJBAOqrm9tVOX6+1g6KWM8+J+kXqlcG2P1El2uNrYPMBZEQl8mpif5FhoSI8MyXSmMq6T8OeYPsduJZpT6YNtH/FfcCQQDhAmLrVg4Q05DStCegsNiedaiq5g8EP7swGWYCy1k+zwbjoqy2IsBu0kRMpoXhXEAr0ZL5NOWY10WTlA1nm/bXAkEAv4BFUsqMfcLr2bfKW2zEkvHN/vDGmH+l9Y4LX/dZP5VD2LxysL451OQPZVW8zYpSBzQfs6l/Jp2zPI5ohhvc5wJBAJbP2KlPtoHEq+7t3RmxLp+W0QQqyqnYZYhpnZwF271jWYS9hfFV/ZDJ0glmG5nfEQvNnir2L2Vv9CxkMU/ek2UCQHLCp12bvkMe0H/4EDfUT8TWCHx8Bcey+SvkOSTg0+1XWA1l2zhvLyAf2viE6h3zZt2f4jr7yxYNy+UYSlB7Y74=';
+				var pubKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOQwQAabLG+tR9rT9Kss8e9zmlqvyHmdlcBPNxvg5LNRiojpm9RG9Ors+QbUyzOqLifmfwy3+zYJC+o4NuR3lseqTU6LFKMl8ln8rvnjYkk/jzGS9bPD3jJ1BmPm/NJZLdOL+yLaQBHOFSdcgRDyjoycgvvlmYVz54ATSpKePMcQIDAQAB';
+				var cipher : Cipher = new Cipher();	
+				createOrder.opportunity.chargentSFACardNumber = cipher.decrypt(payment.getEncryptedCreditCardNumber('RSA', pubKey), rsaKey, 'RSA', '', 0);
+				createOrder.opportunity.chargentSFACardName = payment.creditCardHolder;
+				createOrder.opportunity.paymentType = "Credit Card";
+				
+				createOrder.opportunity.authCode = payment.paymentTransaction.custom.AuthCode;
+				createOrder.opportunity.authTransID = payment.paymentTransaction.custom.AuthTransID;
+				createOrder.opportunity.authResponse = payment.paymentTransaction.custom.AuthResponse;
+				if (dw.system.Site.getCurrent().ID != 'kidzmatter') {
+					createOrder.opportunity.chargentSFAChargeAmount = payment.paymentTransaction.getAmount();
+				}
+				
+			} else if (payment != null && payment.paymentMethod.equals("PURCHASE_ORDER")) {
+				createOrder.opportunity.purchaseOrder = payment.custom.poAccountID;
+				createOrder.opportunity.paymentType = "Net 30";
+			} else if (payment != null && payment.paymentMethod.equals("PayPal")) {
+				createOrder.opportunity.paymentType = "Paypal";
+			}
+		}
+		
+		createOrder.opportunity.primaryCampaignSource = "";
+		if (dw.system.Site.getCurrent().ID == 'kidzmatter') {
+			/*******************************************************************************************************************
+			 LOOKUP CAMPAIGN ID IN CAMPAIGNSOURCECODES OBJECT
+			*******************************************************************************************************************/
+			if (!empty(order.custom.campaignSourceCode)) {
+				var campaignObject : dw.object.CustomObject = dw.object.CustomObjectMgr.queryCustomObject("campaignSourceCodes", "custom.SourceCodes = {0}", order.custom.campaignSourceCode);
+				createOrder.opportunity.primaryCampaignSource = campaignObject.custom.campaignId;
+			}
+		} else {
+			createOrder.opportunity.chargentSFAChargeAmount = createOrder.opportunity.chargentSFAChargeAmount==null?0:createOrder.opportunity.chargentSFAChargeAmount;
+			createOrder.opportunity.isSplitOrder = false;
+			createOrder.opportunity.primaryCampaignSource = !empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SiteCampaignID'))?dw.system.Site.getCurrent().getCustomPreferenceValue('SiteCampaignID'):"";
+		}
+		
+		createOrder.opportunity.shipToFirstName = order.shipments[0].shippingAddress.firstName;
+		if (order.shipments[0].shippingAddress.firstName == null) {
+			createOrder.opportunity.shipToFirstName = "";
+		}
+		createOrder.opportunity.shipToLastName = order.shipments[0].shippingAddress.lastName;
+		createOrder.opportunity.shipToName = order.shipments[0].shippingAddress.fullName;
+		createOrder.opportunity.shippingCity = order.shipments[0].shippingAddress.city;
+		createOrder.opportunity.shippingState = order.shipments[0].shippingAddress.stateCode;
+		createOrder.opportunity.shippingStreet = order.shipments[0].shippingAddress.address1 + ((order.shipments[0].shippingAddress.address2==null)?"":"\n" + order.shipments[0].shippingAddress.address2);
+		if (dw.system.Site.getCurrent().ID == 'Awana' || dw.system.Site.getCurrent().ID == 'essentials') {
+			createOrder.opportunity.shippingZipCode = formatNumeric(order.shipments[0].shippingAddress.postalCode);
+		} else {
+			createOrder.opportunity.shippingZipCode = order.shipments[0].shippingAddress.postalCode;
+		}
+		createOrder.opportunity.shippingCounty = "";
+		createOrder.opportunity.shippingType = order.shipments[0].shippingMethod.displayName;
+		createOrder.opportunity.shippingCountry = order.shipments[0].shippingAddress.countryCode.getDisplayValue().toUpperCase();
+
+		/*********************************************************************************************
+		 BEGIN TEMPORARY CODE FOR LITERAL NULL PROBLEM
+		*********************************************************************************************/
+		createOrder.opportunity.chargentSFABillingStreet = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingStreet)=="null"?"":createOrder.opportunity.chargentSFABillingStreet;
+		var PositionOfNull : Number =  createOrder.opportunity.chargentSFABillingStreet.toUpperCase().indexOf("NULL");
+		if (PositionOfNull > 0 && PositionOfNull == (createOrder.opportunity.chargentSFABillingStreet.length-4)) {
+			createOrder.opportunity.chargentSFABillingStreet = createOrder.opportunity.chargentSFABillingStreet.substr(0, (createOrder.opportunity.chargentSFABillingStreet.length-4));
+		}
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.chargentSFABillingStreet = createOrder.opportunity.chargentSFABillingStreet.substr(5, createOrder.opportunity.chargentSFABillingStreet.length);
+		}		
+		createOrder.opportunity.chargentSFABillingCity = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingCity)=="null"?"":createOrder.opportunity.chargentSFABillingCity;
+		createOrder.opportunity.chargentSFABillingFirstName = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingFirstName)=="null"?"":createOrder.opportunity.chargentSFABillingFirstName;
+		PositionOfNull = createOrder.opportunity.chargentSFABillingFirstName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.chargentSFABillingFirstName = createOrder.opportunity.chargentSFABillingFirstName.substr(5, createOrder.opportunity.chargentSFABillingFirstName.length);
+		}
+		createOrder.opportunity.chargentSFABillingLastName = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingLastName)=="null"?"":createOrder.opportunity.chargentSFABillingLastName;
+		PositionOfNull = createOrder.opportunity.chargentSFABillingLastName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.chargentSFABillingLastName = createOrder.opportunity.chargentSFABillingLastName.substr(5, createOrder.opportunity.chargentSFABillingLastName.length);
+		}		
+		createOrder.opportunity.chargentSFABillingPhone = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingPhone)=="null"?"":createOrder.opportunity.chargentSFABillingPhone;
+		createOrder.opportunity.chargentSFABillingZip = dw.util.StringUtils.trim(createOrder.opportunity.chargentSFABillingZip)=="null"?"":createOrder.opportunity.chargentSFABillingZip;
+		createOrder.opportunity.shipToLastName = dw.util.StringUtils.trim(createOrder.opportunity.shipToLastName)=="null"?"":createOrder.opportunity.shipToLastName;
+		PositionOfNull = createOrder.opportunity.shipToLastName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.shipToLastName = createOrder.opportunity.shipToLastName.substr(5, createOrder.opportunity.shipToLastName.length);
+		}
+		createOrder.opportunity.shipToFirstName = dw.util.StringUtils.trim(createOrder.opportunity.shipToFirstName)=="null"?"":createOrder.opportunity.shipToFirstName;
+		PositionOfNull = createOrder.opportunity.shipToFirstName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.shipToFirstName = createOrder.opportunity.shipToFirstName.substr(5, createOrder.opportunity.shipToFirstName.length);
+		}
+		createOrder.opportunity.shipToName = dw.util.StringUtils.trim(createOrder.opportunity.shipToName)=="null"?"":createOrder.opportunity.shipToName;		
+		PositionOfNull = createOrder.opportunity.shipToName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.shipToName = createOrder.opportunity.shipToName.substr(5, createOrder.opportunity.shipToName.length);
+		}
+		PositionOfNull = createOrder.opportunity.shipToName.toUpperCase().indexOf("NULL");
+		if (PositionOfNull == 0) {
+			createOrder.opportunity.shipToName = createOrder.opportunity.shipToName.substr(5, createOrder.opportunity.shipToName.length);
+		}		
+		createOrder.opportunity.shippingCity = dw.util.StringUtils.trim(createOrder.opportunity.shippingCity)=="null"?"":createOrder.opportunity.shippingCity;
+		createOrder.opportunity.shippingStreet = dw.util.StringUtils.trim(createOrder.opportunity.shippingStreet)=="null"?"":createOrder.opportunity.shippingStreet;
+		PositionOfNull =  createOrder.opportunity.shippingStreet.toUpperCase().indexOf("NULL");
+		if (PositionOfNull > 0 && PositionOfNull == (createOrder.opportunity.shippingStreet.length-4)) {
+			createOrder.opportunity.shippingStreet = createOrder.opportunity.shippingStreet.substr(0, (createOrder.opportunity.shippingStreet.length-4));
+		}		
+		createOrder.opportunity.shippingZipCode = dw.util.StringUtils.trim(createOrder.opportunity.shippingZipCode)=="null"?"":createOrder.opportunity.shippingZipCode;
+		/*********************************************************************************************
+		 END TEMPORARY CODE FOR LITERAL NULL PROBLEM
+		*********************************************************************************************/
+
+		/****************************************************************************************************
+		 IF ACCOUNT STATUS NEEDS TO BE CHANGED IN SFDC, WE SET IT HERE
+		****************************************************************************************************/
+		if (dw.system.Site.getCurrent().ID == 'Awana' || dw.system.Site.getCurrent().ID == 'essentials') {
+			createOrder.opportunity.accountStatus = '';
+			var customerGroup : dw.customer.CustomerGroup;
+			var cart : dw.util.Collection = order.getAllProductLineItems();
+			for each (customerGroup in order.customer.customerGroups) {
+				if (customerGroup.ID == 'HomeSchools - Single-family' && order.customer.profile.custom.AccountStatus == 'Pending') {
+					createOrder.opportunity.accountStatus = 'Added';
+				} else if ((customerGroup.ID == 'HomeSchools - Co-op' && order.customer.profile.custom.AccountStatus == 'Pending') || (customerGroup.ID == 'HomeSchools - Multi-family' && order.customer.profile.custom.AccountStatus == 'Pending')) {
+					for (var i = 0; i < cart.size(); i++) {
+						if (cart[i].getProductID() == dw.system.Site.getCurrent().getCustomPreferenceValue('NonTraditionalRegistrationProductCodeFull')) {
+							createOrder.opportunity.accountStatus = 'Added';
+							break;
+						}
+					}
+				}
+			}
+		}
+		/****************************************************************************************************
+		 END OF ACCOUNT STATUS CHANGE CODE
+		****************************************************************************************************/		
+
+		//set order source
+		if (dw.system.Site.getCurrent().ID == 'Awana') {
+			createOrder.opportunity.orderSource = 'Awana Store';
+		} else {
+			createOrder.opportunity.orderSource = dw.system.Site.getCurrent().name;
+		}
+		
+		//set primary campaign source for site
+		//createOrder.opportunity.primaryCampaignSource = !empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SiteCampaignID'))?dw.system.Site.getCurrent().getCustomPreferenceValue('SiteCampaignID'):"";
+		
+		/*****************************************************************************************************
+		 BEGIN SPLIT ORDER CODE
+		*****************************************************************************************************/
+		if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) {
+			var orderIsAllDonations : Boolean = true;
+	        var ditem;
+	        var ditems : dw.util.Collection = order.getAllProductLineItems();	
+	        for( var i = 0; i < ditems.size(); i++ ) {
+	        	ditem = ditems[i];	        	
+	        	if (empty(ditem.product.custom.ProductType.value) || (!empty(ditem.product.custom.ProductType.value) && ditem.product.custom.ProductType.value != 'Donation')) {
+	        		orderIsAllDonations = false;
+	        		break;
+	        	}
+	        }        		
+		}
+		
+		if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !empty(args.SendingSplitOrder) && args.SendingSplitOrder) {
+			createOrder.opportunity.isSplitOrder = true;
+			createOrder.opportunity.chargentSFATransactionTotal = 0;
+			createOrder.opportunity.chargentSFAChargeAmount = 0;
+			createOrder.opportunity.externalOrderNumber = order.orderNo + '(1)';
+			createOrder.opportunity.authCode = "";
+			createOrder.opportunity.authTransID = "";
+			createOrder.opportunity.authResponse = "";			
+		}
+		/*****************************************************************************************************
+		 END SPLIT ORDER CODE
+		*****************************************************************************************************/		
+
+		//Need to add line items...
+		var itemArray : Array = new Array();
+		var itemType;
+        var item;
+        var items : dw.util.Collection = order.getAllLineItems();
+        var adjustmentAmount = 0;
+        var shippingAdjustmentAmount = 0;
+        var shippingAmount = 0;
+        var totalPriceOfBOGODiscounts = 0;
+        var totalPriceOfOrderLevelDiscounts = 0;
+        var campaignID;
+        var campaignName;
+		createOrder.opportunity.totalChurchRewardsPointsGained = order.custom.ChurchRewardsPointsGained==null?0:order.custom.ChurchRewardsPointsGained;
+		createOrder.opportunity.totalChurchRewardsPointsRedeemed = order.custom.ChurchRewardsPointsRedeemed==null?0:order.custom.ChurchRewardsPointsRedeemed;
+		createOrder.opportunity.churchRewardsSponsoredChurch = order.custom.ChurchRewardsSFDCAccountID==null?"":order.custom.ChurchRewardsSFDCAccountID;   
+
+        for( var i = 0; i < items.size(); i++ ) {
+        	item = items[i];
+        	
+        	if (item instanceof ProductLineItem) {
+        		itemType = new webref.WSInputParamsOpportunityOpportunityLineItem();
+				/*****************************************************************************************************
+				 BEGIN SPLIT ORDER CODE
+				*****************************************************************************************************/
+				if ((!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && args.SendingSplitOrder && item.product.custom.ProductType.value == 'Donation') || (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !empty(orderIsAllDonations) && orderIsAllDonations)) {
+					itemType.itemNumber = item.getProductID();
+					itemType.unitPrice = item.basePrice.value;
+					itemType.quantity = item.quantityValue;
+			    	itemType.lineType = 'P - Donation';
+			    	itemType.priceAfterDiscount = 0;
+			    	itemType.priceBeforeDiscount = 0;
+			    	itemType.priceOfDiscount = 0;
+			    	itemType.promoCode = "";
+			    	itemType.promoName = "";
+			    	itemType.quantityGivenAway = 0;
+			       	itemType.churchRewardsPointsGained = 0;
+					itemType.churchRewardsPointsRedeemed = 0; 
+					itemType.preOrderBackOrderHandling = 'none'
+					itemArray.push( itemType );							
+				} else {      
+					if (empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) || !dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') || !empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !args.SendingSplitOrder && item.product.custom.ProductType.value != 'Donation') { 
+				/*****************************************************************************************************
+				 END SPLIT ORDER CODE
+				*****************************************************************************************************/							  		
+			            //handle church registration
+			            if (dw.system.Site.getCurrent().ID == 'AwanaCA' && item.productID == dw.system.Site.getCurrent().getCustomPreferenceValue('InternationalRegistrationProductCode')) {
+			            	args.registrationNumber = item.externalLineItemText;
+			            	args.hasChurchRegistration = true;
+			            }
+			            
+			            //get the unit price. if the products on this site include tax, remove the tax from the unit price.
+			            if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded')) && dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded') && item.product.custom.ProductType.value != 'Donation') {
+			            	itemType.unitPrice = !empty(item.adjustedNetPrice.value)?(item.adjustedNetPrice.value/item.quantityValue)-(order.custom.TotalLineItemTax/order.getProductQuantityTotal()):item.basePrice.value-item.tax.value;
+			            } else {
+			            	itemType.unitPrice = !empty(item.adjustedNetPrice.value)?(item.adjustedNetPrice.value/item.quantityValue):item.basePrice.value;
+			            }
+			            
+			        	itemType.itemNumber = item.getProductID();
+		        		itemType.quantity = item.quantityValue;
+		        		itemType.quantityGivenAway = 0;
+		        		itemType.promoCode = "";
+		        		itemType.promoName = ""; 
+		        		if (dw.catalog.ProductInventoryMgr.getInventoryList().getRecord(itemType.itemNumber).isPreorderable()) {
+		        			itemType.preOrderBackOrderHandling = 'preorder';
+		        		} else if (dw.catalog.ProductInventoryMgr.getInventoryList().getRecord(itemType.itemNumber).isBackorderable()) {
+		        			itemType.preOrderBackOrderHandling = 'backorder';
+		        		} else {
+		        			itemType.preOrderBackOrderHandling = 'none';
+		        		}
+		
+						//save the church rewards data.
+						if (dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')) {
+							itemType.churchRewardsPointsGained = item.custom.ChurchRewardsPointsGained==null?0:item.custom.ChurchRewardsPointsGained;
+			        		itemType.churchRewardsPointsRedeemed = item.custom.ChurchRewardsPointsRedeemed==null?0:item.custom.ChurchRewardsPointsRedeemed;  						
+						}		
+					
+		        		//save the promotional data
+		        		if (!empty(item.priceAdjustments)) {
+		    				createOrder.opportunity.hasDiscounts = true;
+		    				//save the campaign id        			
+		        			if (!empty(item.priceAdjustments[0].campaignID)) {
+		        				itemType.promoCode = item.priceAdjustments[0].campaignID;
+		        			}
+		        			if (!empty(item.priceAdjustments[0].lineItemText)) {
+		        				itemType.promoName = item.priceAdjustments[0].lineItemText;
+		        			} 
+
+							/*****************************************************************************************
+							 BEGIN CODE FOR BOGO HANDLING
+							*****************************************************************************************/
+		        			//save the quantity given away
+					        //for free items
+		        			if (item.netPrice.value == 0) {
+		        				itemType.quantityGivenAway = item.quantityValue;
+		        			//for BOGO or 100% discount
+		        			} else {
+								var pa;
+						        for( var a = 0; a < item.priceAdjustments.size(); a++ ) {
+						        	pa = item.priceAdjustments[a];
+						        	if (!empty(pa) && !empty(pa.promotion) && !empty(pa.promotion.custom) && !empty(pa.promotion.custom.PromotionType) && pa.promotion.custom.PromotionType=='BOGO') {
+						        		itemType.quantityGivenAway = pa.quantity;
+						        		totalPriceOfBOGODiscounts += (pa.netPrice.value*-1);
+						        	} else if (!empty(pa) && !empty(pa.promotion) && !empty(pa.promotion.custom) && !empty(pa.promotion.custom.PromotionType) && pa.promotion.custom.PromotionType=='100PercentDiscount') {
+						        		itemType.quantityGivenAway = pa.quantity;
+						        		//totalPriceOfBOGODiscounts += (pa.netPrice.value*-1);
+						        	}
+						        }          			
+		        			}
+							/*****************************************************************************************
+							 END CODE FOR BOGO HANDLING
+							*****************************************************************************************/      			     			
+		        		}
+		        		
+		        		//save line item discount data
+		        		itemType.priceAfterDiscount = 0;
+		        		itemType.priceBeforeDiscount = 0;
+		        		itemType.priceOfDiscount = 0;
+		        		itemType.priceOfDiscount = !empty(item.basePrice.value-(item.adjustedNetPrice.value/item.quantityValue))?item.basePrice.value-(item.adjustedNetPrice.value/item.quantityValue):0;
+		       			
+		    			//save the line type       		
+		        		if (itemType.itemNumber == "69391" || itemType.itemNumber == "69315" || itemType.itemNumber == "69323" || itemType.itemNumber == "69331" || itemType.itemNumber == "69340" || itemType.itemNumber == "69358" || itemType.itemNumber == "69366" || itemType.itemNumber == "69374" || itemType.itemNumber == "69382" || itemType.itemNumber == "73875" || itemType.itemNumber == "73883" || itemType.itemNumber == "76179" || itemType.itemNumber == "76187" || itemType.itemNumber == "76195" || itemType.itemNumber == "76208" || itemType.itemNumber == "76988" || itemType.itemNumber == "76996" || itemType.itemNumber == "77489" || itemType.itemNumber == "77497" || itemType.itemNumber == "77577" || itemType.itemNumber == "78140" || itemType.itemNumber == "78158" || itemType.itemNumber == "81584" || itemType.itemNumber == "81592" || itemType.itemNumber == "81605" || itemType.itemNumber == "80987" || itemType.itemNumber == "81576" || itemType.itemNumber == "83161" || itemType.itemNumber == "83601") {
+			        		itemType.lineType = 'ND - Non-Stock Downloadable';
+			        	} else if ((!empty(item.product.custom.downloadable) && item.product.custom.downloadable) || (!empty(item.product.custom.LineType) && item.product.custom.LineType == 'ND - Non-Stock Downloadable')) {
+			        		itemType.lineType = 'ND - Non-Stock Downloadable';
+		        		} else if (itemType.itemNumber == "34340" || itemType.itemNumber == "46324" || itemType.itemNumber == "57584" ) {	
+			        		itemType.lineType = 'D - Direct Ship';
+			        	} else if (itemType.itemNumber == "112096" || itemType.itemNumber == "85149" || itemType.itemNumber == "85131" || itemType.itemNumber == "91523" || itemType.itemNumber == "91549" || itemType.itemNumber == "106010" || itemType.itemNumber == "109527" ) {	
+			        		itemType.lineType = 'SB - Subscription';
+		        		} else{	
+			        		itemType.lineType = 'S - Stock Inventory Item';
+		        		}
+		        		itemArray.push( itemType );
+					}	        		
+				}
+        	} else if ((item instanceof ShippingLineItem || item instanceof ProductShippingLineItem) && dw.system.Site.getCurrent().ID != 'AwanaCA') {
+				/*****************************************************************************************************
+				 BEGIN SPLIT ORDER CODE
+				*****************************************************************************************************/
+				if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !empty(args.SendingSplitOrder) && args.SendingSplitOrder) {     
+				} else { 
+				/*****************************************************************************************************
+				 END SPLIT ORDER CODE
+				*****************************************************************************************************/							
+					var shippingBeforeDiscount = Math.abs(item.getPrice().value); 
+	        		shippingAmount = shippingAmount + Math.abs(item.getAdjustedPrice().value)!=null?shippingAmount + Math.abs(item.getAdjustedPrice().value):Math.abs(item.getPrice().value);
+	        		var shippingDiscount = shippingBeforeDiscount-Math.abs(item.getAdjustedPrice().value);
+				}
+        	} else if (item instanceof PriceAdjustment && item.promotion.promotionClass == 'ORDER') {
+	      		totalPriceOfOrderLevelDiscounts = totalPriceOfOrderLevelDiscounts + item.priceValue;
+	      		campaignID = item.campaignID;
+	      		campaignName = item.lineItemText;
+        	}
+		}
+
+		//add order-level discount
+		if (totalPriceOfOrderLevelDiscounts != 0) {
+			itemType = new webref.WSInputParamsOpportunityOpportunityLineItem();
+			itemType.itemNumber = dw.system.Site.getCurrent().getCustomPreferenceValue('DiscountProductCode');
+			itemType.unitPrice = totalPriceOfOrderLevelDiscounts;
+			itemType.quantity = 1;
+	    	itemType.lineType = 'N - Non-Stock';
+	    	itemType.priceAfterDiscount = 0;
+	    	itemType.priceBeforeDiscount = 0;
+	    	itemType.priceOfDiscount = 0;
+	    	itemType.promoCode = campaignID;
+	    	itemType.promoName = campaignName;
+	    	itemType.quantityGivenAway = 0;
+	       	itemType.churchRewardsPointsGained = 0;
+			itemType.churchRewardsPointsRedeemed = 0; 
+			itemType.preOrderBackOrderHandling = 'none'
+			itemArray.push( itemType );  
+		}
+
+		if (dw.system.Site.getCurrent().ID != 'AwanaCA') {
+			//Add tax as a line item
+			itemType = new webref.WSInputParamsOpportunityOpportunityLineItem();
+			itemType.itemNumber = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxProductCode');
+			/*****************************************************************************************************
+			 BEGIN SPLIT ORDER CODE
+			*****************************************************************************************************/
+			if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !empty(args.SendingSplitOrder) && args.SendingSplitOrder) {
+				itemType.unitPrice = 0;
+			} else { 
+			/*****************************************************************************************************
+			 END SPLIT ORDER CODE
+			*****************************************************************************************************/				  			
+				itemType.unitPrice = order.getTotalTax().value;
+			}
+			itemType.quantity = 1;
+	    	itemType.lineType = 'T - Text Line';
+	    	itemType.priceAfterDiscount = 0;
+	    	itemType.priceBeforeDiscount = 0;
+	    	itemType.priceOfDiscount = 0;
+	    	itemType.promoCode = "";
+	    	itemType.promoName = "";
+	    	itemType.quantityGivenAway = 0;
+	       	itemType.churchRewardsPointsGained = 0;
+			itemType.churchRewardsPointsRedeemed = 0; 
+			itemType.preOrderBackOrderHandling = 'none'
+			itemArray.push( itemType );
+		}
+
+		//Add shipping as a line item
+		itemType = new webref.WSInputParamsOpportunityOpportunityLineItem();
+		itemType.itemNumber = dw.system.Site.getCurrent().getCustomPreferenceValue('ShippingProductCode');
+		itemType.quantity = 1;
+		/*****************************************************************************************************
+		 BEGIN SPLIT ORDER CODE
+		*****************************************************************************************************/
+		if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && !empty(args.SendingSplitOrder) && args.SendingSplitOrder) {
+			itemType.unitPrice = 0;
+		} else { 
+		/*****************************************************************************************************
+		 END SPLIT ORDER CODE
+		*****************************************************************************************************/			
+			itemType.unitPrice = shippingAmount>=0?shippingAmount:0;
+		}	
+    	itemType.lineType = 'F - Freight';
+    	itemType.priceAfterDiscount = 0;
+    	itemType.priceBeforeDiscount = !empty(shippingBeforeDiscount)?shippingBeforeDiscount:0;
+    	itemType.priceOfDiscount = !empty(shippingDiscount)?shippingDiscount:0;
+    	itemType.promoCode = "";
+    	itemType.promoName = "";
+    	itemType.quantityGivenAway = 0;
+    	itemType.churchRewardsPointsGained = 0;
+		itemType.churchRewardsPointsRedeemed = 0;
+		if (!empty(order.allShippingPriceAdjustments)) {
+			createOrder.opportunity.hasDiscounts = true;
+			if (!empty(order.allShippingPriceAdjustments[0].lineItemText)) {
+				itemType.promoName = order.allShippingPriceAdjustments[0].lineItemText;
+			}					
+		} 	
+		itemType.preOrderBackOrderHandling = 'none'
+	  	itemArray.push( itemType );  	
+
+		//add any order-level promos
+		var promos : dw.util.Collection = order.getPriceAdjustments();
+
+		createOrder.opportunity.opportunityLineItem = itemArray;
+		
+		//Get order record from system object Order
+		if (order.customer.registered) {
+			if (order != null) {
+				if (!empty(order.customer.profile)) {
+					if (order.customer.profile.custom.CustomerType == "Individual") {
+						createOrder.opportunity.accountID = order.customer.profile.custom.SFAccountID;
+					} else {
+						createOrder.opportunity.accountID = order.customer.profile.custom.SFChurchAccountID;
+					}		
+					createOrder.opportunity.loginEMail = order.customer.profile.email;
+					createOrder.opportunity.customerType = order.customer.profile.custom.CustomerType;			
+				}
+				//get SFDC billing address ID
+				if (order.custom.SFDCBillingAddressID != null && order.custom.SFDCBillingAddressID != "") {
+					createOrder.opportunity.billingAddressID = order.custom.SFDCBillingAddressID;
+				}
+				//get SFDC shipping address ID
+				if (order.custom.SFDCShippingAddressID != null && order.custom.SFDCShippingAddressID != "") {
+					createOrder.opportunity.shippingAddressID = order.custom.SFDCShippingAddressID;
+				}								
+			}
+		} else {
+			createOrder.opportunity.customerType = "Guest";
+			createOrder.opportunity.loginEMail = order.customerEmail;
+		}
+
+		//create order in SFDC
+		var response = stub.process_Opps(createOrder);
+		if (response[0].success == true) {
+			order.externalOrderNo = response[0].opportunityName;
+		} else {
+			Logger.error(response[0].errorMsg);
+			args.errorMessage = response[0].errorMsg;
+			//Opp name could be blank or could be order number
+			//order.externalOrderNo = response[0].opportunityName;
+			return PIPELET_ERROR;
+		}
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 	return PIPELET_NEXT;
+}
+
+function formatNumeric(inStr : String) : String
+{
+	if(inStr == null)
+		inStr = "";
+	
+	var badc : RegExp = /[\"\ \x\X\e\E\x\X\t\T\-\ext\EXT]/g;
+	var tmpStr : String = inStr.replace(badc, "");
+
+	var nonAlphaNumPunc : RegExp = /[^\.\w\s\d,!?:;()<>@%$#&-]/g;
+	return tmpStr.replace(nonAlphaNumPunc, "");
+
+}
+

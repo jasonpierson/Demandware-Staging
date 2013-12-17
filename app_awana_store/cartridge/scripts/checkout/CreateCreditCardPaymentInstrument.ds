@@ -1,0 +1,90 @@
+/**
+ * Creates a credit card payment instrument from the given credit card form
+ * for the given basket. If any error occurs the pipelet returns PIPELET_ERROR with
+ * no payment instrument being created. If the creation succeeded the script returns 
+ * the newly created payment instrument.
+ *
+ * Only single credit card payments are allowed. Therefore any existing credit card
+ * is removed from the basket once the new credit card payment was successfully created. 
+ *
+ *  @input Basket : dw.order.Basket The basket.
+ *  @input CreditCardForm : dw.web.FormGroup The credit card form.
+ *  @output PaymentInstrument : dw.order.PaymentInstrument The created payment instrument.
+ */
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.util );
+importPackage( dw.value );
+importPackage( dw.web );
+
+importScript("checkout/Utils.ds");
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+    var basket : Basket = pdict.Basket;
+	var creditCardForm : FormGroup = pdict.CreditCardForm;
+
+	// verify that we have a basket and a valid credit card form
+	if( basket == null || !creditCardForm.valid )
+	{
+		return PIPELET_ERROR;
+	}
+
+	// remove existing credit cards from the basket
+	removeExistingCreditCards( basket );
+
+	// remove existing purchase orders from the basket
+	removeExistingPurchaseOrders( basket );
+	
+	// calculate the amount to be charged for the credit card
+	var amount = calculateNonGiftCertificateAmount( basket );
+
+	// create a payment instrument for this credit card
+	var paymentInstr : PaymentInstrument = basket.createPaymentInstrument( PaymentInstrument.METHOD_CREDIT_CARD, amount );
+
+	// copy the credit card details to the payment instrument
+	paymentInstr.setCreditCardHolder( creditCardForm.owner.value );
+	paymentInstr.setCreditCardNumber( creditCardForm.number.value );
+	paymentInstr.setCreditCardType( creditCardForm.type.value );
+	paymentInstr.setCreditCardExpirationMonth( creditCardForm.month.value );
+	paymentInstr.setCreditCardExpirationYear( creditCardForm.year.value );
+
+	paymentInstr.custom.cscNumber = creditCardForm.cvn.value;
+	
+	pdict.PaymentInstrument = paymentInstr;
+    return PIPELET_NEXT;
+}
+
+/** 
+ * Determines if the basket already contains a credit card payment 
+ * instrument and removes it from the basket.
+ */
+function removeExistingCreditCards( basket : Basket )
+{
+	// get all credit card payment instruments
+	var ccPaymentInstrs : Collection = basket.getPaymentInstruments( PaymentInstrument.METHOD_CREDIT_CARD );
+	var iter : Iterator = ccPaymentInstrs.iterator();
+	var existingPI : OrderPaymentInstrument = null;
+
+	// remove them
+	while( iter.hasNext() )
+	{
+		existingPI = iter.next();
+		basket.removePaymentInstrument( existingPI );
+	}
+}
+
+function removeExistingPurchaseOrders( basket : Basket )
+{
+	// get all credit card payment instruments
+	var ccPaymentInstrs : Collection = basket.getPaymentInstruments("PURCHASE_ORDER");
+	var iter : Iterator = ccPaymentInstrs.iterator();
+	var existingPI : OrderPaymentInstrument = null;
+
+	// remove them
+	while( iter.hasNext() )
+	{
+		existingPI = iter.next();
+		basket.removePaymentInstrument( existingPI );
+	}
+}

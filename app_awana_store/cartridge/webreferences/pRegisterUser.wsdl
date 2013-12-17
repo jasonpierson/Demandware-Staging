@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterUser" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns:tns1="http://www.approuter.com/connectors/request/11/" xmlns="" xmlns:tns2="http://www.approuter.com/connectors/response/11/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/request/11/" xmlns:tns="http://www.approuter.com/connectors/request/11/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="LoginRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="UserName" type="xs:string"/>
+                            <xs:element name="Password" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RegisterUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="EMail" type="xs:string"/>
+                            <xs:element name="Password" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/response/11/" xmlns:tns="http://www.approuter.com/connectors/response/11/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="LoginResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RegisterUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element name="AccountID" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterUserRequest">
+    <wsdl:part name="request" element="tns1:RegisterUserRequest"/>
+  </wsdl:message>
+  <wsdl:message name="RegisterUserResponse">
+    <wsdl:part name="response" element="tns2:RegisterUserResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="RegisterUserPort">
+    <wsdl:operation name="RegisterUser">
+      <wsdl:input message="tns:RegisterUserRequest"/>
+      <wsdl:output message="tns:RegisterUserResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterUserBinding" type="tns:RegisterUserPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterUser">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterUserService">
+    <wsdl:port name="RegisterUserPort" binding="tns:RegisterUserBinding">
+      <soap:address location="https://ci4.awana.org:443/pRegisterUser"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

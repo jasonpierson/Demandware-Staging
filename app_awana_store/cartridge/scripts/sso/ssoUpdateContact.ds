@@ -1,0 +1,76 @@
+/**
+*
+*	@input contactID : String
+*   @input emailAddress : String 
+*   @input firstName : String 
+*   @input lastName : String 
+*   @input password : String 
+*	@output errorMessage : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var outputMsg : String;
+	
+	try {
+		if(dw.system.Site.getCurrent().ID == 'kidzmatter') {
+		    var webref : WebReference = webreferences.KMUpdateSFDCContactDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pKMUpdateSFDCContact;
+		    }		    
+		} else {
+		    var webref : WebReference = webreferences.UpdateSFDCContactDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pUpdateSFDCContact;
+		    }			
+		}
+		var stub : Stub = webref.defaultService; 
+		
+		if(dw.system.Site.getCurrent().ID == 'kidzmatter') {
+			var updateContact:WebReference = new webref.KMUpdateSFDCContactRequest();
+			updateContact.request = new webref.KMUpdateSFDCContactRequestRequest();
+		} else {
+			var updateContact:WebReference = new webref.UpdateSFDCContactRequest();
+			updateContact.request = new webref.UpdateSFDCContactRequestRequest();			
+		}
+		
+		updateContact.request.password = args.password;
+		updateContact.request.firstName = args.firstName;
+		updateContact.request.lastName = args.lastName;
+		updateContact.request.EMail = args.emailAddress;
+		updateContact.request.SFDCContactID = args.contactID;
+		
+		if(dw.system.Site.getCurrent().ID == 'kidzmatter') {
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pKMUpdateSFDCContact(updateContact);
+			} else {
+				var response = stub.KMUpdateSFDCContact(updateContact);
+			}			
+		} else {
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pUpdateSFDCContact(updateContact);
+			} else {
+				var response = stub.updateSFDCContact(updateContact);
+			}
+		}
+		
+		if (!response.response.success) {
+			args.errorMessage = response.response.message;
+		}
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 
+   	return PIPELET_NEXT;
+
+}

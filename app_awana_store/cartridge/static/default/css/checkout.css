@@ -1,0 +1,276 @@
+/* CHECKOUT
+--------------------------------------------------------------------------------------- */	
+.pt_checkout .breadcrumb {display: none;}
+.pt_checkout .content { width:738px; float:left; background:green; margin-right:20px; }
+.pt_checkout .rightcolumn { width:200px; float:left; }
+.checkout { }
+/*.checkoutbilling, .checkoutshipping, .checkoutmultishipping, .checkoutplaceorder, .orderconfirmation { padding-right: 5px; }*/
+.checkoutshipping form { width:730px; border:solid 2px #FEF0C8; -moz-border-radius:8px; -webkit-border-radius:8px; padding:2px;margin-bottom:50px; }
+.checkoutplaceorder { width:730px; border:solid 2px #FEF0C8; -moz-border-radius:8px; -webkit-border-radius:8px; padding:2px; }
+.placeorder_footer { width:738px; }
+.checkoutshipping .addressform .header { -moz-border-radius-topleft:8px; -moz-border-radius-topright:8px; width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkoutshipping #shippingmethodform .header { width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkoutshipping .addressform .container { padding:20px; }
+.checkoutshipping .addressform .container .label { width:120px; text-align:left;  }
+.checkoutshipping .addressform .container .value select { width:250px;margin-bottom:15px; }
+.checkoutshipping .addressform .container .value input { width:245px;margin-bottom:15px; }
+.checkoutshipping .addressform .container .value .checkbx { width:20px; }
+.checkoutshipping .continuecheckoutbutton {position:absolute;right:216px;margin-top:25px}
+/*.checkoutplaceorder tr.tablerow td { border-bottom:0px; }*/
+.labaltext { }
+.labeltextbold { font-weight:bold; }
+.checkoutbilling { width:730px; border:solid 2px #FEF0C8; -moz-border-radius:10px; -webkit-border-radius:10px; padding:2px;margin-bottom:50px;}
+.checkoutbilling .addressform .header { -moz-border-radius-topleft:4px; -moz-border-radius-topright:4px; width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkoutbilling #shippingmethodform .header { width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkoutbilling .addressform .container { padding:20px; }
+.checkoutbilling .addressform .container .label { width:120px; text-align:left; }
+.checkoutbilling .addressform .container .value select { width:250px;margin-bottom:15px; }
+.checkoutbilling .addressform .container .value input {width:245px;margin-bottom:15px;}
+.checkoutbilling .addressform .container .value .checkinput { width:20px; }
+.checkoutbilling .giftcertcouponform .header { width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkoutbilling .paymentmethodform .header { width:100%; height:40px; background:#FFC324; font-size:16px; font-weight:bold; color:#D95225; line-height:40px; }
+.checkout .continuecheckout {text-align: right;}
+.checkout .addressform {margin:0;}		
+.checkout .addresslist {margin: 5px 0px 15px 0px;}
+.checkout .addresslist select {width:372px;}
+.checkout .selectaddress .selectaddressstar {color: black;font-size:1.2em;}
+.checkout .selectaddress .selectaddressmessage {color: gray;font-size:1.1em;}
+.checkout .emailsignup .value {width:300px;}
+.checkout .emailsignup label {float:left;font-size:1.0em;font-weight:normal;margin: -14px 0px 0px 18px;text-align:left;}
+.checkout .emailsignup .value a {display:block;margin: 0 0 0 18px;}
+.checkout .firstname {clear:both;padding-top:15px;}
+.giftcertcouponform .couponcode {margin-top:15px;}
+/***** Checkout Login *****/
+.checkoutlogin {margin: 5px 0px 0px 50px;width:700px;}
+.guestcontinue {margin:25px 75px 0px 25px;text-align:right;}
+/***** Shipping *****/
+.checkout .addressoptions {margin:0px 0px;}
+.checkout .addressoptions .checkbox {display:inline;margin: 0px 20px 0px 0px;}
+.checkout .addressoptions .checkbox label {font-weight: normal;line-height: 14pt;position:relative;top:-5px;}
+.checkout .giftmessage label {font-weight: normal;line-height: 14pt;}
+.checkout .giftmessagetext textarea {height: 85px;width: 300px;}
+.checkout .shippingmethods { padding:20px; }
+.checkout .shippingmethods label {}
+.checkout .shippingmethods .shippingdescription {color:#666666; margin-left:5px;}
+.checkout .shippingmethods .shippingpromos {color: red; padding-left: 18px;}
+.checkout .shippingmethods .standardshipping {text-decoration: line-through;}
+.checkout .shippingmethods .discountshipping {color: red;}
+.checkout .paymentmethods { padding:20px; }
+.checkout .paymentform { padding:20px; }
+.checkout .couponform { padding:20px; }
+.checkout #paymentmethods .couponform .couponcode .label { width:120px; text-align:left; }
+.checkout #paymentmethods .couponform .couponcode .value input { width:200px; }
+.checkout .giftcertcouponform .couponform .couponcode button { background:url(../images/buttons/btn-apply.gif) no-repeat; height:20px; width:54px; }
+/* shipping method details link tooltip */ 
+.shippingdetails {float:right; text-align: right; width: 250px;}
+.shippingdetails .label {float:left;text-align:right;width:200px;}
+.shippingdetails .value {float:none;text-align:right;}
+.shippingdetails .surchargeproduct {font-weight:normal;padding-bottom:3px;}
+.shippingdetails .surchargeqty {font-weight:bold;margin-right:3px;}
+.shippingdetails .shippingmethodcost {padding-bottom:3px;}
+.shippingdetails .promo {color: red;padding-bottom:3px;}
+.shippingdetails .shippingtotal {border-top:1px solid black;font-size:1.2em;padding:3px 0 0;}
+.checkout .shiptomultiple {margin: 5px 0px 5px 12px;}
+.checkout .continuecheckout button.shiptomultiplebutton span {text-transform:uppercase;}
+.checkout .shippingpromotions {margin:10px 0px;color:red;font-size:1.2em;font-weight:bold;position:relative;}
+/***** Multiple Shipping Addresses *****/
+.checkout table.multishipaddressestable {margin-bottom:50px;width: 100%;}
+.checkoutmultishipping td {padding:2px 4px 2px 16px;vertical-align:top;}
+.checkoutmultishipping td.detailscolumn .name {font-weight:normal;}
+.checkoutmultishipping td.quantitycolumn {padding-top:4px;}
+.checkoutmultishipping td.shippingaddress select.selectbox {width:250px;}
+.checkoutmultishipping td.shippingaddress .editaddress {text-align: right;}
+.checkoutmultishipping td.shippingaddress .editaddress a {color: black;}
+.checkoutmultishipping tr.rowgiftcert {border-bottom:1px dashed #898989;}
+.checkoutmultishipping tr.rowgiftcert td {padding:2px 4px 8px 16px;}
+/***** Billing/Payment Methods *****/
+.checkout .creditcardlist {margin: 5px 0px 10px 123px;height:30px;}
+.checkout .selectcreditcard .selectcreditcardstar {color: black;font-size:1.2em;}
+.checkout .selectcreditcard .selectcreditcardmessage {color: gray;font-size:1.1em;}
+.checkout .creditcardlist select {width:400px;}
+.checkout .paymentmethods  {}
+.checkout .paymentmethods label { vertical-align: middle; margin-left: 10px;}
+.checkout .paymentmethods input {vertical-align: middle; }
+.checkout .paymentmethods label span.text {display: none;}
+.checkout #paymentmethods .creditcardpayment .creditcardlist select { width:250px;margin-bottom:15px}
+.checkout #paymentmethods .creditcardpayment .cardtype select { width:250px;margin-bottom:15px}
+.checkout #paymentmethods .creditcardpayment input {width:245px;margin-bottom:15px}
+.checkout #paymentmethods .creditcardpayment .expirationdate .month .value { margin:0 35px 15px 0; }
+.checkout #paymentmethods .creditcardpayment .expirationdate .month .value select { width:112px; }
+.checkout #paymentmethods .creditcardpayment .expirationdate .year .value select { width:100px; }
+.checkout #paymentmethods .creditcardpayment input.checkinput { width:20px; }
+.checkout #paymentmethods .creditcardpayment .checkbox label {position:relative;top:-5px}
+.checkout .checkoutbilling .continuecheckoutbutton {position:absolute;right:216px;margin-top:25px}
+.checkout .paymentform {display: none;}
+.checkout #PaymentMethod_CREDIT_CARD .label { width:120px; }
+/* Coupons (Billing) */
+.couponform .redemption {margin-left:154px;}
+.couponform .redemption .success {color:red;font-size:1.1em;font-weight:bold;}
+/* Gift Certificate */
+.checkout .giftcertcouponform .requiredindicator {display:none;}
+.checkout .giftcertform .helptext {border-top: 1px dashed black;}
+.checkout .giftcertform {margin: 15px 0px 25px 0px;}
+.checkout .giftcertfield .balance,.giftcertfield .redemption {color:red;font-weight:bold;margin: 0 0 0 153px;}
+.checkout .giftcertfield .redemption a {color:red;font-weight:normal;text-decoration: none;}
+.checkout .giftcertfield .redemption a span {margin: 0 0 0 3px;text-decoration:underline;}
+.checkout .helptext {}
+.checkout .helptext p {margin: 5px 0px 5px 0px;}
+/***** Checkout Summary *****/
+.checkoutminisummary { border:solid 2px #D95225; padding:10px; margin-left:10px; -moz-border-radius:10px; -webkit-border-radius:10px; width:198px; }
+.checkoutminisummary h2 {font-size: 1.3em; line-height: 30px;}
+.checkoutminisummary .summaryproduct .productlineitem { width:130px; }
+.pt_checkout #rightcolumn .minishipments { font-size:11px; margin-left:10px;  }
+.pt_checkout #rightcolumn .minishipments .header { font-size:14px; font-weight:bold; color:#D95225; border-top:solid 1px #FEF0C8; border-bottom:solid 1px #FEF0C8; padding:3px; width:218px; }
+.pt_checkout #rightcolumn .minishipments .header .edit { font-size:12px; font-weight:normal; margin-top:1px; }
+.pt_checkout #rightcolumn .minishipments .details { font-size:11px; line-height:18px; margin-left:3px; }
+.pt_checkout #rightcolumn .minibillinginfo { font-size:11px; margin-left:10px;  }
+.pt_checkout #rightcolumn .minibillinginfo .minibillingaddress .header { font-size:14px; font-weight:bold; color:#D95225; border-top:solid 1px #FEF0C8; border-bottom:solid 1px #FEF0C8; padding:3px; width:218px; }
+.pt_checkout #rightcolumn .minibillinginfo .minibillingaddress .header .edit { font-size:12px; font-weight:normal; margin-top:1px; }
+.pt_checkout #rightcolumn .minibillinginfo .minibillingaddress .details { font-size:11px; line-height:18px; margin-left:3px; }
+.pt_checkout #rightcolumn .minibillinginfo .minipaymentinstrument .header { font-size:14px; font-weight:bold; color:#D95225; border-top:solid 1px #FEF0C8; border-bottom:solid 1px #FEF0C8; padding:3px; width:218px; }
+.pt_checkout #rightcolumn .minibillinginfo .minipaymentinstrument .header .edit { font-size:12px; font-weight:normal; margin-top:1px; }
+.pt_checkout #rightcolumn .minibillinginfo .minipaymentinstrument .details { font-size:11px; line-height:18px; margin-left:3px; }
+.checkoutsummaryheader {color:#D95225; font-size:16px; font-weight:bold; padding:5px 0 0 10px; }
+.checkoutsummaryheader a.orderedit {color:#D95225; float: right; font-size:12px; font-weight:normal; margin: 4px 10px 0px 0px; }
+.checkoutminisummary .checkoutordertotals, .checkoutminisummary .minishipment, .checkoutminisummary .minibillingaddress, .checkoutminisummary .minipaymentinstrument {margin: 0px 0px 10px 0px;}
+.checkoutminisummary .header  { font-size: 16px; font-weight: bold; margin: 0px 0px 5px 0px; color:#D95225; }
+.checkoutminisummary .header a { color: black; float:right; font-weight: normal; text-decoration:none; }
+.checkoutminisummary .header a:hover {text-decoration: underline;}
+/* Checkout Summary Order Totals */
+.checkoutordertotals .ordertotals {line-height: 1.8em;}
+.checkoutordertotals .ordertotals table.ordertotalstable {width:100%;}
+.checkoutordertotals .ordertotals table.ordertotalstable .label { float:right; }
+.checkoutordertotals .ordertotals table.ordertotalstable .ordertotal .label {font-weight: bold; float:left;}
+.checkoutordertotals .ordertotals .ordertotal .value {font-weight: bold; padding-right: 2px;}	
+.checkoutordertotals .ordertotal {margin-top: 5px; padding: 0px 0px 10px 0px;}
+.checkoutplaceorder .editcart {margin:0 10px 0 0;}
+/***** Place Order *****/	
+.checkoutplaceorder table.placeordertable {width: 100%}
+.checkoutplaceorder table.placeordertable tr.bonusproduct {border-bottom: 1px dashed #898989;margin-top:5px;}
+.checkoutplaceorder table.placeordertable tr.rowcoupons {border-bottom: 1px dashed #898989;}
+.checkoutplaceorder table.placeordertable td {vertical-align:top; padding: 8px 0;}
+.checkoutplaceorder table.placeordertable td.imagecolumn {padding:0px;}
+.checkoutplaceorder table.placeordertable td.imagecolumn img {height:75px;width:75px;}
+.checkoutplaceorder table.placeordertable td.imagecolumn .bonusitem {font-weight:bold;}
+.checkoutplaceorder table.placeordertable td.itemtotalcolumn {padding: 8px 4px 0 0;text-align: right;white-space: nowrap; border-right:solid 1px #FFF0C9;}
+/*.checkoutplaceorder table.placeordertable td.placeorderfooter {background:#CCCCCC;height:20px;}*/
+.checkoutplaceorder table.placeordertable .lineitempricing div {display:inline;}
+.checkoutplaceorder table.placeordertable .attribute {font-size:1.0em;}
+.checkoutplaceorder table.placeordertable .couponapplied {color:red;text-align:left;text-transform:uppercase;}
+.checkoutplaceorder table.placeordertable .lineitempricing .price {font-size:1.0em;}
+.checkoutplaceorder table.placeordertable .promo  {color:red;font-weight:bold;margin:0px 0px 0px 5px;}
+/*.checkoutplaceorder table.placeordertable .editdetails a {color:black;}*/
+/*.placeordertotals {float:right;width:250px;}
+.checkoutplaceorder .ordertotals {float:right;line-height:1.8em;margin:5px 0px 15px;}
+.checkoutplaceorder .ordertotals .label {width:150px;}
+.checkoutplaceorder .ordertotals .value {width:auto;}*/
+.checkoutplaceorder .product { width:240px; margin:0; padding:0; }
+.checkoutplaceorder .product a { float:none; margin:0; }
+.checkoutplaceorder td div.quantity { padding:0 10px 0 10px; }
+.checkoutplaceorder .orderdiscount { float:right; font-size:1.2em; margin:5px 4px; }
+.placeordertotals .ordertotal .label {font-weight: bold;} .ordertotals .ordertotal { margin-top: 5px; padding: 0px 0px 10px 0px; }
+.placeordertotals .ordertotal .label {font-weight: bold;} .ordertotals .ordertotal .label { font-weight: bold; }
+.placeordertotals .ordertotals {line-height: 1.8em;}
+.checkoutplaceorder td.detailscolumn { border-right:solid 1px #FFF0C9; }
+.checkoutplaceorder .onorder { margin-top:4px; color: #cc0000; font-weight: bold; display: block; }
+.checkoutplaceorder .itemtotals {float:right;}
+.checkoutplaceorder .itemtotals .label {float:none;text-align:right;width:auto;}
+.checkoutplaceorder .itemtotals .value {font-weight:bold; float:none; text-align:right;}
+.checkoutplaceorder .itemtotals .promo {font-size:1em;font-weight:normal;}
+.checkoutplaceorder .itemtotals .standardprice .value {text-decoration:line-through;}
+.checkoutplaceorder .itemtotals .salesprice {color:#D75026;}
+.checkoutplaceorder .itemtotals .promoprice {color:#D75026;}
+.checkoutplaceorder .itemtotals .itemtotal {color:#D75026; font-weight:bold; border-top:1px solid #FFF0C9; padding:3px 0 0;}
+.checkoutplaceorder td.quantitycolumndetails {border-right:1px solid #FFF0C9; width: 105px;padding: 8px 8px 10px 4px;vertical-align: top;}
+/***** ORDER CONFIRMATION (confirmation.isml) *****/
+.orderconfirmation {width:745px;}
+.orderconfirmation .orderheader {background-color:transparent;font-size:1.2em;margin:0;}
+.orderconfirmation .thankyoumessage {width: 600px;margin:0;}
+.orderconfirmation .thankyoumessage h2 {font-size:1.6em;color:#D75026;}
+.orderconfirmation .thankyoumessage p {font-size: 1.2em;font-weight:normal;}
+.orderconfirmation .thankyoumessage .printit {margin:15px 0;width:91px;height:21px;background:url(../images/buttons/btn-print-receipt.gif) 0 0 no-repeat;}
+.orderconfirmation .thankyoumessage .printme span {display:none;}
+.orderconfirmation .thankyoumessage a.printme { width:91px; height:21px; display:block; cursor:pointer; }
+.orderconfirmation .orderfooter {font-size: 10pt; line-height: 12pt; color: rgb(58, 58, 58);}
+.orderpayment h5 {height:28px;background-color:#ffc324;margin:3px;padding:10px 0 0 15px;color:#d75225;font-size:13px;font-weight:bold;-moz-border-radius-topleft:8px;-webkit-border-top-left-radius:8px;-moz-border-radius-topright:8px;-webkit-border-top-right-radius:8px;}
+/* Order Confirmation Create Account */
+.pt_orderconfirmation h3 {background-color:transparent;font-size:1.8em;font-weight: bold;padding:0 0 0 8px;}
+.pt_orderconfirmation .createaccount {-moz-border-radius: 8px; border:2px solid #FFF0C7; margin:0 0 10px 8px; padding: 8px;}
+.pt_orderconfirmation .createaccount p {font-size:1.1em;font-weight:bold;margin:0px;}
+.pt_orderconfirmation .createaccount .formfield{margin:3px 0 0 0;}
+.pt_orderconfirmation .createaccount .firstname{display:none;}
+.pt_orderconfirmation .createaccount .lastname{display:none;}
+.pt_orderconfirmation .createaccount .caption{display:none;}
+.pt_orderconfirmation .createaccount .label {float:none;font-size:1.1em;text-align:left;}
+.pt_orderconfirmation .createaccount .actions {margin:15px 0 15px 0;}
+.pt_orderconfirmation .createaccount .question select { width:175px; } 
+.pt_orderconfirmation .createaccount input.textinput, .pt_orderconfirmation .createaccount input.textinputpw {margin:0;width: 170px;}
+/* Order Confirmation Church Rewards */
+.pt_orderconfirmation .churchrewards {float:right;margin-top:129px;}
+/***** Checkout Progress Indicator *****/
+.checkoutprogressindicator { width:738px; }
+.checkoutprogressindicator .step1 { background:url(../images/checkout/step1-shipping.gif) no-repeat; width:244px; height:56px; display:block; float:left; margin-right:3px; }
+.checkoutprogressindicator .step1 a { display:block; width:244px; height:56px; }
+.checkoutprogressindicator .step2-off { background:url(../images/checkout/step2-billing-off.gif) no-repeat; width:243px; height:56px; display:block; float:left; margin-right:3px; }
+.checkoutprogressindicator .step2-on { background:url(../images/checkout/step2-billing-on.gif) no-repeat; width:243px; height:56px; display:block; float:left; margin-right:3px; }
+.checkoutprogressindicator .step2-on a { display:block; width:243px; height:56px; }
+.checkoutprogressindicator .step3-off { background:url(../images/checkout/step3-placeorder-off.gif) no-repeat; width:244px; height:56px; display:block; float:left; }
+.checkoutprogressindicator .step3-on { background:url(../images/checkout/step3-placeorder-on.gif) no-repeat; width:244px; height:56px; display:block; float:left; }
+.checkoutprogressindicator .step3-on a { display:block; width:244px; height:56px; }
+/*
+.checkoutprogressindicator a {color:black;text-decoration:none;}
+.checkoutprogressindicator .label {font-size: 1.2em;float:none;font-weight:bold;width:auto;}
+.checkoutprogressindicator .value {font-size: 1.2em;float:none;}
+.checkoutprogressindicator .active {border: 1px solid #CCCCCC;border-bottom: 0px;display: inline;font-weight: bold;margin: 3px 6px 3px 0px;padding: 3px;text-align: center;}
+.checkoutprogressindicator .inactive {background: #efefef;border: 1px solid #dddddd;border-bottom: 0px;display: inline;margin: 3px 6px 3px 0px;padding: 3px;text-align: center;}
+*/
+/* Rewards Sponsor Selection */
+.selectsponsor { width:693px;height:40px;padding-left:40px;line-height:40px;border:2px solid #ffe191;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;background:#fff8e4 url(../images/arrow.png) no-repeat 25px center;font-family: Arial, Helvetica, sans-serif;overflow:hidden;font-size:14px;font-weight:bold;color:#d85226; }
+.selectsponsor a.clickhere {text-decoration:underline;}
+.sponsorsuccess { display:none;width:678px;height:40px;padding-left:55px;line-height:40px;border:2px solid #ffe191;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;background:#fff8e4 url(../images/check_circle.png) no-repeat 25px center;font-family: Arial, Helvetica, sans-serif;overflow:hidden;font-size:14px; }
+.sponsorinfo { width:718px;height:40px;padding-left:15px;line-height:40px;border:2px solid #ffe191;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;background-color:#fff8e4;font-family: Arial, Helvetica, sans-serif;overflow:hidden;font-size:14px; }
+.sponsoractions { display:inline;font-size:11px; }
+.churchname { font-weight:bold; color:#d85226; }
+.colorboxDialogHeader h3.sponsordialogheader {color:#d85226;}
+.sponsorselectiondialog {margin:20px; padding:20px; border:solid 2px #FFC324; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px;}
+.sponsorselectiondialog h2 {color: red;text-align: center;}
+.sponsorselectiondialog form .formfield .label {width: 170px; padding-bottom:15px;}
+.sponsorselectiondialog .actions {margin: 0px;padding:0;text-align:right;}
+.sponsorselectiondialog button#searchBtn {width:69px;height:20px;background:url(../images/buttons/btn-search.gif) 0 0 no-repeat;}
+.sponsorselectiondialog button#searchBtn span {display:none;}
+.sponsorselectiondialog button#cancelBtn {width:58px;height:20px;background:url(../images/buttons/btn-cancel.gif) 0 0 no-repeat;}
+.sponsorselectiondialog button#cancelBtn span {display:none;}
+.churchsearchresults {margin:0;}
+.churchsearchresults h3 {font-size:13px;font-weight:bold;color:#d85226;margin:20px 0 5px;}
+.churchsearchresults .churchresultslist {max-height:284px; overflow:auto;}
+.churchsearchresults .churchresult {border-top:1px solid #fff0c8;padding:20px 0;}
+.churchsearchresults .churchresultinfo {width:70%;float:left;}
+.churchsearchresults .churchresultname {font-weight:bold;}
+.churchsearchresults .churchresultaddress {}
+.churchsearchresults .churchresultselectlink {width:30%;float:left;font-weight:bold;text-align:right;}
+/* ORDER TOTALS - Cost and Discount Details (used in Mini Cart, Cart, Checkout, Order Details)
+--------------------------------------------------------------------------------------- */
+.ordertotals {font-size:1em;text-align:center; }
+.ordertotals .label {text-align: center;  font-weight:normal; margin: 0 3px 0 0;overflow:hidden; }
+.ordertotals .value {overflow:hidden;padding-right: 2px;width:auto;}
+.ordertotals .shippingname {color:#8f969c;}
+/* OTHER PAYMENT METHODS
+--------------------------------------------------------------------------------------- */
+/***** Bill Me Later *****/
+.checkout .billmelater .bmlform {margin: auto;width: 95%;}
+.checkout .bmlbirthday {float:left;width:65%;white-space:nowrap;}
+.checkout .bmlssn {float:left;width:30%;white-space:nowrap;}
+.checkout .billmelater .bmlbirthday .label, .bmlssn .label {text-align:left;width:auto;}
+.checkout .billmelater .bmlbirthday select {margin-right:2px;}
+.checkout .billmelater .day {width: 53px;}
+.checkout .billmelater .month {width: 70px;}
+.checkout .billmelater .year {width: 60px;}						
+.checkout .billmelater .ssn {width: 60px;}	
+.checkout .bmltermsandconditions {overflow: scroll;clear: both;border: 1px solid #CCCCCC;height: 440px;width: 640px;}
+.checkout .bmliagree {margin: 0px 0px 25px 0px;text-align:right;}
+.checkout .bmliagree input.checkinput {vertical-align: top;}
+.checkout .giftcertused {color:#afb845;font-size:1.2em;font-weight:bold;margin:25px 75px;text-align:center;}
+/******SPECIAL MESSAGING*************/
+.nopoboxes {margin-top:0px;margin-left:123px;text-align:left; margin-bottom:15px;}
+
+#dwfrm_singleshipping_shippingAddress_addressFields_address1 {margin-bottom:0;}

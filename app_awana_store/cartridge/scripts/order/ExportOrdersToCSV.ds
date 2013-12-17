@@ -1,0 +1,227 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @input OrdersToExport : dw.util.Iterator
+* @input FileName : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.net );
+importPackage( dw.object );
+importPackage( dw.order );
+
+function execute( args : PipelineDictionary ) : Number
+{
+   (new dw.io.File(dw.io.File.IMPEX +'/src/order/')).mkdirs();
+	var exportFileWriter : StringWriter = new StringWriter();
+	var exportWriter : StringWriter = new StringWriter();
+	
+	//First build the header in the string, this is going to be a tab delimited file
+	exportWriter.write("CustomerNumber\tDemandwareOrderNumber\tProStoresOrderNumber\tBillingFirstName\tBillingLastName\tBillingAddressLine1\tBillingAddressLine2\tBillingCity\tBillingState\tBillingZip\tBillingCountry\tShippingFirstName\tShippingLastName\tShippingAddressLine1\tShippingAddressLine2\tShippingCity\tShippingState\tShippingZip\tShippingCountry\tEMail\tPurchaseOrderLine\tPaymentTerms\tShippingMethod\tOrderDate\tProductNumber\tProductDescription\tQuantity\tUnitPrice\tUnitPriceOfDiscount\tFinalUnitPrice\tPromotionName\tTaxCode\tToBeEMailed\r\n");
+	
+	//Build the detail
+	var CustomerNumber : String;
+	var PaymentType;
+	var PurchaseOrderText : String;
+	var SecondaryOrderNumber : String;
+	var BillingAddressFirstName : String;
+	var BillingAddressLine2 : String;
+	var ShippingAddressFirstName : String;
+	var ShippingAddressLine2 : String;
+	var EMail : String;
+	var TaxCodeIterator : dw.util.SeekableIterator;
+	var TaxCode : object;
+	var ToBeEMailed : String;
+	var OrderDate : String;
+	
+   	var item;
+  	var items : dw.util.Collection;
+  	var i;
+  	var SecondaryOrderNumber : String;
+	var UnitPrice : String;
+	var UnitPriceNum : Number;
+	var Qty : String;
+	var ProductNumber : String;
+	var UnitPriceOfDiscount : String;
+	var PromoName : String;
+	var shippingBeforeDiscount : Number;
+	var ProductDesc : String;
+	var StateTaxCode : String;
+	var FinalUnitPrice : String;
+		
+	var orderList: dw.util.List = args.OrdersToExport.asList();
+	for each(var order:dw.order.Order in orderList)
+	{
+		if (!empty(order))
+		{
+			CustomerNumber = "";
+			PurchaseOrderText = "";
+			SecondaryOrderNumber = "";
+			BillingAddressFirstName = "";
+			BillingAddressLine2 = "";
+			ShippingAddressFirstName = "";
+			ShippingAddressLine2 = "";
+			StateTaxCode = "";
+			ToBeEMailed = "Y";
+			
+			if (!empty(order.customer) && !empty(order.customer.profile) && !empty(order.customer.profile.custom) && !empty(order.customer.profile.custom.AllowCustomerNumberOverride) && order.customer.profile.custom.AllowCustomerNumberOverride && !empty(order.custom.SFMailingAddressBookID)) {
+				CustomerNumber = order.custom.SFMailingAddressBookID;
+			} else if (!empty(order.customer) && !empty(order.customer.profile) && !empty(order.customer.profile.custom) && !empty(order.customer.profile.custom.SFMailingAddressBookID)) {
+				CustomerNumber = order.customer.profile.custom.SFMailingAddressBookID;
+			} else {
+				CustomerNumber = Number(order.customerNo);
+			}
+
+			if (!empty(order.billingAddress.firstName)) {
+				BillingAddressFirstName = order.billingAddress.firstName;
+			}
+			
+			if (!empty(order.billingAddress.address2)) {
+				BillingAddressLine2 = order.billingAddress.address2;
+			}			
+			
+			if (!empty(order.shipments[0].shippingAddress.firstName)) {
+				ShippingAddressFirstName = order.shipments[0].shippingAddress.firstName;
+			}			
+			
+			if (!empty(order.shipments[0].shippingAddress.address2)) {
+				ShippingAddressLine2 = order.shipments[0].shippingAddress.address2;
+			}	
+						
+			if (!empty(order.custom) && !empty(order.custom.SecondaryExternalOrderNo)) {
+				SecondaryOrderNumber = order.custom.SecondaryExternalOrderNo;
+			}	
+			
+			if (!empty(order.customer.profile) && !empty(order.customer.profile.custom) && !empty(order.customer.profile.custom.BillingContactEMail)) {
+				EMail = order.customer.profile.custom.BillingContactEMail;
+			} else {
+				EMail = order.customerEmail;
+			}
+			
+			if (!empty(order.creationDate)) {
+				OrderDate = dw.util.StringUtils.formatDate(order.creationDate, "dd/MM/yyyy");
+			}
+										
+			for each(var payment :OrderPaymentInstrument in order.paymentInstruments)
+			{
+				if (!empty(payment)) {
+					if (payment.paymentMethod == dw.order.PaymentInstrument.METHOD_CREDIT_CARD) {
+						PaymentType = "Credit Card";
+						ToBeEMailed = "N";
+					} else if (payment.paymentMethod.equals("PURCHASE_ORDER")) {
+						PurchaseOrderText = payment.custom.poAccountID;
+						PaymentType = "Net 30";
+					} else if (payment.paymentMethod.equals("PayPal")) {
+						PaymentType = "Paypal";
+					}
+				}
+			}	
+			
+			items = order.getAllLineItems();		
+	        for( i = 0; i < items.size(); i++ ) {
+	        	
+        		UnitPrice = "";
+	        	Qty = "0";
+	        	ProductNumber = "";
+	        	UnitPriceOfDiscount = "0";
+	        	PromoName = "";
+	        	shippingBeforeDiscount = 0;
+	        	ProductDesc = "";
+	        	FinalUnitPrice = "";
+	        	item = items[i];
+	        		
+				/***************************************************************************************************************************
+				 ADD THE PRODUCT LINE ITEMS
+				***************************************************************************************************************************/	        	
+	        	if (item instanceof ProductLineItem) {
+		            UnitPrice = dw.util.StringUtils.formatNumber(item.basePrice.value);
+		            Qty = item.quantityValue;
+		        	ProductNumber = item.getProductID();
+	        		if (!empty(item.priceAdjustments)) {
+	        			PromoName = !empty(item.priceAdjustments[0].lineItemText)?item.priceAdjustments[0].lineItemText:"";
+	        			//UnitPrice = dw.util.StringUtils.formatNumber(item.adjustedNetPrice.value/item.quantityValue);
+	        			UnitPriceOfDiscount = dw.util.StringUtils.formatNumber(item.basePrice.value-(item.adjustedNetPrice.value/item.quantityValue));
+	        		} 
+	        		UnitPrice = UnitPrice < 0?"0":UnitPrice;
+	        		FinalUnitPrice = dw.util.StringUtils.formatNumber(item.adjustedNetPrice.value/item.quantityValue);
+	        		ProductDesc = item.productName;
+	        	} else if ((item instanceof ShippingLineItem || item instanceof ProductShippingLineItem)) {
+					/***************************************************************************************************************************
+					 ADD SHIPPING
+					***************************************************************************************************************************/ 	        		
+     	        	shippingBeforeDiscount = Math.abs(item.getPrice().value); 
+        			UnitPrice = dw.util.StringUtils.formatNumber(Math.abs(item.getPrice().value));
+					Qty = "1";		
+        			ProductNumber = dw.system.Site.getCurrent().getCustomPreferenceValue('ShippingProductCode');
+        			if (!empty(order.allShippingPriceAdjustments)) {
+        				PromoName = order.allShippingPriceAdjustments[0].lineItemText;
+        				UnitPrice = dw.util.StringUtils.formatNumber(Math.abs(item.getAdjustedPrice().value));
+        				UnitPriceOfDiscount = dw.util.StringUtils.formatNumber(shippingBeforeDiscount-Math.abs(item.getAdjustedPrice().value));
+        			}
+        			UnitPrice = UnitPrice < 0?"0":UnitPrice;
+        			FinalUnitPrice = UnitPriceOfDiscount > 0?UnitPriceOfDiscount:UnitPrice;
+        			ProductDesc = "Freight";
+     	        } else {
+     	        	continue;
+	        	}
+	        	
+				/***************************************************************************************************************************
+				 ADD TAX CODE
+				***************************************************************************************************************************/     	        
+     	        if (empty(StateTaxCode)) {
+					TaxCodeIterator = dw.object.CustomObjectMgr.queryCustomObjects("TaxCodes", "custom.JurisdictionCode = {0}", "custom.Jurisdiction asc", order.shipments[0].shippingAddress.stateCode);
+					TaxCode = null;
+					while (!empty(TaxCodeIterator) && TaxCodeIterator.hasNext())
+					{
+						TaxCode = TaxCodeIterator.next();
+						StateTaxCode = TaxCode.custom.TaxCode;
+						break;
+					}
+	        	}
+	        	
+				/***************************************************************************************************************************
+				 WRITE LINE ITEM & ORDER INFO
+				***************************************************************************************************************************/	        	     	        
+				exportWriter.write(CustomerNumber + "\t" + order.orderNo + "\t" + SecondaryOrderNumber + "\t" + BillingAddressFirstName + "\t" + order.billingAddress.lastName + "\t" + order.billingAddress.address1 + "\t" + BillingAddressLine2 + "\t" + order.billingAddress.city + "\t" + order.billingAddress.stateCode + "\t" + order.billingAddress.postalCode + "\t" + order.billingAddress.countryCode.getDisplayValue().toUpperCase() + "\t" + ShippingAddressFirstName + "\t" + order.shipments[0].shippingAddress.lastName + "\t" + order.shipments[0].shippingAddress.address1 + "\t" + ShippingAddressLine2 + "\t" + order.shipments[0].shippingAddress.city + "\t" + order.shipments[0].shippingAddress.stateCode + "\t" + order.shipments[0].shippingAddress.postalCode + "\t" + order.shipments[0].shippingAddress.countryCode.getDisplayValue().toUpperCase() + "\t" + EMail + "\t" + PurchaseOrderText + "\t" + PaymentType + "\t" + order.shipments[0].shippingMethod.displayName + "\t" + OrderDate + "\t" + ProductNumber + "\t" + ProductDesc + "\t" + Qty + "\t" + UnitPrice + "\t" + UnitPriceOfDiscount + "\t" + FinalUnitPrice + "\t" + PromoName + "\t" + StateTaxCode + "\t" + ToBeEMailed + "\r\n");     	        
+	        }
+		}
+	}
+	
+	// write data to file
+	exportWriter.flush();
+	exportFileWriter.write(exportWriter.toString());
+	exportWriter.close();
+	
+	try
+	{	
+		var file	 : File = new dw.io.File(dw.io.File.IMPEX + '/src/order/' + args.FileName);
+		var content  : String = exportFileWriter.toString();
+	
+		if(!file.exists()) 
+		{
+			if(!file.createNewFile())
+			{
+				Logger.error("File "+file.name+" could not be created!");
+				return PIPELET_ERROR;
+			}
+		} 
+		else
+		{
+			Logger.debug("File "+file.name+" exists and gets overwritten!");
+		}	
+
+		var out : FileWriter = new FileWriter(file);
+		out.write(content);
+		out.flush();
+		out.close();
+	}
+	catch(e)
+	{
+		Logger.error("An error occured while exporting orders to CSV {0}.", e);
+		return PIPELET_ERROR;
+	}	
+	
+	return PIPELET_NEXT;
+}

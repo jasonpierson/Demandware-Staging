@@ -1,0 +1,31 @@
+/* CUSTOMER SERVICE
+--------------------------------------------------------------------------------------- */
+.pt_customerservice #content .contentasset {margin:10px 0 0 20px;}
+#content .contentasset h2 {font-size:16px;font-weight:bold;color:#fba115;
+						   border-bottom:1px solid #FFF0C8;padding-bottom:5px;margin-bottom:5px;}
+#content .contentasset h2 span {font-weight:normal;color:#666;}
+#content .contentasset .pipePadd {position:relative;top:-1px;}
+#content .contentasset p {margin-bottom:8px;}
+
+.customerservice {font-size:1.1em;margin:0;width:700px;}
+.customerservice p {width: 600px;color:#797a72;}
+.customerservice .contentasset h1 {color:#d75225;font-size:20px;font-weight:bold;}
+.customerservicesection {float:left;width:330px;height:75px;margin:20px 10px 0 0;padding-bottom:5px;border-bottom:1px solid #fff0c7;}
+.customerservicesection h5 {font-weight:bold;text-decoration:none;font-size:16px;background-color: transparent;color:#fba01c;padding:2px 0 2px 0px;}
+.customerservicesection ul {padding: 0px 0px 0px 0px;}
+.customerservicesection li a {color:#d95225;text-decoration: none;}
+.customerservicesection li a:hover {text-decoration: underline;}
+
+.customerservice_directory {margin-left:20px}
+
+.contactus {width: 700px; margin: 0 0 0 30px;}
+.contactus .formactions {margin: 10px 0px;width: 353px;}
+.contactus .messagesent {font-size:1.4em;height:300px;padding:60px 0 0;text-align:center;}
+.contactus .messagesent p {line-height: 24px;}
+.contactus h2 {color:#d75225;font-size:20px;font-weight:bold;}
+.contactus fieldset {width:700px}
+.contactus button {background:url(../images/buttons/btn-send.gif) no-repeat;width:52px;height:20px;margin-left:150px;}
+.contactus button span {display:none;}
+.contactus .formfield {margin: 15px 0;}
+.contactus form .label { float:left; margin-right:10px;width:140px;}
+.contactus form .value {float:left;width:auto;text-align:left;}

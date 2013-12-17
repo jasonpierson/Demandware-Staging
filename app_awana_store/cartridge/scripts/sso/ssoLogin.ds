@@ -1,0 +1,75 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*	@input  Openid : String
+* 	@input  Password : String
+*   @output userList : dw.util.LinkedHashMap
+*	@output accountList : dw.util.List
+*
+*/
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.util );
+ 
+function execute( args : PipelineDictionary ) : Number
+{
+	var tempList:dw.util.LinkedHashMap = new dw.util.LinkedHashMap();
+	var tempAcctList:dw.util.ArrayList = new dw.util.ArrayList();
+	
+	try {
+		var webref : WebReference = webreferences.GetSFDCAccountIDDev;
+	    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+	    	webref = webreferences.pGetSFDCAccountID;
+	    }			
+		var stub : Stub = webref.defaultService; 
+		
+		var getAccount:WebReference = new webref.GetSFDCAccountIDRequest();
+		getAccount.request = new webref.GetSFDCAccountIDRequestRequest();		
+		var location:String = dw.system.Site.getCurrent().currencyCode=="USD"?"UNITED STATES":"CANADA";
+		getAccount.request.openID = args.Openid;
+		getAccount.request.password = args.Password;
+		getAccount.request.accountLocation = location;
+		getAccount.request.site = dw.system.Site.getCurrent().ID;
+		getAccount.request.authenticationProvider = dw.system.Site.getCurrent().getCustomPreferenceValue('SiteAuthenticationProvider');
+		
+	    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+	    	var response = stub.pGetSFDCAccountID(getAccount);
+		} else {
+	    	var response = stub.getSFDCAccountID(getAccount);			
+		}
+		
+		if (response.response.success == "true") {
+			//found user(s), load into out var
+			for each(accountItem in response.response.accountInfo) {
+				tempList.put(accountItem.accountID, accountItem.accountName);
+				tempAcctList.add(accountItem.accountID);
+			}
+			args.userList = tempList;
+			args.accountList = tempAcctList;
+		} else {
+			Logger.error(response.response.message);
+			return PIPELET_ERROR;
+		}
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 
+   	return PIPELET_NEXT;
+}

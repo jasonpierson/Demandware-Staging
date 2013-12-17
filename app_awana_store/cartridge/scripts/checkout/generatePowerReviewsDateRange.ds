@@ -1,0 +1,24 @@
+/**
+*
+*-  @input ExampleIn : String This is a sample comment.
+* 	@output beginningDate : Date
+* 	@output endingDate : Date
+*
+*/
+importPackage( dw.system );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	/*******************************************************************************************
+	 DEFINE DATE RANGE FOR POWER REVIEWS ORDER FEED (DOES NOT WORK CORRECTLY IN ASSIGN NODE)
+	*******************************************************************************************/
+	 var now = dw.util.DateUtils.nowForSite();
+	 var newDate = new dw.util.Calendar(now);
+	 var oldDate = new dw.util.Calendar(now);
+	 oldDate.add(dw.util.Calendar.DATE, -2);
+ 	 args.endingDate = newDate.getTime();
+	 args.beginningDate = oldDate.getTime();
+
+   return PIPELET_NEXT;
+}

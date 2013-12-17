@@ -1,0 +1,154 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*   @input firstName : String 
+*   @input lastName : String 
+*   @input emailAddress : String 
+*   @input password : String
+*   @input accountType : String
+*   @input churchRegistrationNumber : String
+*   @input churchName : String  
+*   @output AccountID : String
+*   @output OpenID : String
+*   @output ContactID : String
+*   @output UserID : String
+*   @output errorMessage : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+
+	try {
+		var isContact : Boolean = false;
+		var isUser : Boolean = false;
+		if(dw.system.Site.getCurrent().ID == 'kidzmatter') {
+			if(args.accountType == 'Individual') {
+				/***********************************************************************************************
+				 CREATE KM INDIVIDUAL ACCOUNT
+				***********************************************************************************************/
+			    var webref : WebReference = webreferences.kmCreateSFDCAccountDev;
+			    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+			    	webref = webreferences.pKMCreateSFDCAccount;
+			    }
+			    
+				var stub : Stub = webref.defaultService; 
+				
+				var createAccount:WebReference = new webref.CreateSFDCAccountRequest();
+				createAccount.request = new webref.CreateSFDCAccountRequestRequest();
+				createAccount.request.accountType = args.accountType;
+				createAccount.request.password = args.password;
+				createAccount.request.firstName = args.firstName;
+				createAccount.request.lastName = args.lastName;
+				createAccount.request.accountName = args.firstName + " " + args.lastName;
+				createAccount.request.email = args.emailAddress;
+				var location:String = dw.system.Site.getCurrent().currencyCode=="USD"?"UNITED STATES":"CANADA";
+				createAccount.request.billingCountry = location;
+				createAccount.request.shippingCountry = location;
+				
+			    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+			    	var response = stub.pKMCreateSFDCAccount(createAccount);
+				} else {
+					var response = stub.createSFDCAccount(createAccount);
+				}			    
+			} else {
+				/***********************************************************************************************
+				 CREATE KM CHURCH ACCOUNT AND/OR CONTACT
+				***********************************************************************************************/				
+			    var webref : WebReference = webreferences.KMCreateSFDCContactDev;
+			    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+			    	webref = webreferences.pKMCreateSFDCContact;
+			    }	
+				var stub : Stub = webref.defaultService; 
+				
+				var createAccount:WebReference = new webref.CreateSFDCContactRequest();
+				createAccount.request = new webref.CreateSFDCContactRequestRequest();
+				createAccount.request.churchAccountID = args.churchRegistrationNumber;
+				createAccount.request.churchAccountName = args.churchName;
+				createAccount.request.firstName = args.firstName;
+				createAccount.request.lastName = args.lastName;
+				createAccount.request.email = args.emailAddress; 
+				
+			    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+			    	var response = stub.pKMCreateSFDCContact(createAccount);
+				} else {
+					var response = stub.KMCreateSFDCContact(createAccount);
+				}	
+				isContact = true;			    			
+			}  					
+		} else {
+			/***********************************************************************************************
+			 CREATE AWANA/CANADA INDIVIDUAL ACCOUNT
+			***********************************************************************************************/			
+		    var webref : WebReference = webreferences.CreateSFDCAccountDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pCreateSFDCAccount;
+		    }
+		    
+			var stub : Stub = webref.defaultService; 
+			
+			var createAccount:WebReference = new webref.CreateSFDCAccountRequest();
+			createAccount.request = new webref.CreateSFDCAccountRequestRequest();
+			createAccount.request.accountType = "Individual";
+			createAccount.request.password = args.password;
+			createAccount.request.firstName = args.firstName;
+			createAccount.request.lastName = args.lastName;
+			createAccount.request.accountName = args.firstName + " " + args.lastName;
+			createAccount.request.email = args.emailAddress;
+			var location:String = dw.system.Site.getCurrent().currencyCode=="USD"?"UNITED STATES":"CANADA";
+			createAccount.request.billingCountry = location; 
+			createAccount.request.shippingCountry = location;
+			createAccount.request.site = dw.system.Site.getCurrent().name;
+			createAccount.request.authenticationProvider = dw.system.Site.getCurrent().getCustomPreferenceValue('SiteAuthenticationProvider');			
+			
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pCreateSFDCAccount(createAccount);
+			} else {
+				var response = stub.createSFDCAccount(createAccount);
+			}
+			isUser = true;	    
+		}
+
+		/***********************************************************************************************
+		 CAPTURE WEBSERVICE RESPONSE AND GENERATE SCRIPT OUTPUT
+		***********************************************************************************************/
+		if (response.response.success) {
+			args.AccountID = response.response.SFDCAccountID;
+			args.OpenID = response.response.openID;
+			if (!empty(isUser) && isUser) {
+				args.UserID = response.response.SFDCUserID;
+			}
+			if (!empty(isContact) && isContact) {
+				args.ContactID = response.response.SFDCContactID;
+			}
+		} else {
+			Logger.error(response.response.success + "-" + response.response.SFDCAccountID + "-" + response.response.openID);
+			args.errorMessage = response.response.message;
+			return PIPELET_NEXT;
+		}		
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 
+   	return PIPELET_NEXT;
+}

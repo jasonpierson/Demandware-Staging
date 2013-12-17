@@ -1,0 +1,18 @@
+<isdecorate template="content/pt_customerservice">
+<div id="getsat-widget-52"></div>
+<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+<script type="text/javascript">
+if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+</script>
+<style type="text/css">
+.gsfn-left {
+	left:inherit !important;
+	right:-80px !important;
+}
+</style>
+<isinclude template="util/modules"/>
+
+<div class="customerservice">
+	<p style="margin-left:15px;">Thank you.  A customer service representative will contact you.</p>
+</div><!-- END: customerservice -->
+</isdecorate>

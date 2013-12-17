@@ -1,0 +1,168 @@
+<iscontent type="text/html" charset="UTF-8"/>
+<isinclude template="util/modules"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<subject><isprint value="${pdict.CurrentForms.contactus.myquestion.value}"/></subject>
+
+<head>
+<style type="text/css">
+body {
+	color: Black;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-style: normal;
+	font-size: 9pt;
+	border: none;
+	background:#FFFFFF;
+	margin:auto; }
+h1 {
+	font-family: 'Century Gothic',Arial,Verdana,sans-serif;
+	padding: 3px;
+	text-transform: none;
+	color: #006;
+	font-size: 18pt;
+	font-weight: normal;
+	text-transform: uppercase;
+	border: 0px; }
+h3 {
+	font-family: 'Century Gothic',Arial,Verdana,sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	text-transform: uppercase;
+	line-height: 1.1;
+	color: #6699cc;
+	padding: 3px 5px 0px 0px;
+	margin: 0px 0px 0px 10px;}
+p {
+	margin: 10px;}
+p.bonus {
+	color: red;
+	margin: 0px;
+	padding: 0px; }
+table.producttable {
+	width: 636px;
+	margin: 1px;
+	border: 1px solid #eee;
+	font-size: 9pt; }
+table.producttable tr th {
+	background-color: #e0e0e0;
+	white-space: nowrap;
+	color: Black;
+	padding: 2px 5px;
+	text-transform: uppercase;
+	text-align: center; }
+table.producttable tr th.blank {
+	background:#ffffff; }
+table.producttable tr td.blank {
+	background:#ffffff; }
+table.producttable tfoot td {
+	padding: 3px 5px;
+	text-align: right;
+	background-color: #e0e0e0; }
+table.producttable tr td {
+	padding: 3px 5px;
+	margin: 0px;
+	background-color: #f3f3f3;}
+table.producttable tr td.quantitycolumn {
+	text-align: center;
+	vertical-align: middle;
+	width: 70px; }
+table.producttable td .alreadyordered {
+	display: block;
+	color: Green; }
+table.producttable tr.odd td {
+	background-color: #f3f3f3; }
+table.producttable tr.even td {
+	background-color: #fcfcfc; }
+table.producttable td a {
+	text-decoration: none;
+	color: #006699; }
+table.producttable td a:hover {
+	text-decoration: underline; }
+table.producttable td.price {
+	text-align: right;
+	width: 85px; }
+table.producttable .imagecolumn {
+	margin: auto;
+	text-align: center;
+	vertical-align: middle; }
+table.producttable .remove {
+	margin: auto;
+	text-align: center;
+	vertical-align: middle; }
+table.producttable .shippinggrouping { }
+table.producttable .shiptoline {
+	background-color: #fcfcfc;}
+table.producttable .shippinggroupinginfo {
+	text-align: right; }
+table.producttable .shippinggroupingpromo{
+	text-align: right;
+	color: Red; }
+table.producttable .shippingunadjusted {
+	text-decoration: line-through; }
+table.producttable td.ordertotalsdivider {
+	margin: 0px;
+	padding: 1px;
+	background:#ffffff;
+	border-top: 1px solid #cdcdcd;
+	border-bottom: 1px solid #cdcdcd; }
+table.producttable tfoot td.blank {
+	background:#ffffff; }
+table.producttable .ordertotal{
+	text-align: right;
+	background-color: #dcdcdc; }
+table.producttable .ordertotalprice {
+	text-align: right;
+	font-weight: bold;
+	background-color: #dcdcdc; }
+table.producttable tfoot td {
+	background-color: #fcfcfc; }
+.shippingunadjusted {
+	text-decoration:line-through; }
+.promotiondescription {
+	color: red; }
+</style>
+</head>
+
+<body>
+
+<table style="margin:auto;640px;padding:5px;">
+  <tbody>
+  <tr>
+	<td style="width:315px">
+		<h1>Demandware</h1>
+	</td>
+  </tr>
+  <tr>
+	<td>
+		Name = <isprint value="${pdict.CurrentForms.contactus.firstname.value}"/> <isprint value="${pdict.CurrentForms.contactus.lastname.value}"/>
+	</td>
+  </tr>
+  <tr>
+	<td>		
+		Email = <isprint value="${pdict.CurrentForms.contactus.email.value}"/>		
+	</td>
+  </tr>
+  <tr>
+	<td>	
+		Phone = <isprint value="${pdict.CurrentForms.contactus.phone.value}"/>	
+	</td>
+  </tr>
+    <tr>
+	<td>		
+		Order Number =<isprint value="${pdict.CurrentForms.contactus.ordernumber.value}"/>
+	</td>
+  </tr>
+  <tr>
+	<td>
+		My Question = <isprint value="${pdict.CurrentForms.contactus.myquestion.value}"/>
+	</td>
+  </tr>
+  <tr>
+	<td>	
+		Comment = <isprint value="${pdict.CurrentForms.contactus.comment.value}"/>
+	</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

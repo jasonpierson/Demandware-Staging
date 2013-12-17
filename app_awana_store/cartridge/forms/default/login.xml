@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	<field formid="username" label="E-Mail" description="label.username.description" type="string" mandatory="true"/>
+	<field formid="password" label="label.password" type="string" mandatory="true"/>
+
+	<field formid="account" label="label.account" type="string" mandatory="true"/>
+	
+	<!--  checkbox if the user wants to be remembered on this machine  -->
+	<field formid="rememberme" label="login.rememberme" type="boolean" mandatory="false" />
+	
+	<!-- this is a dummy field used to provide the loginpanel template with the
+	     information that login failed -->
+	<field formid="loginsucceeded" type="boolean" mandatory="false"/>
+	
+	<group formid="verify">
+		<field formid="verifypassword" label="forms.profile.015" type="string" mandatory="true" min-length="8" max-length="20"
+			   range-error="forms.8_20characters"	
+			   value-error="forms.profile.017"/>
+	</group>	
+
+	<action formid="login" valid-form="true"/>
+	<action formid="register" valid-form="false"/>
+	<action formid="forgotpassword" valid-form="false"/>
+
+	<!-- this form action is necessary for the guest checkout -->
+	<action formid="unregistered" valid-form="false"/>
+	
+	<!-- this form action is necessary for verifying the password of a user who does not have PasswordSetForImportedCustomer set to true -->
+	<action formid="logyouin" valid-form="false"/>
+</form>

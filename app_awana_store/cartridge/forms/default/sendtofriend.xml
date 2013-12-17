@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	<field formid="friendsname" label="forms.sendtofriend.friendsName" type="string" mandatory="true"/>
+	<field formid="friendsemail" label="forms.sendtofriend.friendsEmail" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$"/>
+	<field formid="confirmfriendsemail" label="forms.sendtofriend.confirmFriendsEmail" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$" parse-error="forms.profile.email.parse-error" max-length="50" value-error="forms.sendtofriend.confirmFriendsEmail.value-error"/>
+	<field formid="yourname" label="forms.sendtofriend.yourName" type="string" mandatory="false" binding="firstName"/>
+	<field formid="youremail" label="forms.sendtofriend.yourEmail" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$" binding="email"/>
+	<field formid="subject" label="forms.sendtofriend.subject" type="string" mandatory="false" />
+	<field formid="message" label="forms.sendtofriend.personalMessage" type="string" mandatory="false" description="forms.sendtofriend.personalMessage.hint"/>
+	<field formid="messagelink" type="string" mandatory="false"/>
+	<field formid="messagelinktext" type="string" mandatory="false"/>
+	<field formid="addtoemaillist" label="forms.giftregistry.items.public"  type="boolean"/>
+	<action formid="preview" label="forms.sendtofriend.preview" valid-form="true"/>
+	<action formid="send" label="forms.sendtofriend.send" valid-form="true"/>
+	<action formid="cancel" label="forms.sendtofriend.cancel" valid-form="false"/>
+	<action formid="edit" label="forms.sendtofriend.edit" valid-form="false"/>
+</form>

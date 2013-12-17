@@ -1,0 +1,46 @@
+<iscomment>
+	Creates a miniaddress display.
+
+	Parameter:
+	p_address	 	: the address object to display
+    p_productlist   : the product list the address represents. can be empty
+</iscomment>
+<div class="miniaddress">
+	<iscomment>
+		There are some addresses without an ID, catch this here and make this include
+	    more universal usable therefore.
+    </iscomment>
+	<isif condition="${'ID' in pdict.p_address && !empty(pdict.p_address.ID)}">
+		<div class="addressname">
+			<isprint value="${pdict.p_address.ID}">
+			<isif condition="${!empty(pdict.p_productlist)}">
+				<div class="productlist">${Resource.msg('miniaddress.registrywishlist','account',null)}</div>
+ 		    </isif>
+		</div><!-- END: addressname -->
+	</isif>
+	<div class="name">
+		<span class="firstname"><isprint value="${pdict.p_address.firstName}"></span>
+		<span class="lastname"><isprint value="${pdict.p_address.lastName}"></span>
+	</div><!-- END: name -->
+	<div class="address">
+		<div class="street">
+			<div class="line1"><isprint value="${pdict.p_address.address1}"></div>
+			<isif condition="${!empty(pdict.p_address.address2)}">
+				<div class="line2"><isprint value="${pdict.p_address.address2}"></div>
+			</isif>
+		</div><!-- END: street -->
+		<div class="location">
+			<isif condition="${pdict.p_address.city != null}">
+                <span class="city"><isprint value="${pdict.p_address.city}"></span><span class="statedivider">,&nbsp;</span>
+            </isif>
+            <span class="state"><isprint value="${pdict.p_address.stateCode}">&nbsp;</span>
+            <span class="zip"><isprint value="${pdict.p_address.postalCode}"></span>
+		</div><!-- END: location -->
+		<div class="country"><isprint value="${pdict.p_address.countryCode}"></div>
+		
+		<isif condition="${!empty(pdict.p_address.phone)}">
+			<div class="phone">${Resource.msg('miniaddress.phone','account',null)}&nbsp;<isprint value="${pdict.p_address.phone}"></div>
+		</isif>
+		
+	</div><!-- END: address -->
+</div><!-- END: miniaddress -->

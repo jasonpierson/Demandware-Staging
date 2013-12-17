@@ -1,0 +1,87 @@
+<isdecorate template="account/pt_account">
+	<div id="getsat-widget-52"></div>
+	<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+	<script type="text/javascript">
+	if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+	</script>
+	
+	<style type="text/css">
+	.gsfn-left {
+		left:inherit !important;
+		right:-80px !important;
+	}
+	</style>
+	<isinclude template="util/modules"/>
+			
+	<div class="accountlogin">
+		
+		<div class="logincreate">
+			<h3>${Resource.msg('globalaccount.createheader','locale',null)}</h3>
+			<div class="createaccount">
+				<p>${Resource.msg('globalaccount.createmessage','locale',null)}</p>
+				<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.login.htmlName}_register">
+					<fieldset>
+						<div class="createaccountbutton">
+							<button type="submit" value="${Resource.msg('global.createbutton','locale',null)}" name="${pdict.CurrentForms.login.register.htmlName}"><span>${Resource.msg('global.createbutton','locale',null)}</span></button>
+						</div>
+						<input type="hidden" name="${pdict.CurrentForms.login.secureKeyHtmlName}" value="${pdict.CurrentForms.login.secureKeyValue}"/>
+					</fieldset>
+				</form>
+				<div class="createbenefits">
+					<iscontentasset aid="create-account-benefits">
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<isinclude template="account/login/logininclude"/>
+		<div class="logingeneral">
+			<h3>${Resource.msg('accountlogin.orderheader','account',null)}</h3>
+			<div class="checkorder">
+				<p>${Resource.msg('accountlogin.checkmessage','account',null)}</p>
+				<iscomment>Order Not Found Error Message</iscomment>
+				<isif condition="${pdict.OrderNotFound != null}">
+					<div class="errorform">${Resource.msg('accountlogin.ordererror','account',null)}</div>
+				</isif>
+				<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.ordertrack.htmlName}">
+					<fieldset>
+						<div class="formfield">
+							<isinputfield formfield="${pdict.CurrentForms.ordertrack.orderNumber}" type="input">
+							<div class="clear"></div>
+						</div>
+						<div class="formactions">
+							<button type="submit" value="${Resource.msg('accountlogin.orderbutton','account',null)}" name="${pdict.CurrentForms.ordertrack.findorder.htmlName}"><span>${Resource.msg('accountlogin.orderbutton','account',null)}</span></button>
+						</div>
+					</fieldset>
+				</form>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+
+	<iscomment>B2B Account Dropped Error Message</iscomment>
+	<isif condition="${!empty(pdict.customerAccountStatus) && pdict.customerAccountStatus == 'Dropped'}">
+		<div id="acctDropBox" style='position:absolute; left:-9999px;'>
+			<div id="openIDMsg">
+				<div class="colorboxDialogHeader" style="text-align:center;">
+					<h3>Church Account Dropped</h3>
+				</div>
+				<div style="margin:20px; padding:20px; font-size:12px;">
+					Your church has dropped Awana. You may create an account to shop as an individual, but you can no longer shop using this account or e-mail address. Please chat with or call Customer Care and let us help. We're available Mondays, Tuesdays, Thursdays and Fridays from 8:15 a.m. to 4:30 p.m. CST and Wednesdays from 10 a.m. to 4:30 p.m. CST.
+					<br />
+					<br class="last" style="clear:both; width:0; height:0; margin:0; padding:0; visibility:hidden;" />
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var alcBadge = unescape("%23__ALC_BADGE_ONLINE").concat(__ALC_BADGE_SUFFIX.toString());
+				var alcDisplay = $(alcBadge).css("display");
+				$("#acctDropBox").colorbox({inline:true,href:"#openIDMsg",open:true,innerWidth:"660px",innerHeight:"150px"});
+				$("#cboxClose").css("top",0);
+				$(alcBadge).css("display",alcDisplay);
+			});
+		</script>			
+	</isif>	
+</isdecorate>

@@ -1,0 +1,71 @@
+<iscomment>
+	This template renders the bread crumb navigation for the product detail page.
+</iscomment>
+<ol class="breadcrumb">
+
+	<div id="breadcrumb" class="breadcrumb">
+	
+		<iscomment>bread crumb home link</iscomment>
+		<div class="fl">
+			<a href="${URLUtils.httpHome()}">${Resource.msg('pagecomponents.breadcrumbs.home','pagecomponents',null)}</a>
+		</div>
+		<div class="divider"></div>
+		<div class="fl"><a href="${URLUtils.url('Home-Shop')}" title="${Resource.msg('global.store','locale',null)}">${Resource.msg('global.store','locale',null)}</a></div>	
+	
+		<iscomment>
+			the category context is determined based on the product search
+			which was triggered or through the products primary category
+		</iscomment>
+		<isscript>
+			var category : dw.catalog.Category = null;
+			
+			// get category from search context
+			if( !empty(pdict.ProductSearchResult) )
+			{
+				category = pdict.ProductSearchResult.category;
+			}
+			
+			if( category == null )
+			{
+				// get category from products primary category
+				category = pdict.Product.primaryCategory;
+	
+				// get category from product master if not set at variant
+				if( category == null && pdict.Product.variant )
+				{
+					category = pdict.Product.masterProduct.primaryCategory;
+				}
+			}
+		</isscript>
+	
+	   	<iscomment>if we have any category context, we show it</iscomment>
+	  	<isif condition="${category != null && category.online}">
+	
+			<isactivedatacontext category="${category}">
+			
+			<isscript>
+				var path : dw.util.Collection = new dw.util.ArrayList();
+				while( category.parent != null )
+				{
+					if( category.online ) path.addAt( 0, category );
+					category = category.parent;
+				}
+			</isscript>
+			
+			<iscomment>display the path</iscomment>
+			<isloop items="${path}" var="cat">
+				<div class="divider"></div>
+				<div class="fl">
+					<a href="${dw.catalog.ProductSearchModel.urlForCategory('Search-Show',cat.ID)}">${cat.displayName}</a>
+				</div>
+			</isloop>
+	
+			<iscomment>append product name</iscomment>
+			<div class="divider"></div>
+			<div class="fl" style="line-height:22px;">${pdict.Product.name}</div>
+		</isif>
+		<div class="clear"></div>
+		
+	</div>
+	<div class="clear"></div>
+</ol>

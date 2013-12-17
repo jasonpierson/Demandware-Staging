@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- TemplateComment :  EMail informing us of an error -->
+<iscontent type="text/html" charset="UTF-8">
+<html>
+<head>
+<style type="text/css">
+body {
+	color: Black;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-style: normal;
+	border: none; }
+a {
+	font-family: 'Century Gothic',Arial,Verdana,sans-serif;
+	font-size: 11pt;
+	font-weight: normal; }
+</style>
+</head>
+<body>
+	<div class="previewpanel" id="previewPanel">		
+		<div class="previewfield stfmessage">
+			Church rewards product <span style="font-weight:bold;"><isprint value="${pdict.Product.ID}"></span> has no value in the Product.ChurchRewardsPointsCategory field or no price. Open it up Business Manager and set it appropriately. Now!
+		</div>											
+	</div>
+</body>
+</html>

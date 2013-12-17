@@ -1,0 +1,4 @@
+<script type="text/javascript"><!--
+	// just trigger the apply event for the dialog
+	app.dialog.triggerApply();
+//--></script>

@@ -1,0 +1,39 @@
+/**
+ * SetDefaultAddress.ds
+ *
+ * This script sets the default address for the customer addressbook.
+ *
+ * @input CustomerAddress : dw.customer.CustomerAddress
+ * @input CurrentCustomer : dw.customer.Customer
+ * @input AddressType : String
+ */
+importPackage( dw.customer );
+importPackage( dw.util );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var customerAddress : CustomerAddress = pdict.CustomerAddress;
+	var customer : Customer = pdict.CurrentCustomer;
+	var addressType : String = pdict.AddressType;
+	
+	if (addressType == "shipping") {
+		var addressBook : AddressBook = customer.profile.addressBook;
+		addressBook.setPreferredAddress(customerAddress);
+		customer.profile.custom.defaultShippingAddressID = customerAddress.ID;
+	} else {
+		customer.profile.custom.defaultBillingAddressID = customerAddress.ID;
+	}
+	
+	//If this is a b2b customer, then we need to update default address info in church custom object
+	if (customer.profile.custom.CustomerType == "Commander") {
+		var custObj : dw.object.CustomObject = dw.object.CustomObjectMgr.getCustomObject("Church", customer.profile.custom.SFChurchAccountID);    
+		if (custObj != null) 
+		{
+			if (addressType == "shipping") {
+				custObj.custom.DefaultShippingAddress = customerAddress.ID;
+			}	
+		}
+	}
+	
+    return PIPELET_NEXT;
+}

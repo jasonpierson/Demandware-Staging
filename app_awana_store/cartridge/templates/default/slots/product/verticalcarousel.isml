@@ -1,0 +1,17 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+
+<isinclude template="util/modules"/>
+<div class="verticalcarouselheader"><!-- Header for Carousel --></div>
+<div class="verticalcarousel">
+	<ul id="vertcarousel">
+		<isloop items="${slotcontent.content}" var="product">
+			<li>
+				<div class="productcarousel">
+					<iscomment>include a hidden product id element for analytics capture</iscomment>
+					<div class="analytics captureproductid"><isprint value="${product.getID()}"></div>
+					<isproducttile product="${product}" showpricing="${true}">
+				</div><!-- END: productcarousel -->
+			</li>
+		</isloop>
+	</ul>
+</div><!-- END: verticalcarousel -->

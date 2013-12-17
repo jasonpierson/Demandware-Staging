@@ -1,0 +1,60 @@
+<iscomment>
+	This template renders the church rewards meter which 
+	shows how close the church is to it's point reward goal.
+</iscomment>
+<isif condition="${!empty(pdict.CurrentCustomer.profile) && pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+	<isscript>
+		//id of the sponsored church
+		var ChurchRewardsRegistrationNumber : String = pdict.CurrentCustomer.profile.custom.ChurchRewardsRegistrationNumber;		
+		
+		//name of the sponsored church
+		var ChurchRewardsChurchName : String = pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchName;		
+		
+		//points the church has accrued
+		var ChurchRewardsChurchPointsAvailable : Number = parseInt(pdict.CurrentCustomer.profile.custom.ChurchRewardsSponsoredChurchPointsAvailable);		
+		
+		//points needed to achieve a reward - for now we are assuming 2200
+		var ChurchPointsMax	: Number = 2200;		
+	    
+	    //number of points gained through a recently completed order	    
+	    var ChurchRewardsChurchPointsGained : Number = 0;
+	    if (!empty(pdict.pointsgained)){
+	    	ChurchRewardsChurchPointsGained = parseInt(pdict.pointsgained);
+	    }
+		
+		//percentage of reward goal achieved	
+		var ChurchPointsPercentage	: Number = ChurchRewardsChurchPointsAvailable/ChurchPointsMax;		
+		
+	</isscript>
+
+	<div class="churchrewards">
+		<div class="toprewardmessage">
+			<isif condition="${ChurchRewardsChurchPointsGained > 0}">
+				<isprint value="${Resource.msgf('churchrewards.earnedpoints','components',null,ChurchRewardsChurchPointsGained)}" />
+			<iselse>
+				<div class="totalpointslabel"><isprint value="${Resource.msg('churchrewards.pointtotal','components',null)}" /></div>
+				<div class="totalpoints"><span class="ptsnum"><isprint value="${ChurchRewardsChurchPointsAvailable}" style="INTEGER" /></span> <isprint value="${Resource.msg('churchrewards.points','components',null)}" /></div>
+			</isif>
+		</div>
+		<div class="rewardmeter">
+			<div class="meterbar">
+				<div class="meterbarprogress" style="height:0px;"><!-- 'filled in' portion of meter --></div>
+			</div>
+			<div class="metergraduationmarks"><!-- meter graduation marks --></div>
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div>
+		<isif condition="${ChurchRewardsChurchPointsGained > 0}">		
+			<div class="bottomrewardmessage">
+				<div class="totalpointslabel"><isprint value="${Resource.msg('churchrewards.pointtotal','components',null)}" /></div>
+				<div class="totalpoints"><span class="ptsnum"><isprint value="${ChurchRewardsChurchPointsAvailable}" style="INTEGER" /></span> <isprint value="${Resource.msg('churchrewards.points','components',null)}" /></div>
+			</div>
+		</isif>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var entirebarheight = jQuery('.meterbar').height();
+				var progressbarheight = Math.round(entirebarheight*<isprint value="${ChurchPointsPercentage}" />);
+				jQuery('.meterbarprogress').height(progressbarheight);
+			});
+		</script>		
+	</div>
+</isif>

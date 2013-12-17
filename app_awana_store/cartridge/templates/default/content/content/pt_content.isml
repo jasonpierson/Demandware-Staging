@@ -1,0 +1,42 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<isinclude template="util/modules"/>
+
+<head>
+	<isinclude template="components/header/htmlhead"/>
+</head>
+<body>
+<div id="container">
+	<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	<div id="main">
+		<div id="content">
+			<isinclude template="components/contentbreadcrumbs"/>
+			<isreplace/>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<isinclude template="components/footer/footer"/>
+</div>
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+    <isif condition="${dw.system.Site.getCurrent().ID != 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10437;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+    <isif condition="${dw.system.Site.getCurrent().ID == 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10976;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+</body>
+</html>

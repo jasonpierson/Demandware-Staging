@@ -1,0 +1,59 @@
+/**
+* Calls CalculateTax
+*
+*   @input order : dw.order.Order The order object
+*   @output orderTax : Number
+*/
+
+
+ importPackage( dw.system );
+ importPackage( dw.order );
+ importScript( "order/Utils.ds" );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	try {
+		var items : dw.util.Collection = args.order.getAllLineItems();
+        var itemTax = 0;
+        var item;
+		var accountID : String = !empty(order.customer)&&!empty(order.customer.profile)?order.customer.profile.custom.SFMailingAddressBookID:"0";
+		var shipment : Shipment = order.shipments[0];        		
+		
+		for( var i = 0; i < items.size(); i++ ) {
+        	item = items[i];
+        	itemTax = 0;
+        	itemTax = getTaxForShipmentLineItem(accountID, shipment, item);
+			args.orderTax = args.orderTax + Math.abs(itemTax);     		
+		}
+		
+		//iterate through items and set tax
+		var tempCount:Number = 0;
+		var shipmentLineItems2 : Iterator = args.order.shipments[0].getAllLineItems().iterator();
+		while(shipmentLineItems2.hasNext())
+		{
+			
+			// first we reset all line item tax attributes
+			var lineItem2 : LineItem = shipmentLineItems2.next();
+			
+			if (lineItem2 instanceof ProductLineItem)
+				tempCount++;
+				
+			if (tempCount >= 1 && lineItem2 instanceof ProductLineItem){
+				lineItem2.updateTax(args.orderTax/args.order.shipments[0].merchandizeTotalNetPrice.value);
+            	args.order.updateTotals();
+			} else {
+            	lineItem2.updateTax(0);
+			}
+        }				
+	}
+	
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 	return PIPELET_NEXT; 
+}

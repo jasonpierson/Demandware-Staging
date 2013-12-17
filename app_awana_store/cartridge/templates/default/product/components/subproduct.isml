@@ -1,0 +1,109 @@
+<div id="subProduct${pdict.ProductCount}Div">
+
+	<div class="productsetdetail">
+	
+		<div class="fl" style="width:75px; margin-right:5px;">
+			<isset name="ProductImage" value="${pdict.Product.getImage('small',0)}" scope="PAGE" />
+			<div class="productsetimage">
+				<img src="${ProductImage.url}" alt="${ProductImage.alt}" title="${ProductImage.title}" border="none" width="75" height="75" />
+			</div>
+			<div class="clear"></div>
+		</div>
+	
+		<div class="fl" style="width:250px;">
+		
+			<h1 class="productname">
+				<a href="${URLUtils.url('Product-Show','pid', pdict.Product.ID)}" title="${pdict.Product.name}" style="color:#D85226">
+					<isprint value="${pdict.Product.name}"/>
+				</a>
+			</h1>
+			<div class="itemNo">
+				${Resource.msg('product.item','product',null)} <isprint value="${ pdict.Product.ID }"/>
+			</div>
+			<isif condition="${!pdict.Product.bundled}">
+				<isset name="showTieredPrice" value="${false}" scope="page"/>
+				<isinclude template="product/components/pricing"/>
+			</isif>
+			<isinclude template="product/components/promotions"/>
+			<isif condition="${pdict.Product.bundled}">
+				<div class="attribute">
+					<span class="label">
+						${Resource.msg('global.quantity','locale',null)}: 
+					</span>
+					<span class="value">
+						<isprint value="${pdict.ProductBundle.getBundledProductQuantity(pdict.Product)}" />
+					</span>
+				</div>
+			</isif>
+			
+			<isinclude template="product/components/variations"/>
+			
+			<div class="mainattributes">
+				<isset name="pam" value="${pdict.Product.getAttributeModel()}" scope="page"/>
+				<isset name="group" value="${pam.getAttributeGroup('mainAttributes')}" scope="page"/>
+				<isinclude template="product/components/group"/>
+				<div class="clear"></div>			
+			</div>
+			
+			<isif condition="${!pdict.Product.bundled}">
+				<isinclude template="product/components/options"/>
+			</isif>
+			
+			<div class="availability">
+				<span class="label">${Resource.msg('global.availability','locale',null)}: </span>
+				<span class="value"><!-- Product Availability Message --></span>
+				<isif condition="${pdict.Product.availabilityModel.inventoryRecord.inStockDate.toDateString()}">
+					- The expected ship date is ${pdict.Product.availabilityModel.inventoryRecord.inStockDate.toDateString()}.
+				</isif>
+				<isif condition="${pdict.Product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate.toDateString()}">
+					<span id="ProductVarInStock"></span>
+				</isif>				
+			</div>
+			
+		</div>
+		<div class="clear"></div>
+		
+		<isif condition="${!pdict.Product.bundled}">
+			<div id="pdpATCDivsubProduct${pdict.ProductCount}Div" class="addtocartbar">
+				<div class="addtocart">
+					<isscript>
+						var returnParameterArray : Array = new Array();
+						/****************************************************************************************************
+						 do NOT change the order the following parameters are added to the array.
+						 at present the array positions are hard coded
+						 until passing multiple parameters back to a template is supported
+						****************************************************************************************************/
+						returnParameterArray.push(false);
+						returnParameterArray.push("Placeholder");
+						var allowPurchase = returnParameterArray;
+						importPackage(dw.util);
+						importScript('product/CanCustomerPurchase.ds');
+						allowPurchase = execute(pdict);
+					</isscript>		
+					<isif condition="${!empty(allowPurchase[0]) && allowPurchase[0]}">
+						<div class="quantity">
+							<span class="label">${Resource.msg('global.qty','locale',null)}:</span>
+							<input class="quantityinput" value="${Number(empty(pdict.CurrentHttpParameterMap.Quantity.stringValue) ? 1 : pdict.CurrentHttpParameterMap.Quantity.stringValue).toFixed()}"/>
+						</div>
+						<button type="button" display="${pdict.Product.ID}" value="${Resource.msg('global.addtocart','locale',null)}" class="addtocartbutton"><span>${Resource.msg('global.addtocart','locale',null)}</span></button>
+						
+						<isif condition="${pdict.Product.productSet == null}">
+							<isset name="showTieredPrice" value="${false}" scope="page"/>
+							<isinclude template="product/components/pricing"/>
+						</isif>
+					<iselse>
+						<isif condition="${!empty(allowPurchase[1])}">
+							<isif condition="${allowPurchase[1]==Resource.msg('product.notpublicmsg','product',null)}">
+								<div class="label">${Resource.msg('product.notpublicmsg','product',null)} <a title="${Resource.msg('global.login','locale',null)}" href="${URLUtils.https('Account-Show')}" class="userlogin">${Resource.msg('product.notpublic','product',null)}</a></div>
+							<iselse>
+								<div class="label"><a title="${Resource.msg('global.login','locale',null)}" class="userlogin"><isprint value="${allowPurchase[1]}"/></a></div>
+							</isif>
+						</isif>
+					</isif>
+				</div>
+			</div>
+		</isif>
+		
+		<div class="clear"></div>		
+	</div>
+</div>

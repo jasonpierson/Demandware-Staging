@@ -1,0 +1,13 @@
+<script type="text/javascript">
+<!--
+	<isif condition="${pdict.colorbox == true}">
+		$.fn.colorbox.close();
+	<iselse>
+		app.dialog.close();
+	</isif>
+
+	<isif condition="${pdict.refresh == true}">
+		location.href=location.href;
+	</isif>
+//-->
+</script>

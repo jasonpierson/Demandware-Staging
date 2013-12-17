@@ -1,0 +1,24 @@
+/**
+*   scripts/sso/sspLostLoginProcedure.ds
+*
+*   @input custProfile : dw.customer.Profile
+*   @output canOrderCoreProduct : Boolean
+*
+*/
+importPackage( dw.system );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	if(dw.system.Site.getCurrent().ID == 'Awana') {
+		if (!empty(args.custProfile.custom.AccountRecordType) && args.custProfile.custom.AccountRecordType == 'US Organization') {
+			if (!empty(args.custProfile.custom.AccountStatus) && args.custProfile.custom.AccountStatus == 'Added' || !empty(args.custProfile.custom.AccountStatus) && args.custProfile.custom.AccountStatus == 'Pending' || !empty(args.custProfile.custom.RegistrationPaymentPending) && args.custProfile.custom.RegistrationPaymentPending) {
+				args.canOrderCoreProduct = true;
+			} else {
+				args.canOrderCoreProduct = false;
+			}				
+		} else {
+			args.canOrderCoreProduct = false;
+		}		
+	}
+   return PIPELET_NEXT;
+}

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="OrderStatusRequest" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns:tns1="http://www.approuter.com/connectors/" xmlns="" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/" xmlns:tns="http://www.approuter.com/connectors/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="OrderStatusIn">
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="Token" nillable="false">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="OpportunityId" nillable="false" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OrderStatusIn" type="tns:OrderStatusIn"/>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/" xmlns:tns="http://www.approuter.com/connectors/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="OrderStatusOut">
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="ResultSet" nillable="false">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="Success" nillable="true" type="xs:boolean"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="Message" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="OrderStatus" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="TrackNumber" nillable="false" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OrderStatusOut" type="tns:OrderStatusOut"/>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="OrderStatusRequestRequest">
+    <wsdl:part name="request" element="tns1:OrderStatusIn"/>
+  </wsdl:message>
+  <wsdl:message name="OrderStatusRequestResponse">
+    <wsdl:part name="response" element="tns1:OrderStatusOut"/>
+  </wsdl:message>
+  <wsdl:portType name="OrderStatusRequestPort">
+    <wsdl:operation name="OrderStatusRequest">
+      <wsdl:input message="tns:OrderStatusRequestRequest"/>
+      <wsdl:output message="tns:OrderStatusRequestResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrderStatusRequestBinding" type="tns:OrderStatusRequestPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="OrderStatusRequest">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OrderStatusRequestService">
+    <wsdl:port name="OrderStatusRequestPort" binding="tns:OrderStatusRequestBinding">
+      <soap:address location="http://ci5.awana.org:80/dGetOrderStatus"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

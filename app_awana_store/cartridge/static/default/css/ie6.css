@@ -1,0 +1,50 @@
+html {filter: expression(document.execCommand("BackgroundImageCache", false, true));}
+button {padding:0;}
+.logincreate {height:414px;}
+.logingeneral {height:200px;}
+.searchrefinements ul.refinementcategory li.expandable.active {background: transparent url(../images/navarrow.gif) no-repeat 0 -35px;}
+.navgroup .refineattributes .Color li a {background-image:url(../images/refinement_color.gif) !important;}
+.sorthitscontainer {height:20px;}
+.sorthitscontainer .resultshits {line-height:18pt;}
+.returningcustomers .rememberme {margin-left:75px;}
+
+/***** CATEGORY DEPARTMENTS MENU BAR *****/
+.categorymenu ul ul {background-color:transparent;background-repeat: repeat;}
+
+/***** CART *****/
+.pt_cart #content {width:750px;}
+.cart {margin:0 0 0 0;}
+.cart .actions form {display:inline;}
+.cart .actions fieldset {display:inline;}
+.cart .actions button.textbutton {margin:10px 0 0 0;}
+
+/***** CHECKOUT *****/
+label {clear:none;}
+.checkoutminisummary {border: 1px solid red; width:200px;}
+.checkoutordertotals .ordertotals table.ordertotalstable .label {white-space:normal;}
+
+.checkoutshipping .addressform .country {padding-bottom:15px;}
+.checkoutshipping .addressform .state {padding-bottom:15px;}
+.checkoutbilling .addressform .country {padding-bottom:15px;}
+.checkoutbilling .addressform .state {padding-bottom:15px;}
+.paymentmethodform .creditcardpayment .cardtype {padding-bottom:15px;}
+
+/***** PRODUCT TILE *****/
+
+.producttile .image {position:static;}
+.producttile .image .quickviewbutton  {position:relative;}
+.producttile .image .quickviewbutton a {left: -60px;top: -65px;}
+
+/***** WISHLIST *****/
+.wishlistitems .wishlistsharing .productlisturl {width:685px;}
+
+/***** GIFT REGISTRY *****/
+.giftregistry .shareurl{width:685px;}
+
+/***** SEND TO A FRIEND *****/
+.sendtofriend .emailsignupcheckbox{margin: 0 4px 0 100px;}
+
+#pdpMain {margin-left:15px;}
+#content {margin-left:0;}
+.search {margin:0px;}
+.productresultarea {margin:0px;}

@@ -1,0 +1,215 @@
+/* MINI-CART
+--------------------------------------------------------------------------------------- */	
+.minicart {z-index:99;}	
+/*.minicart .minicarttotal {float:right;position:relative;}*/
+.minicart .minicarttotal {}
+.minicart .minicarttotal .cartlabel {margin: 0px 5px 0px 0px;text-transform: uppercase;}
+.minicart .minicarttotal .welcomedivider {margin:0px 3px;}
+.minicartcontent { width:200px; background-color: #ffffff; border: 4px solid #DF6222; margin-left:-180px; margin-top:5px; color: #666666; padding:10px; display: block; -moz-border-radius: 10px; -webkit-border-radius: 10px; position: absolute; width: auto; z-index:9999;}
+.minicartcontent .minicartclose { cursor:pointer; float:right; }
+.minicartcontent .minicartclose .minicart-close { background:url(../images/buttons/btn-close.gif) no-repeat; display:block; width:52px; height:20px; }
+.minicartcontent .minicartcontainer .minicarttotal {background-color:#CCCCCC; color:#fff;clear:both;padding:1px 3px;text-align:right;}
+.minicartcontent .checkoutminicart .summaryproduct .productlineitem { width:200px; }
+.minicartcontent .minicarttotals {background-color:#ffffff; color: #787878; margin:0;}
+.minicartcontent .minicarttotals table.ordertotalstable { width:280px;}
+.minicartcontent .minicarttotals table.ordertotalstable td.ordersubtotal { width:140px;}
+.minicartcontent .minicarttotals table.ordertotalstable td.ordersubtotal .col1 { text-align:left; }
+.minicartcontent .minicarttotals table.ordertotalstable td.ordersubtotal .col2 { text-align:right; }
+.minicartcontent .minicarttotals tr {display:none;}
+.minicartcontent .minicarttotals tr.ordersubtotal {display:block;}
+
+.minicartcontent .minicarttotals tr.ordersubtotal .col1 { width:140px; text-align:left; padding:5px; }
+.minicartcontent .minicarttotals tr.ordersubtotal .col2 { width:140px; text-align:right; padding:5px; }
+
+.minicartcontent .minicarttotals td {color: #D64C27; }
+.minicarttotals .ordersubtotal .label, .minicarttotals .ordersubtotal .value {font-weight:bold;}
+.minicartcontent .minicartslot {background-color:#ededed;border: 1px solid #CCC;font-size:1.2em;font-weight:bold;margin:0 auto;padding:4px;text-align:center;}
+.minicartcontent .link2cart { }
+.minicartcontent .link2cart .viewcart-btn{ margin:0 auto; border:0; width:116px; height:31px; background:url(../images/buttons/btn-view-cart.gif) no-repeat; display:block; }
+/*.minicartcontent .link2cart a {background: transparent url(../images/button_background.gif) repeat-x center center;border: 1px solid #999;color: black;display:block;font-weight: bold;line-height: 14px;margin: 1px auto;text-decoration:none;width:90px;-moz-border-radius: 3px;-webkit-border-radius: 3px;}
+.minicartcontent .link2cart a:hover {border-color:black;}*/
+	
+/* Mini Cart Product Display */
+.checkoutminicart {max-height: 175px;overflow:auto;}
+.checkoutminicart .summaryproduct { padding: 3px 0px;}
+.checkoutminicart .imageexpanded {background: transparent url(../images/nav_arrow.gif) no-repeat 0 0; height: 15px; width: 15px;}
+.checkoutminicart .imagecollapsed {background: transparent url(../images/nav_arrow_expand.gif) no-repeat 0 0;}
+.checkoutminicart .imagecollapsed img {height: 50px; margin: 0px 10px; width: 50px;}
+.checkoutminicart .name { font-weight:bold; color: #D95225; font-size:11px; height: 1.3em;overflow: hidden;}
+
+.checkoutminicart .attributes {overflow:hidden;}
+.checkoutminicart .attribute {color: #D95225; font-size:1.0em; margin: 0px 3px 0px 0px; float:left; }
+.checkoutminicart .attribute .clear {clear:none;}
+.checkoutminicart .pricing { color: #D95225;}
+
+/* CART
+--------------------------------------------------------------------------------------- */
+h1.checkout { padding: 0px; font-size: 22px; font-weight: bold; color: #D65327; }
+.cart {margin:0; padding:0; width:738px; }
+.cart .cartempty {text-align: center;height: 50px;padding: 20px 0 0 0;font-size: 1.4em;}
+.cart .errorform {margin-left:0;}
+.cart .errormessage {white-space: normal; padding:0 20px 0 20px; font-size: 1.1em;}
+.cart .odd {background-color:#fff;}
+.cart table.carttable {-moz-border-radius:10px; -webkit-border-radius:10px; border:solid 2px #FFF0C7; padding: 4px;width:100%;}
+.cart tr.rowcoupons {border-bottom: 1px dashed #898989;}
+.cart tr.rowcoupon { background-color:#FFF7E4; border-top: 1px solid #ffffff; margin:0; -moz-border-radius-bottomleft:4px; -moz-border-radius-bottomright:4px;}	
+.cart tr.rowbundle {border-top: 1px solid #ffffff;}
+.cart tr.rowbundlespacer {border-bottom: 1px dashed #898989;}
+.cart tr.rowbundlespacer td {padding: 0 0 20px 0;}
+.cart tr.rowgiftcert {border-bottom: 1px dashed #898989;}
+.cart tr.rowgiftcert td.detailscolumn p {color: red;}
+.cart .imagecolumnbundle {float:left;text-align: center;width: 60px;vertical-align: middle;}
+.cart .imagecolumnbundle img {width: 90%;height: 90%;}
+.cart tr.rowbundle .stockstate {display:none;}
+.cart td.detailscolumn {border-right:1px solid #FFF0C9;}
+.cart td.detailscolumn .price {font-family: Arial, Helvetica, Verdana, sans-serif;font-size:1.0em;font-style:normal;}
+.cart td.detailscolumn .productoption {font-size:1.1em;font-weight:bold;}
+.cart td .promo {color:red;font-size:1.1em;font-weight:bold;}
+.cart td.detailscolumn .label {float:left; text-align: left;}
+.cart td.detailscolumn .value {float:left;}
+.cart td.detailscolumn .attribute {font-size:10px; float: left; width:200px; }
+.cart td.detailscolumn .productid {float:left; font-size:11px; }
+.cart td.quantitycolumn {font-size: 1.2em;width: 36px;vertical-align: top;padding: 8px 0 0 0;text-align:center;}
+.cart td.quantitycolumndetails {border-right:1px solid #FFF0C9; width: 105px;padding: 8px 8px 10px 4px;vertical-align: top;}
+.cart td.quantitycolumndetails a {white-space:nowrap;}	
+.cart td.quantitycolumndetails button.textbutton {margin: 0 0 0 -3px;}
+.cart td.itemtotalcolumn {padding: 8px 4px 0 0;text-align: right;vertical-align: top;min-width: 150px;}
+.cart .itemtotals {float:right;}
+.cart .itemtotals .label {float:none;text-align:right;width:auto;}
+.cart .itemtotals .value {font-weight:bold; float:none; text-align:right;}
+.cart .itemtotals .promo {font-size:1em;font-weight:normal;width:140px;}
+.cart .itemtotals .standardprice .value {text-decoration:line-through;}
+.cart .itemtotals .salesprice {color:#D75026;}
+.cart .itemtotals .promoprice {color:#D75026;}
+.cart .itemtotals .itemtotal {color:#D75026; font-weight:bold; border-top:1px solid #FFF0C9; padding:3px 0 0;}
+.cart tr.rowcoupons td.detailscolumn .name {text-decoration:underline;}
+.cart tr.rowcoupons td.detailscolumn .label {font-size:1.1em;text-align:left;width:auto;}
+.cart tr.rowcoupons td.detailscolumn .value {color:red;font-size:1.1em;}
+.cart td.applycoupon { padding:8px; text-align:right; }
+.cart table.carttable .orderdiscount {float:right;font-size:1.2em;margin:5px 4px;}
+.cart table.carttable .orderdiscount .label {font-weight:normal;}
+.cart .productlistitem {color: Green;display: block;font-weight: bold;}
+.cart .stockstate li{list-style: none;}
+.cart .onorder {margin-top:4px;color: #cc0000;font-weight: bold;display: block;}
+.cart .notavailable {margin-top:4px;color: #cc0000;font-weight: bold;display: block;}
+.cart .couponcode { float:right; margin:0;}
+.cart .couponcode .label {float: left; color: #FCB54B; font-weight: bold; font-size:11px; margin: 2px 4px 0 10px; width:auto;}
+.cart .couponcode input.couponinput {float: left; margin: 0px 0 0 0;}
+.cart .couponcode input.prodquantityinput {float: left; margin: 0px 0 0 0; width:20px;}
+.cart .couponcode button { float: left; width:54px; height:20px; background:url(../images/buttons/btn-applycoupon.gif) no-repeat; margin-left:8px; }
+.cart .couponcode button.addProduct { float: left; width:80px; height:20px; background:url(../images/buttons/btn-add-to-cart.gif) no-repeat; margin-left:8px; }
+.cart .couponcode .errormessage {text-align: right;padding: 2px 0 4px 0;width:auto;}
+.cart td.applycoupon .errormessage {text-align: right;padding: 2px 0 4px 0;width:auto;}
+.cart .priceadjustment {color: red;}
+.cart .actions {margin: 24px 0 30px 0;}
+.cart .actions form {float: right;}
+.cart .actions form.formupdatecart {float: none;}
+.cart .actions button.textbutton {margin: 0px;}
+.cart .actions button.continuecheckout span {text-transform:uppercase;}
+.cartfooter { margin: 20px 0; }
+.cartfooter .recommendations { width: auto; }
+.cartfooter .ordertotals { }
+.cartfooter .cartordertotals { float:right; width:200px; -moz-border-radius: 10px; -webkit-border-radius:10px; padding: 20px; border:solid 2px #FFF0C9; margin-top: 20px;}
+.cartfooter .ordertotals td { padding: 0 0 5px 0;}
+.cartfooter .ordertotals tr.ordertotal td {border-top:1px solid #FFF0C9; border-bottom:1px solid #FFF0C9; padding: 0 0 5px 0;}
+.cartfooter .ordertotal span { color: #D75026; font-weight: bold; line-height: 1.8em;}
+.cartfooter .ordertotal .label { color: #D75026; font-weight: bold;}
+.cartfooter .orderdiscount .label { color: #D75026; font-weight: bold;}
+.cartfooter .ordershippingdiscount .label { color: #D75026; font-weight: bold;}
+
+tr.tablerow td { border-bottom:1px solid #FFF0C9; }
+tr.tablerownbb td { border-bottom:0px; }
+
+.stockstate { float: left; clear:left; }
+
+.cartfooter .cartordertotals table.ordertotalstable { width:100%; }
+.cartfooter .cartordertotals table.ordertotalstable .ordersubtotal td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .ordersubtotal td.col2 { width:80px; text-align:right; }
+.cartfooter .cartordertotals table.ordertotalstable .ordershipping td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .ordershipping td.col2 { width:80px; text-align:right; }
+.cartfooter .cartordertotals table.ordertotalstable .ordersalestax td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .ordersalestax td.col2 { width:80px; text-align:right; }
+.cartfooter .cartordertotals table.ordertotalstable .orderdiscount td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .orderdiscount td.col2 { width:80px; text-align:right; }
+.cartfooter .cartordertotals table.ordertotalstable .ordershippingdiscount td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .ordershippingdiscount td.col2 { width:80px; text-align:right; }
+.cartfooter .cartordertotals table.ordertotalstable .ordertotal td.col1 { text-align:right;}
+.cartfooter .cartordertotals table.ordertotalstable .ordertotal td.col2 { width:80px; text-align:right; }
+
+.cartfooter .cartordertotals .rewardpointsearned { color: #D75026; font-weight:bold;margin-top:5px;text-align:center; }
+
+/*.placeordertotals .ordertotals td { padding: 0 0 5px 0;}*/
+.placeordertotals { float:right; width:200px; -moz-border-radius: 10px; -webkit-border-radius:10px; padding: 20px; border:solid 2px #FFF0C9; }
+.checkoutordertotals table.ordertotalstable { width:100%; font-size:11px; color:#8F969C; }
+.checkoutordertotals table.ordertotalstable .ordersubtotal td.col1 { text-align:right; width:160px;}
+.checkoutordertotals table.ordertotalstable .ordersubtotal td.col2 { width:60px; text-align:right; }
+.checkoutordertotals table.ordertotalstable .ordershipping td.col1 { text-align:right; white-space: nowrap; }
+.checkoutordertotals table.ordertotalstable .ordershipping td.col2 { width:60px; text-align:right; }
+.checkoutordertotals table.ordertotalstable .ordersalestax td.col1 { text-align:right; width:160px;}
+.checkoutordertotals table.ordertotalstable .ordersalestax td.col2 { width:60px; text-align:right; }
+.checkoutordertotals table.ordertotalstable .orderdiscount td.col1 { text-align:right; width:160px;}
+.checkoutordertotals table.ordertotalstable .orderdiscount td.col2 { width:60px; text-align:right; }
+.checkoutordertotals table.ordertotalstable .ordershippingdiscount td.col1 { text-align:right; width:160px;}
+.checkoutordertotals table.ordertotalstable .ordershippingdiscount td.col2 { width:60px; text-align:right; }
+.checkoutordertotals table.ordertotalstable tr.ordertotal { border-bottom:solid 1px #FFF0C9; border-top:solid 1px #FFF0C9; }
+.checkoutordertotals table.ordertotalstable .ordertotal td.col1 { text-align:left; color:#D95225; font-size:14px; font-weight:bold; border-top:1px solid #FEF0C8; border-bottom:1px solid #FEF0C8;}
+.checkoutordertotals table.ordertotalstable .ordertotal td.col2 { width:60px; text-align:right; color:#D95225; font-size:14px; font-weight:bold; border-top:1px solid #FEF0C8; border-bottom:1px solid #FEF0C8; }
+
+.placeordertotals table.ordertotalstable { width:100%; font-size:11px; color:#8F969C;}
+.placeordertotals table.ordertotalstable .ordersubtotal td.col1 { text-align:right;}
+.placeordertotals table.ordertotalstable .ordersubtotal td.col2 { width:80px; text-align:right; }
+.placeordertotals table.ordertotalstable .ordershipping td.col1 { text-align:right;}
+.placeordertotals table.ordertotalstable .ordershipping td.col2 { width:80px; text-align:right; }
+.placeordertotals table.ordertotalstable .ordersalestax td.col1 { text-align:right;}
+.placeordertotals table.ordertotalstable .ordersalestax td.col2 { width:80px; text-align:right; }
+.placeordertotals table.ordertotalstable .orderdiscount td.col1 { text-align:right;}
+.placeordertotals table.ordertotalstable .orderdiscount td.col2 { width:80px; text-align:right; }
+.placeordertotals table.ordertotalstable .ordershippingdiscount td.col1 { text-align:right;}
+.placeordertotals table.ordertotalstable .ordershippingdiscount td.col2 { width:80px; text-align:right; }
+.placeordertotals table.ordertotalstable tr.ordertotal { border-bottom:solid 1px #FFF0C9; border-top:solid 1px #FFF0C9; }
+.placeordertotals table.ordertotalstable .ordertotal td.col1 { text-align:right; color:#D95225; font-size:14px; font-weight:bold; border-top:1px solid #FEF0C8; border-bottom:1px solid #FEF0C8; }
+.placeordertotals table.ordertotalstable .ordertotal td.col2 { width:80px; text-align:right; color:#D95225; font-size:14px; font-weight:bold; border-top:1px solid #FEF0C8; border-bottom:1px solid #FEF0C8; }
+
+/***** Checkout Button *****/
+button.checkoutcart { cursor: pointer; width:110px; height:31px; background:url(../images/buttons/btn-checkout.gif) no-repeat; }
+button.continuecheckout { cursor: pointer; width:178px; height:31px; background:url(../images/buttons/btn-checkout-continue.gif) no-repeat; }
+
+/***** Submit Order *******/
+button.submitorder { cursor:pointer; width:137px; height:31px; background:url(../images/buttons/btn-submit-order.gif) no-repeat; }
+button.loadingorder { cursor:pointer; width:137px; height:31px; background:url(../images/loading.gif) no-repeat center center; }
+
+/***** Cart Login *****/
+.cartlogin {width:218px;margin:62px 0 0 0;}
+.cartlogin input { border: none; }
+.cartlogin .logincustomers {color: #ffffff;border:none;width:220px;}
+.cartlogin .accountwelcome {margin:0px;}
+.cartlogin h3 { color: #fff; background-color:transparent;font-size:15px;letter-spacing:0.5px;padding:21px 0 0 16px; }
+.cartlogin .errorform {margin:0px;height:50px;width:200px;position:relative;}
+.cartlogin .returningcustomers {margin:0px;text-align:left;}
+.cartlogin .returningcustomers p {display:block;padding:5px 0 0 21px;margin:0;}
+.cartlogin .returningcustomers a { font-weight: bold; color: #FCBB1F; text-decoration:none;margin:0 0 0 21px;}
+.cartlogin .returningcustomers .label {font-size:1.1em;margin:0;padding:2px 0 0 21px;width:auto;text-align:left;color:#fff;}
+.cartlogin .returningcustomers .label .requiredindicator{display:none;}
+.cartlogin .returningcustomers .value {clear:both;padding:1px 0 0 21px;}
+.cartlogin .returningcustomers .rememberme {float: left;margin:10px 0 10px 21px !important;padding:0;}
+.cartlogin .returningcustomers .rememberme .checkbox label {color:#fff !important; font-weight:bold;}
+.cartlogin .returningcustomers .formactions {margin: 2px 0 4px 0;text-align:left;}
+.cartlogin .returningcustomers .forgotpassword {margin: 4px 0; clear: left; float: left; }
+.cartlogin .returningcustomers input.textinput, .cartlogin .returningcustomers input.textinputpw {width: 160px;}
+.cartlogin .returningcustomers button.login { width:63px; height:31px; background:url(../images/buttons/btn-login.gif) no-repeat;margin:0 0 0 21px;padding:0; }
+.cartlogin .cartnewcustomer { font-size:11px; }
+.cartlogin .cartnewcustomer button { width:105px; height:20px; background:url(../images/buttons/btn-createaccount.gif) no-repeat; }
+.cartlogin .cartguest { font-size: 11px; }
+.cartlogin .cartguest button { width:105px; height:20px; background:url(../images/buttons/btn-checkoutnow.gif) no-repeat; }
+.cartloginpanel button::-moz-focus-inner {border: none;/* overrides extra padding in Firefox */}
+@media screen and (-webkit-min-device-pixel-ratio:0) {/* Safari and Google Chrome only - fix margins */.cartloginpanel button span {margin-top: -1px;}}
+.cartloginpanel {position:relative;}
+.cartcreateaccount {position:relative;height:75px;clear:both;}
+
+.lastvisited {border:solid 2px #D95225; padding:10px; -moz-border-radius:10px; -webkit-border-radius:10px; margin-top:10px;}
+/*
+.cartloginpanel button { -moz-border-radius:10px 10px 10px 10px; -webkit-border-radius:10px 10px 10px 10px; margin: 8px 0px; clear: left; float: left; background-color: #D95225; border: 1px solid #F79F1A;cursor: pointer;font-size:1em; padding: 7px; text-align: center;}
+.cartloginpanel button span {color:#fff; font-size:1.2em; font-weight:bold; }
+.cartloginpanel button:hover {background-position: right -210px;}
+.cartloginpanel button:hover span {background-position: 0 -70px;}
+*/

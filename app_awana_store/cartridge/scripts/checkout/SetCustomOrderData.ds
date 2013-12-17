@@ -1,0 +1,24 @@
+/**
+ * SetCustomOrderData.ds
+ *
+ * This script writes detail about the order to the custom object Orders
+ *
+ *   @input order : dw.order.Order The order object
+ */
+importPackage( dw.system );
+importPackage( dw.customer );
+importPackage( dw.order );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var order : Order = pdict.order;
+	
+	if (order.customer.authenticated) {		
+		var custObj : dw.object.CustomObject = dw.object.CustomObjectMgr.createCustomObject("Orders", order.originalOrderNo);   
+		if (custObj != null) 
+		{
+			custObj.custom.LoginEMail = order.customer.profile.email;
+		}
+	}
+   return PIPELET_NEXT;
+}

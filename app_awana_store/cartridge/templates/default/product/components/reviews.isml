@@ -1,0 +1,11 @@
+<a name='prReview'></a>
+<h2>${Resource.msg('reviews.header','product',null)}</h2>
+<div id="pr_review_summary_${pdict.Product.variant?pdict.Product.variationModel.master.ID:pdict.Product.ID}" class="pr_review_summary">
+	<!---  
+	<script type="text/javascript">POWERREVIEWS.display.engine(document, { pr_page_id : "${pdict.Product.ID}" });</script>
+	--->
+	<script type="text/javascript">
+		var __productReviewid = "${pdict.Product.variant?pdict.Product.variationModel.master.ID:pdict.Product.ID}";
+		POWERREVIEWS.display.engine({ write : function(content) { jQuery('div#pr_review_summary_' + __productReviewid).append(content); } }, { pr_page_id : __productReviewid });
+	</script>
+</div>

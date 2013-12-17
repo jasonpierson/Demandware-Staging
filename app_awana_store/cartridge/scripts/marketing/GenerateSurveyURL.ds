@@ -1,0 +1,19 @@
+/**
+*   @input coupon : dw.campaign.Coupon
+*   @input surveyURLInput : String
+*   @input CurrentCustomer : dw.customer.Customer
+*   @input phone : String
+*   @output surveyURLOuput : String
+*
+*/
+importPackage( dw.system );
+importPackage(dw.campaign);
+importPackage(dw.web);
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var nextCouponCode : String = args.coupon.getNextCouponCode();
+	args.surveyURLOuput = args.surveyURLInput + '?surveyid=' + nextCouponCode.substring(0, 6) + '&church=' + args.CurrentCustomer.profile.custom.ChurchName + '&city=' + args.CurrentCustomer.addressBook.getAddress(args.CurrentCustomer.profile.custom.defaultBillingAddressID).getCity() + '&state=' + args.CurrentCustomer.addressBook.getAddress(args.CurrentCustomer.profile.custom.defaultBillingAddressID).getStateCode() + '&sessionid=' + nextCouponCode.substring(7, 14) + '&name=' + args.CurrentCustomer.profile.firstName + ' ' + args.CurrentCustomer.profile.lastName + '&phone=' + args.phone + '&email=' + args.CurrentCustomer.profile.email + '&var=' + nextCouponCode.substring(15, 22) + '&custid=' + args.CurrentCustomer.profile.customerNo + '&sfdcid=' + args.CurrentCustomer.profile.custom.SFMailingAddressBookID;   
+	
+	return PIPELET_NEXT;
+}

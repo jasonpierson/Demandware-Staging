@@ -1,0 +1,22 @@
+<iscache type="relative" hour="24"/>
+
+<iscomment>make sure we have content at all</iscomment>
+<isif condition="${slotcontent != null}">
+	<script type="text/javascript" src="${URLUtils.staticURL('/lib/swfobject.js')}"></script>
+    <div class="flashhomepageerror" id="flashcontent1">
+		<a href="http://www.macromedia.com/go/getflash/">
+			<img alt="" src="${URLUtils.staticURL('/flash/homepage/images/getflash.png')}" />
+		</a>
+    </div>
+    <script type="text/javascript"><!--
+		var so = new SWFObject("${URLUtils.staticURL('/flash/homepage/3dcarouselv2dev.swf')}", "3dcarouselv2dev", "730", "375", "9.0.115.0", "#FFFFFF");
+		so.addParam("quality", "high");
+		so.addParam("scale", "noscale");
+		so.addParam("menu", "false");
+		so.addParam("salign", "lt");
+		so.addParam("wmode", "transparent");
+		so.addParam("allowScriptAccess", "always");
+		so.addParam("flashvars", "configfile=${URLUtils.url('Page-Show','cid','carousel-config-homepage')}"); 
+		so.write("flashcontent1");
+    //--></script>
+</isif>

@@ -1,0 +1,20 @@
+<iscontent type="text/plain" charset="UTF-8" compact="true"/>
+<iscache type="relative" minute="30"/>
+<iscomment>
+	This template renders the search suggestions as JSON response.
+	Each suggestion is composed of a suggested phrase (the suggestion itself)
+	and a count of hits, the suggested phrase would produce.
+</iscomment>
+{
+	"suggestions":[
+		<isif condition="${!empty(pdict.Suggestions)}">
+			<isloop items="${pdict.Suggestions.keySet().iterator()}" var="Suggestion" status="InfoState">
+		    {
+			    "suggestion": "<isprint value="${Suggestion}">",
+			    "count": "<isprint value="${pdict.Suggestions.get(Suggestion)}">",
+			    "hits": "<isprint value="${pdict.Suggestions.get(Suggestion)}"> <isif condition="${pdict.Suggestions.get(Suggestion) == 1}">${Resource.msg('suggestions.result','search',null)}<iselse>${Resource.msg('suggestions.results','search',null)}</isif>"
+			}<isif condition="${InfoState.isLast() == false}">,</isif>
+			</isloop>
+		</isif>
+	]
+}

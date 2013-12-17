@@ -1,0 +1,222 @@
+/**
+*   checkout/SaveOrderData.ds
+*   Writes custom data to system object Order
+*
+*   @input order : dw.order.Order 
+*   @input custProfile : dw.customer.Profile
+*   @input totalRedeemablePointsInCart : Number
+*   @input totalQualifyingPointsInCart : Number
+*   @input mailingAddressBookID : String
+*   @input AuthorizedAmount : dw.value.Money
+*   @input SplitOrder : Boolean
+*   @input campaignCode : String
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.object );
+importPackage( dw.rpc );
+importPackage( dw.crypto );
+importPackage( dw.util );
+
+importScript( "order/Utils.ds" );
+
+function execute( args : PipelineDictionary ) : Number
+{
+    var order : Order = args.order;
+	var profile : dw.customer.Profile = args.custProfile;
+	var item;
+	var items : dw.util.Collection = order.getAllProductLineItems();
+    
+	try {
+		/********************************************************************************************************
+		 EXTRACT RECORD IN ORDER OBJECT FOR CURRENT ORDER
+		********************************************************************************************************/
+		var orderObj : object = dw.object.SystemObjectMgr.querySystemObject("Order", "UUID = {0}", order.UUID);
+		
+		if (!empty(orderObj)) {
+			/********************************************************************************************************
+			 WRITE ADDRESS INFORMATION TO ORDER OBJECT FOR GUEST
+			********************************************************************************************************/
+			//if the billing state is OTHER, change it to blank
+			if (dw.system.Site.getCurrent().ID == 'kidzmatter') {
+				if (!empty(order.billingAddress.stateCode) && order.billingAddress.stateCode == 'OTHER') {
+					order.billingAddress.stateCode = ' ';
+				}
+				if (!empty(order.shipments[0].shippingAddress.stateCode) && order.shipments[0].shippingAddress.stateCode == 'OTHER') {
+					order.shipments[0].shippingAddress.stateCode = ' ';
+				}
+				if (!empty(args.campaignCode)) {
+					order.custom.campaignSourceCode=args.campaignCode;
+				}
+			}
+
+			
+    		/*****************************************************************************************
+			 BEGIN CODE TO CALC TAX FOR PRODUCTS IF TAX IS INCLUDED IN THE PRODUCT PRICE 
+			*****************************************************************************************/  
+    		if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded')) && dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded') && !empty(dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnConfirmation')) && dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnConfirmation')) {
+				orderObj.custom.TotalLineItemTax = Number(GetTaxForOrderLineItems(order));
+    		}
+    		/*****************************************************************************************
+			 END CODE TO CALC TAX FOR PRODUCTS IF TAX IS INCLUDED IN THE PRODUCT PRICE
+			*****************************************************************************************/
+			
+			/*****************************************************************************************
+			 BEGIN CODE TO SPLIT ORDERS
+			*****************************************************************************************/	
+			orderObj.custom.SplitOrderAuthorizationAmount = 0;
+			orderObj.custom.SplitOrder = args.SplitOrder;
+			if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations')) && dw.system.Site.getCurrent().getCustomPreferenceValue('SplitOrdersWithDonations') && args.SplitOrder) {	
+				orderObj.custom.SplitOrderAuthorizationAmount = Number(order.getTotalNetPrice())-Number(args.AuthorizedAmount);
+			}
+			/*****************************************************************************************
+			 END CODE TO SPLIT ORDERS
+			*****************************************************************************************/				
+							
+			if (order.customer.authenticated && !empty(order.customer.profile)) {
+				/********************************************************************************************************
+				 WRITE ORDER LEVEL CUSTOM INFORMATION TO ORDER OBJECT FOR NON-GUEST
+				********************************************************************************************************/
+				if (!empty(order.customer.profile.custom.SFChurchAccountID)) {
+					orderObj.custom.SFDCAccountID = order.customer.profile.custom.SFChurchAccountID;
+				} else {
+					orderObj.custom.SFDCAccountID = order.customer.profile.custom.SFAccountID;
+				}				
+				orderObj.custom.CustomerType = order.customer.profile.custom.CustomerType;
+				orderObj.custom.LoginEMail = order.customer.profile.email;
+				orderObj.custom.ChurchRewardsPointsRedeemed = 0;
+				orderObj.custom.ChurchRewardsPointsGained = 0;
+				orderObj.custom.ChurchRewardsSFDCAccountID = "";
+				if (!empty(args.mailingAddressBookID) && args.mailingAddressBookID!=null) {
+					orderObj.custom.SFMailingAddressBookID = args.mailingAddressBookID;
+				}
+				
+				if (dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive') && dw.system.Site.getCurrent().ID == 'Awana') {
+					if (!empty(args.totalQualifyingPointsInCart) && args.totalQualifyingPointsInCart > 0 && order.customer.profile.custom.IsChurchRewardsSponsor) {
+						orderObj.custom.ChurchRewardsPointsGained = args.totalQualifyingPointsInCart;
+						orderObj.custom.ChurchRewardsSFDCAccountID = order.customer.profile.custom.ChurchRewardsSFDCAccountID;
+					}
+					if (!empty(args.totalRedeemablePointsInCart) && args.totalRedeemablePointsInCart > 0 && order.customer.profile.custom.CustomerType=='Commander') {
+						orderObj.custom.ChurchRewardsPointsRedeemed = args.totalRedeemablePointsInCart;
+						orderObj.custom.ChurchRewardsSFDCAccountID = order.customer.profile.custom.SFChurchAccountID;
+					} 
+				}
+
+				/********************************************************************************************************
+				 WRITE LINE ITEM LEVEL CUSTOM INFORMATION TO PRODUCT LINE ITEM OBJECT FOR NON-GUEST
+				********************************************************************************************************/
+				if (dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive') && dw.system.Site.getCurrent().ID == 'Awana') {
+			        for( var i = 0; i < items.size(); i++ ) {
+			        	item = items[i];
+	 					item.custom.ChurchRewardsPointsGained = 0;
+	 					item.custom.ChurchRewardsPointsRedeemed = 0;
+	 					
+		        		//save church rewards data
+		        		if (!empty(item.product.custom.ProductType) && item.product.custom.ProductType=='RewardsQualifying' && !empty(order.customer.profile) && order.customer.profile.custom.IsChurchRewardsSponsor) {
+		        			if (item.adjustedNetPrice.value > 0) {
+		        				item.custom.ChurchRewardsPointsGained = Math.ceil(item.adjustedNetPrice.value);
+		        			} else if (item.netPrice.value > 0){
+		        				item.custom.ChurchRewardsPointsGained = Math.ceil(item.netPrice.value);
+		        			}
+		        			item.custom.ChurchRewardsPointsGained = item.custom.ChurchRewardsPointsGained==null?0:item.custom.ChurchRewardsPointsGained;
+		        		}
+		        		if (!empty(item.product.custom.ProductType) && item.product.custom.ProductType=='RewardsRedeemable' && !empty(order.customer.profile) && order.customer.profile.custom.CustomerType == 'Commander') {
+		        			item.custom.ChurchRewardsPointsRedeemed = item.product.custom.ChurchRewardsPointsCategory*item.quantityValue;
+		        			item.custom.QuantityGivenAway = item.quantityValue;
+		        			item.custom.ChurchRewardsPointsRedeemed = item.custom.ChurchRewardsPointsRedeemed==null?0:item.custom.ChurchRewardsPointsRedeemed;
+		        		}			        	
+			        }	
+				}		
+								
+				//get SFDC Address ID's for billing and shipping addresses
+				if (profile.addressBook!=null && profile.addressBook.addresses!= null && profile.addressBook.addresses.length>0)
+				{
+					/********************************************************************************************************
+					 WRITE SFDC ADDRESS ID'S TO ORDER OBJECT FOR NON-GUEST
+					********************************************************************************************************/
+					for each(var custAddress:dw.customer.CustomerAddress in profile.addressBook.getAddresses())
+					{
+						if (custAddress!= null) {					
+							//if billing address on form, matches address in address book loop
+							if (custAddress.address1 == order.billingAddress.address1 && custAddress.city == order.billingAddress.city && custAddress.stateCode == order.billingAddress.stateCode) {					
+								//catch the SFDC address ID (in case they typed it out instead of selecting it)
+								if (order.custom.SFDCBillingAddressID == '' || order.custom.SFDCBillingAddressID == null) {
+									if (custAddress.custom.SFDCAddressID != null && custAddress.custom.SFDCAddressID != "") {
+										if (custAddress.custom.SFDCAddressID.slice(0,3) == 'a0Q') {
+											order.custom.SFDCBillingAddressID = custAddress.custom.SFDCAddressID;
+										}
+									} 
+								}
+							}
+							
+							//if shipping address on form, matches address in address book loop
+							if (custAddress.address1 == order.shipments[0].shippingAddress.address1 && custAddress.city == order.shipments[0].shippingAddress.city && custAddress.stateCode == order.shipments[0].shippingAddress.stateCode) {					
+								//catch the SFDC address ID (in case they typed it out instead of selecting it)
+								if (order.custom.SFDCShippingAddressID == '' || order.custom.SFDCShippingAddressID == null) {
+									if (custAddress.custom.SFDCAddressID != null && custAddress.custom.SFDCAddressID != "") {
+										if (custAddress.custom.SFDCAddressID.slice(0,3) == 'a0Q') {
+											order.custom.SFDCShippingAddressID = custAddress.custom.SFDCAddressID;
+										}
+									}
+								}
+							}							
+						}
+					}
+				}
+			} else {
+				if (!empty(order)) {
+					/********************************************************************************************************
+					 WRITE ORDER LEVEL CUSTOM INFORMATION TO ORDER OBJECT FOR GUEST
+					********************************************************************************************************/					
+					order.custom.CustomerType = "Guest";
+					order.custom.SFDCAccountID = "";
+					order.custom.ChurchRewardsPointsRedeemed = 0;
+					order.custom.ChurchRewardsPointsGained = 0;		
+							
+					/********************************************************************************************************
+					 WRITE LINE ITEM LEVEL CUSTOM INFORMATION TO PRODUCT LINE ITEM OBJECT FOR GUEST
+					********************************************************************************************************/
+					if (dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive') && dw.system.Site.getCurrent().ID == 'Awana') {
+						var item;
+				        var items : dw.util.Collection = order.getAllProductLineItems();
+		
+				        for( var i = 0; i < items.size(); i++ ) {
+				        	item = items[i];
+		 					item.custom.ChurchRewardsPointsGained = 0;
+		 					item.custom.ChurchRewardsPointsRedeemed = 0;			        	
+				        }	
+					}							
+				}								
+			}
+			/****************************************************************************************************
+			 FOR CANADA, GET THE NEXT PROSTORES ORDER NUMBER 
+			****************************************************************************************************/
+			if (dw.system.Site.getCurrent().ID == 'AwanaCA') {
+				order.custom.SecondaryExternalOrderNo = GetNextProStoresOrderNumber();
+			}
+		}
+	}
+	
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 	return PIPELET_NEXT;
+}
+
+function formatNumeric(inStr : String) : String
+{
+	if(inStr == null)
+		inStr = "";
+	
+	var badc : RegExp = /[\"\ \x\X\e\E\x\X\t\T\-\ext\EXT]/g;
+	var tmpStr : String = inStr.replace(badc, "");
+
+	var nonAlphaNumPunc : RegExp = /[^\.\w\s\d,!?:;()<>@%$#&-]/g;
+	return tmpStr.replace(nonAlphaNumPunc, "");
+
+}

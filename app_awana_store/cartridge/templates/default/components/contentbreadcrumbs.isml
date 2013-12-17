@@ -1,0 +1,13 @@
+<div class="breadcrumb">
+	
+	<div class="fl">
+		<a href="${URLUtils.httpHome()}" class="home" title="${Resource.msg('global.home','locale',null)}">${Resource.msg('global.home','locale',null)}</a>
+	</div>
+
+	<isif condition="${pdict.Content != null}">
+		<div class="divider"></div>
+		<div class="fl"><a href="${URLUtils.url('Page-Show','cid',pdict.Content.ID)}" title="${pdict.Content.name}">${pdict.Content.name}</a></div>
+	</isif>
+	<div class="clear"></div>
+	
+</div>

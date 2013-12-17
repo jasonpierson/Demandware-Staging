@@ -1,0 +1,11 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+
+<isinclude template="util/modules"/>
+<div class="productlisting product_1x4">
+	<isloop items="${slotcontent.content}" var="product" begin="0" end="3">
+		<isobject object="${product}" view="recommendation">
+			<isproducttile product="${product}" showswatches="${true}" showpricing="${true}" showpromotion="${true}" showrating="${true}">
+		</isobject>
+	</isloop>
+	<div class="clear"><!-- FLOAT CLEAR --></div>
+</div><!-- END: product_1x4 -->

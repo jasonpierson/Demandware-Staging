@@ -1,0 +1,177 @@
+<isscript>
+	importPackage( dw.catalog );
+	importPackage( dw.web );
+	
+	// get root category of current site's navigation catalog
+	var siteCatalog : Catalog = CatalogMgr.getSiteCatalog();
+	var root : Catalog = null;
+	
+	if(siteCatalog != null) {
+		root = siteCatalog.getRoot();
+	}
+</isscript>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--- TemplateComment :  Send To Friend --->
+<iscontent type="text/html" charset="UTF-8">
+
+<html>
+<head>
+	<style type="text/css">
+		body {color:#696a6c;height:100%;font-size:11px;background:#fff;font-family:Arial, Helvetic, sans-serif; }
+		a {text-decoration:none; color:#d75026; cursor:pointer; }
+		a:hover {text-decoration:underline; }
+		.fl { float:left; }
+		.fr { float:right; }
+		.clear { clear:both; }
+		
+		${'#'}container { background-color: white; width: 980px; margin: 0px auto; padding: 0px; }
+		${'#'}header { margin:0; padding:0; width:980px;}
+		${'#'}main { margin:auto; top: 0px; padding:20px; margin-bottom:40px; }
+		
+		${'#'}footer_content {width:1024px;margin:0 auto;font-size:10px;}
+		${'#'}footer_content .contentasset {float:left;}
+		.footer_links {width:600px;}
+		${'#'}footer_legal {width:600px;color:#f9a01b;float:left;}
+		${'#'}copyright img {float:left;display:block;margin:0 10px 10px 0;}
+		${'#'}footer_media {float:left;width:424px; margin-top:-35px; }
+		${'#'}footer_media h6 {font-size:11px;color:#d75026;font-weight:bold;margin-bottom:6px;}
+		${'#'}download_catalog {width:79px;float:left;padding:0 35px;border-right:1px solid #e7e1d2;}
+		${'#'}connect{float:right;width:254px;padding-left:20px;}
+	
+		.facebook { float:left; padding:5px; }
+		.twitter { float:left; padding:5px; }
+		.youtube { float:left; padding:5px; }
+		.podcast { float:left; padding:5px; }
+		
+		.categorymenu { height:35px; width:980px; }
+		.categorybtn { width:135px; height:35px; background:#FAA41C; margin-right:2px; float:left; }
+	</style>
+</head>
+<body>
+	<div id="container" class="pt_storefront">
+	
+		<div id="header">
+	
+			<div style="height:20px;"></div>
+	
+			<div style="margin-bottom:10px;">
+				<a href="http://www.awana.org" title="${Resource.msg('global.storename','locale',null)}">
+					<img src="${URLUtils.httpsStatic('images/awanalogo.gif')}" border="0" />
+				</a>
+			</div>
+			
+			<isif condition="${root != null}">
+				<div class="categorymenu">
+
+					<isloop items="${root.getOnlineSubCategories()}" var="topCat">
+						<isif condition="${('showInMenu' in topCat.custom) && topCat.custom.showInMenu.valueOf()}">
+							<div class="categorybtn">
+								<div style="padding-left:5px;">
+								<a href="${URLUtils.http('Search-Show', 'cgid', topCat.getID())}" style="color:#fff; text-decoration:none; line-height:35px; font-weight:bold; font-family:Arial, Helvetic, sans-serif; font-size:16px;">
+									<isprint value="${topCat.getDisplayName()}"/>
+								</a>
+								</div>
+				            </div>
+				    	</isif>
+					</isloop>
+
+				    <div class="clear"></div>
+				</div>
+				
+			</isif>
+			
+		</div>
+		
+		<div id="main">
+		
+			<div><b><isprint value="${pdict.CurrentForms.sendtofriend.friendsname.htmlValue}"/></b>, this message has been sent to you from <b><isprint value="${pdict.CurrentForms.sendtofriend.yourname.htmlValue}"/></b> at <b><isprint value="${pdict.CurrentForms.sendtofriend.youremail.htmlValue}"/></b>.</div>
+			<br/>
+			<div>Personalized message from <b><isprint value="${pdict.CurrentForms.sendtofriend.yourname.htmlValue}"/></b>:  <isprint value="${pdict.CurrentForms.sendtofriend.message.htmlValue}"></div>
+			<br/>
+			<div>You have been invited to <a href="<isprint value="${pdict.CurrentForms.sendtofriend.messagelink.htmlValue}">">
+				check this out
+			</a> on <a href="http://www.awana.org">Awana.org</a>.</div>
+	
+		</div> 
+		
+		<div id="footer">
+			<div id="footer_content">
+				<div class="footer_links">
+					<a href="${URLUtils.http('CustomerService-Show')}" title="Customer Service">Customer Service</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('Page-Show', 'cid', 'about-us')}" title="About Us"> About Us</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('CustomerService-ContactUs')}" title="Contact Us">Contact Us</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('Account-Show')}" title="My Account">My Account</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('Order-History')}" title="Order Status">Order Status</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('CustomerService-Show','aid','customer-service')}" title="Return Policy">Return Policy</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('Page-Show', 'cid', 'terms')}" title="Shipping Policy">Shipping Policy</a>
+					<span class="divider">|</span>
+					<a href="${URLUtils.http('Page-Show', 'cid', 'faqs')}" title="Faqs">Faqs</a>
+				</div>
+				
+				<div id="footer_legal" style="margin-top:10px;">
+					<div id="logo" style="width:106px; float:left; margin:20px 10px 20px 0px;">
+						<img height="22" width="106" border="0" src="${URLUtils.httpsStatic('images/awanalogo-small.gif')}" alt="Awana" />
+					</div>
+					<div id="copyright" style="width:400px; float:left; margin:10px 0px 20px 0px;">
+						&copy;1997-2010 by Awana&reg; Clubs International. All rights reserved. 	The text and images of this Web site may not be copied for distribution in any way, directly or indirectly, 	without express written permission from Awana&reg; Clubs International unless otherwise stated or granted.
+					</div>
+					<div class="clear"></div>
+					
+					<div>
+						<a href="">Privacy and Policies</a> 	<span class="divider">|</span> 	<a href="">Legal Notices for Copyright and Trademarks</a>
+					</div>
+				</div>
+			
+				<div id="footer_media">
+					<div id="download_catalog">
+						<h6 style="font-size:10px; font-weight:bold;">Online Catalog</h6>
+						<p>
+							<a href="http://viewer.zmags.com/showmag.php?magid=188162" title="online catalog">
+								<img height="87" width="79" src="${URLUtils.httpsStatic('images/catalog.gif')}" alt="e-catalog" border="0" />
+							</a>
+						</p>
+					</div>
+				
+					<div id="connect">
+						<h6 style="font-size:10px; font-weight:bold;">Stay Connected</h6>
+						<form>
+						<div id="email_signup">
+							<input type="text" value="Enter Your Email Address" id="user_email" />
+							<button type="submit" value="Sign-Up"><span>Sign-Up</span></button>
+						</div>
+						</form>
+						
+						<div id="social_media">
+
+							<div class="facebook">
+								<a href="http://www.facebook.com/pages/Streamwood-IL/AWANA/62342221439?ref=ts"><img src="${URLUtils.httpsStatic('images/facebook-icn.gif')}" alt="facebook" width="16" height="16" border="0"/></a>
+							</div>
+							<div class="twitter">
+								<a href="http://www.twitter.com/awana"><img src="${URLUtils.httpsStatic('images/twitter-icn.gif')}" alt="twitter" width="16" height="16" border="0"/></a>
+							</div>
+							<div class="youtube">
+								<a href="http://www.youtube.com/user/awana1950"><img src="${URLUtils.httpsStatic('images/youtube-icn.gif')}" alt="youtube" width="16" height="16" border="0"/></a>
+							</div>
+							<div class="podcast">
+								<a href="http://feeds.feedburner.com/24-7ministries"><img src="${URLUtils.httpsStatic('images/podcast-icn.gif')}" alt="podcast" width="21" height="20" border="0"/></a>
+							</div>
+							<div class="clear"></div>
+
+						</div>
+					</div>
+			
+				</div>
+				<div class="clear"></div>
+			
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!--- TEMPLATENAME: subscriptionconfirmation.isml --->
+<h2>Thank you for subscribing to the <isprint value="${pdict.CurrentHttpParameterMap.newsletter.stringValue}"/> newsletter.</h2><br/>
+
+<p>If you have questions, we're happy to take your call<br/>
+(877-568-2437) Monday - Friday 8AM CST - 4:30PM CST<br />
+</p>
+
+<p>To download your purchase, please click the link below or paste it in your web browser.<br/>
+
+<isscript>
+	importPackage( dw.system );
+	var expDate : dw.util.Calendar = new dw.util.Calendar(new Date());
+	var message : String = "";
+	var pubKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6B2rA4cnLZg2fL0K1SHpAXiIvufUlMu7V0UkMfaa6+sXI152tgZbL98SDG8WvIYGflDX8uS8j6UbQVj3aUEsldRVVyEL75O/OfS2m9x2vHk2P+sBoOOq8moNXce6CQFM1HqOwwIOd+gS1rfdu5OW9NmbVTwjPoARZSek3X/XPa5VgXLDeoLpIYfgKw4N7kewfwPqzJ0uE8cR+w+j/uAe5y60dQfGFKUhVFfP3+Ay0GxcmHkD9HdlsCVZO6RruCBABapVVOewMfpEj6Sbe96wyvveuaZZ3Aj8dwCcGpy2eA91c60IhwD70XyvXVulA3A10lqUO0DwR4/tQKAslScXZwIDAQAB';
+	var cipher : dw.crypto.Cipher = new dw.crypto.Cipher();
+	var encodedMsg : String;
+	
+	// Add 365 days to the date for newsletter expiration
+	expDate.add(dw.util.Calendar.DAY_OF_YEAR, 365);
+
+    // add subscription id, subscription expiration date and the confirmation form to the encrypted parameter 
+	message = pdict.CustomObject.custom.SubscriptionID + "|" + dw.util.StringUtils.formatCalendar(expDate, "MM/dd/yyyy") + "|" + pdict.CurrentHttpParameterMap.confirmForm.stringValue;
+	encodedMsg = cipher.encrypt(message, pubKey, 'RSA', '', 0);
+	newsletterURL = dw.web.URLUtils.http('Subscription-ConfirmSubscription', 'xx', cipher.encrypt(message, pubKey, 'RSA', '', 0)).toString();
+</isscript>
+<b><isprint value="${pdict.CurrentHttpParameterMap.newsletter.stringValue}"/></b> <a href="${newsletterURL}">Click Here to Confirm</a><br/>

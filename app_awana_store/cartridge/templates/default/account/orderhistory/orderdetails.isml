@@ -1,0 +1,30 @@
+<isdecorate template="account/orderhistory/pt_orderhistory">
+<div id="getsat-widget-52"></div>
+<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+<script type="text/javascript">
+if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+</script>
+<style type="text/css">
+.gsfn-left {
+	left:inherit !important;
+	right:-80px !important;
+}
+</style>
+<isinclude template="util/modules"/>
+<div class="orderdetails">
+	<isif condition="${!empty(pdict.Order)}">
+		<isorderdetails order="${pdict.Order}" orderstatus="true">
+		<div class="formactions">
+			<isif condition="${pdict.CurrentCustomer.authenticated}">
+				<a href="${URLUtils.https('Order-History')}" title="">${Resource.msg('orderdetails.returnorder','account',null)}</a><br/>
+			</isif>
+			<a href="${URLUtils.url('Home-Shop')}" title="">${Resource.msg('orderdetails.returnshopping','account',null)}</a>	
+		</div><!-- END: formactions -->
+	<iselse/>
+		<isif condition="${pdict.CurrentCustomer.authenticated}">
+			<div class="back"><a href="${URLUtils.https('Order-History')}" title="">${Resource.msg('orderdetails.returnorder','account',null)}</a></div>
+		</isif>
+		<div class="notfound">${Resource.msg('orders.notfound','account',null)}</div>
+	</isif>
+</div><!-- END: orderdetails -->
+</isdecorate>

@@ -1,0 +1,139 @@
+<isinclude template="util/modules"/>
+
+<div class="colorboxDialogHeader">
+	<h3 class="sponsordialogheader">Search for a Church</h3>
+	<div id="colorboxDialogCloseButton"></div>
+</div>
+
+<iscomment>SEARCH BOX FOR SPONSORING A CHURCH</iscomment>
+<div class="sponsorselectiondialog">
+	<form action="${URLUtils.continueURL()}" method="post" name="FindChurchForm" id="FindChurchForm">
+		<div class="formfields" id="findChurchForm">
+			<div class="formfield">
+				<isinputfield formfield="${pdict.CurrentForms.churchsearch.churchname}" type="input">
+				<div class="clear"></div>
+			</div>					
+			<div class="formfield">
+				<isinputfield formfield="${pdict.CurrentForms.churchsearch.zip}" type="input">
+				<div class="clear"></div>
+			</div>	
+		</div>
+		<div class="actions">
+			<div id="churchsearchformaction"></div>	
+			<div id="SearchingMessage" class="fr" style="display:none;"><button id="ChurchSearchingButton" class="imagebutton loadingrewardssearch" type="button" disabled="disabled" name="loading" value="${Resource.msg('global.submitorder','locale',null)}"></button></div>
+			<button id="searchBtn" onclick="hidebutton();" name="${Resource.msg('global.search','locale',null)}" type="button"><span>${Resource.msg('global.search','locale',null)}</span></button>
+			<button id="cancelBtn" type="button"><span>${Resource.msg('global.cancel','locale',null)}</span></button>
+		</div>
+		<script type="text/javascript"><!--
+			function hidebutton() {
+				testing2 = $("div[id='SearchingMessage']");
+				testing2[0].style.display = "";				
+				testing = $("button[id='searchBtn']");
+				testing[0].style.display = "none";			
+			}
+		//--></script>
+		<!-- Display results here, if there are any -->
+		<isif condition="${pdict.churchResults!=null}">
+			<div class="churchsearchresults">
+				<h3>Search Results</h3>
+				<div class="churchresultslist">
+					<isloop items="${pdict.churchResults}" var="resultItem">
+						<div class="churchresult">
+							<div class="churchresultinfo">
+								<div class="churchresultname"><isprint value="${resultItem.name}"/></div>								
+								<div class="churchresultaddress"><isprint value="${resultItem.city}"/>, <isprint value="${resultItem.state}"/>, <isprint value="${resultItem.postalCode}"/></div>
+							</div>
+							<div class="churchresultselectlink"><a rel="${resultItem.registrationNumber}" title="${resultItem.name}">Select this church</a></div>
+							<div class="clear"><!--  FLOAT CLEAR --></div>
+						</div>
+					</isloop>
+					<isinputfield formfield="${pdict.CurrentForms.churchsearch.selectedChurch}" type="hidden">
+				</div>
+				<div id="churchselectformaction"></div>	
+			</div>
+		<iselse>
+			<isif condition="${pdict.errorMessage != null}">
+				<div style="margin:20px; padding:20px;">
+					<span class="error">${pdict.errorMessage}</span>
+				</div>		
+			</isif>
+		</isif>
+	</form>
+</div>
+
+<script type="text/javascript">
+<!--
+	app.URLs.submitDialogURL = "${URLUtils.httpContinue()}";
+		
+	jQuery(document).ready(function() {	
+
+		jQuery("#cancelBtn").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#colorboxDialogCloseButton").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#cboxClose").hide();
+
+		jQuery("#searchBtn").click( function() {
+			jQuery('#churchsearchformaction').append("<input name='${pdict.CurrentForms.churchsearch.search.htmlName}' type='hidden' />");
+			var post = jQuery("#FindChurchForm").serialize();
+			jQuery.ajax({
+				   type: "POST",
+				   url: app.URLs.submitDialogURL,
+				   data: post,
+				   dataType: 'html',
+				   success: function(data){	   		
+				   		jQuery("#cboxLoadedContent").empty().html(data);
+				   		jQuery.fn.colorbox.resize();
+				   },
+				   failure: function(data) {
+				   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+				   }
+			});
+		});
+
+		// select church from list
+		jQuery(".churchresultslist a").click(function() {
+			var churchSelection = jQuery(this).attr("rel");
+			if(!churchSelection) return false;
+			jQuery("[name=${pdict.CurrentForms.churchsearch.selectedChurch.htmlName}]").val(churchSelection);
+			jQuery('#churchselectformaction').append("<input name='${pdict.CurrentForms.churchsearch.select.htmlName}' type='hidden' />");
+			var post = jQuery("#FindChurchForm").serialize();
+			var churchname = jQuery(this).attr("title");
+			jQuery.ajax({
+				   type: "POST",
+				   url: app.URLs.submitDialogURL,
+				   data: post,
+				   dataType: 'html',
+				   success: function(data){	   		
+				   		jQuery.fn.colorbox.close();
+
+				   		//population of selected sponsor church name
+				   		jQuery("span.churchname").html(churchname);
+				   		
+						//if adding new sponsor hide old message
+				   		if(jQuery(".selectsponsor").length){
+				   			jQuery(".selectsponsor").hide();
+				   		} 
+				   		//if editing existing sponsor hide old message
+				   		else if(jQuery(".sponsorinfo").length){
+				   			jQuery(".sponsorinfo").hide();
+				   		} 
+
+				   		//show success message
+			   			jQuery(".sponsorsuccess").show();
+				   },
+				   failure: function(data) {
+				   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+				   }
+			});
+			return false;
+		});
+
+	});
+//-->
+</script>
+		

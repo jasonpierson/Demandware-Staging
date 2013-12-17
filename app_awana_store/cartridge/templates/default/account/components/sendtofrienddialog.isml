@@ -1,0 +1,280 @@
+<isinclude template="util/modules"/>
+
+<div class="colorboxDialogHeader">
+	<h3>Send To A Friend</h3>
+	<div id="colorboxDialogCloseButton"></div>
+</div>
+
+<div class="sendtofriend" style="margin:20px; padding:20px; border:solid 2px #FFC324; -moz-border-radius:8px; -webkit-border-radius:8px;">
+	<form action="${URLUtils.continueURL()}" method="post" name="SendToFriendForm" id="SendToFriendForm">
+	<isif condition="${pdict.ViewMode == 'edit'}">
+		<div class="formfields emailform" id="sendToFriend">
+		
+			<div class="formfield stfyourname">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.yourname}" type="input">
+				<!---<a title="Privacy Policy" class="privacyPolicy">${Resource.msg('global.privacypolicy','locale',null)}</a>--->
+				<div class="clear"></div>
+			</div>					
+			<div class="formfield stfyouremail">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.youremail}" type="input">
+				<div class="clear"></div>
+			</div>		
+			<div class="formfield stffriendname">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.friendsname}" type="input">
+				<div class="clear"></div>	
+			</div>								
+			<div class="formfield stffriendemail">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.friendsemail}" type="input">
+				<div class="clear"></div>
+			</div>			
+			<div class="formfield stffriendemail">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.confirmfriendsemail}" type="input">
+				<div class="clear"></div>
+			</div>
+			<div class="sendtofriendlogo">		
+				<a title="${Resource.msg('global.storename','locale',null)}" href="${URLUtils.httpHome()}"><img src="${URLUtils.staticURL('/images/awanalogo.gif')}" alt="${Resource.msg('global.storename','locale',null)}" /></a>
+				<div class="clear"></div>
+			</div>
+			<div class="formfield stfmessage" id="friendContent">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.subject}" type="hidden">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.messagelink}" type="hidden">
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.messagelinktext}" type="hidden">
+				<isinputfield attribute1="rows" value1="8" attribute2="cols" value2="40" formfield="${pdict.CurrentForms.sendtofriend.message}" type="textarea">
+				
+				<div class="clear"></div>
+			</div>			
+		</div>
+	</isif>
+	<isif condition="${pdict.ViewMode == 'preview'}">	
+		<div class="previewpanel" id="previewPanel">
+			<div class="stfpreviewmessage">
+				<h2>${Resource.msg('sendtoafrienddialog.reviewheader','account',null)}</h2>
+				<div class="previewmessage">${Resource.msg('sendtoafrienddialog.reviewmessage','account',null)}</div>
+			</div>
+			<div class="sendtofriendlogo">		
+				<a title="${Resource.msg('global.storename','locale',null)}" href="${URLUtils.httpHome()}">
+					<img src="${URLUtils.staticURL('/images/awanalogo.gif')}" alt="${Resource.msg('global.storename','locale',null)}" />
+				</a>
+			</div>		
+			<isif condition="${pdict.Product != null && !empty(pdict.Product)}">
+				<isset name="product" value="${pdict.Product}" scope="page"/>
+				<isset name="productOptionModel" value="${pdict.ProductOptionModel}" scope="page"/>
+				<isset name="image" value="${product.getImage('medium',0)}" scope="page"/>
+				<isif condition="${!empty(image)}">
+					<isset name="thumbnailUrl" value="${image.url}" scope="page"/>
+				   	<isset name="imageAlt" value="${image.alt}" scope="page"/>
+				   	<isset name="imageTitle" value="${image.title}" scope="page"/>
+				<iselse/>
+				  	<isset name="thumbnailUrl" value="${URLUtils.staticURL('/images/noimagesmall.png')}" scope="page"/>
+				  	<isset name="imageTitle" value="${item.object.product.name}" scope="page"/>
+				 	<isset name="imageAlt" value="${item.object.product.name}" scope="page"/>
+				</isif>			
+										
+				<div class="productinfo">
+					<div class="productimage">
+						<div class="greyborder">
+							<img src="${thumbnailUrl}" alt="${imageAlt}" title="${imageTitle}"/>
+						</div>
+					</div>		
+					<div class="producttext">
+						<div class="producttexttop">
+							<isif condition="${!empty(product) && product != null}">
+								<isif condition="${!empty(product.name) && product.name != null}">
+									<h1><span><isprint value="${product.name}" encoding="off"/></span></h1>
+								</isif>
+								<isif condition="${!empty(product.ID) && product.ID != null}">
+									<span class="bold">${Resource.msg('sendtoafrienddialog.item','account',null)}</span>&nbsp;<isprint value="${product.ID}" encoding="off"/><br />
+								</isif>
+							</isif>	
+							<iscomment><isdisplayvariationvalues product="${product}"/></iscomment>
+							<isif condition="${product != null && product.isVariant()}">
+								<isloop items="${product.variationModel.attributeDefinitions}" var="VA">
+									<isset name="SelectedVariationValue" value="${product.variationModel.getSelectedValue(VA)}" scope="page"/>
+									<div class="attribute">
+										<div class="label">${VA.displayName}:</div>
+										<div class="value">
+										<isif condition="${SelectedVariationValue != null}">
+											<isprint value="${SelectedVariationValue.displayValue}"/>
+										<iselse>
+											-
+										</isif>
+										</div>
+										<br />
+									</div>
+								</isloop>
+								<div class="clear"></div>
+							</isif>
+							<isif condition="${productOptionModel!=null}">
+								<isloop iterator="${productOptionModel.options}" alias="productOption">
+									<isset name="selectedOptionValue" value="${productOptionModel.getSelectedOptionValue(productOption)}" scope="page"/>					
+										<span style="display:none" class="<isprint value="${productOption.htmlName}"/>"><isprint value="${selectedOptionValue.ID}"/></span>
+										<span class="bold"><isprint value="${productOption.displayName}"/></span>: <isprint value="${selectedOptionValue.displayValue}"/>			
+									<div class="clear"></div>
+								</isloop>
+							</isif>
+						</div>
+						<div class="producttextdesc">
+							<isif condition="${product.shortDescription != null}">
+								<br/>
+								<div class="title">Description</div>
+								<isprint value="${product.shortDescription}" encoding="off" />
+							</isif>
+						</div>
+					</div>									
+				</div>
+				<div class="clear"></div>
+			</isif>	
+			<div class="previewfield stffriendname">
+				<div class="label">${Resource.msg('global.to','locale',null)}:</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.friendsname.htmlValue}"/></div>
+				<div class="clear"></div>
+			</div>
+			<div class="previewfield stffriendemail">
+				<div class="label">&nbsp;</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.friendsemail.htmlValue}"/></div>
+				<div class="clear"></div>
+			</div>
+			<div class="previewfield stffriendname">
+				<div class="label">${Resource.msg('global.from','locale',null)}:</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.yourname.htmlValue}"/></div>
+				<div class="clear"></div>				
+			</div>		
+			<div class="previewfield stfyouremail">
+				<div class="label">&nbsp;</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.youremail.htmlValue}"/></div>
+				<div class="clear"></div>
+			</div>				
+			<div class="previewfield stfsubject">
+				<div class="label">${Resource.msg('sendtoafrienddialog.subject','account',null)}</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.subject.htmlValue}"/></div>
+				<div class="clear"></div>
+			</div>				
+			<div class="previewfield stfmessage">
+				<div class="label">${Resource.msg('sendtoafrienddialog.message','account',null)}</div>
+				<div class="value"><isprint value="${pdict.CurrentForms.sendtofriend.message.htmlValue}"/></div>					
+				<isinputfield formfield="${pdict.CurrentForms.sendtofriend.subject}" type="hidden"/>
+				<div class="clear"></div>
+			</div>											
+		</div>
+	</isif>
+	
+	<isif condition="${pdict.ViewMode == 'preview' || pdict.ViewMode == 'edit'}">
+		<div class="actions">
+			<div id="sendtofriendformaction"></div>	
+			<button id="<isif condition="${pdict.ViewMode == 'edit'}">previewBtn<iselse>editBtn</isif>" name="<isif condition="${pdict.ViewMode == 'edit'}">${Resource.msg('global.preview','locale',null)}<iselse>${Resource.msg('global.edit','locale',null)}</isif>" type="button"><span><isif condition="${pdict.ViewMode == "edit"}">${Resource.msg('global.preview','locale',null)}<iselse>${Resource.msg('global.edit','locale',null)}</isif></span></button>
+			<button id="sendBtn" type="button"><span>${Resource.msg('global.send','locale',null)}</span></button>
+			<button id="cancelBtn" type="button"><span>${Resource.msg('global.cancel','locale',null)}</span></button>
+			<div class="clear"></div>
+		</div>
+	</isif>
+
+	</form>
+	<isif condition="${pdict.ViewMode == 'confirm'}">
+		<div class="confirmationcontainer" id="confirmationcontainer">
+			<h2>${Resource.msg('sendtoafrienddialog.confirmation','account',null)}</h2>
+		</div>
+	</isif>	
+	<div class="privacypolicy" id="privacypolicy" style="display:none;overflow:auto;">
+		<iscontentasset aid="privacy-policy">
+	</div>
+</div>
+
+<script type="text/javascript">
+<!--
+	app.URLs.submitDialogURL = "${URLUtils.httpContinue()}";
+		
+	jQuery(document).ready(function() {	
+
+		jQuery("#cancelBtn").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#colorboxDialogCloseButton").click(function() {
+			$.fn.colorbox.close();
+		});
+
+		jQuery("#cboxClose").hide();	
+		jQuery("#editBtn").click( function() { PreviewOrEdit(this.name); });
+		jQuery("#previewBtn").click( function() { PreviewOrEdit(this.name); });
+
+		var PreviewOrEdit = function(buttonName) {
+
+			if (buttonName == "${Resource.msg('global.preview','locale',null)}") {
+				jQuery('#sendtofriendformaction').append("<input name='${pdict.CurrentForms.sendtofriend.preview.htmlName}' type='hidden' />");
+			} else {
+				jQuery('#sendtofriendformaction').append("<input name='${pdict.CurrentForms.sendtofriend.edit.htmlName}' type='hidden' />");
+			}
+			
+			jQuery("#confirmationcontainer").remove();
+			var post = jQuery("#SendToFriendForm").serialize();
+		 			
+			jQuery.ajax({
+			   type: "POST",
+			   url: app.URLs.submitDialogURL,
+			   data: post,
+			   dataType: 'html',
+			   success: function(data){	   		
+			   		jQuery("#cboxLoadedContent").empty().html(data);
+			   		jQuery.fn.colorbox.resize();
+			   },
+			   failure: function(data) {
+			   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+			   }
+			});
+		}
+		
+		jQuery('#sendBtn').click( function() {
+			jQuery("#sendtofriendformaction").append("<input name='${pdict.CurrentForms.sendtofriend.send.htmlName}' type='hidden' />");
+			var post = jQuery("#SendToFriendForm").serialize();
+		 			
+			jQuery.ajax({
+			   type: "POST",
+			   url: app.URLs.submitDialogURL,
+			   data: post,
+			   dataType: 'html',
+			   success: function(data){	
+		   			jQuery("#cboxLoadedContent").empty().html(data);
+		   			jQuery.fn.colorbox.resize();	   			
+			   },
+			   failure: function(data) {
+			   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+			   }
+			});		
+		});
+
+		jQuery("#confirmBtn").click( function() {
+			jQuery.fn.colorbox.close();
+		});
+		
+		// message character limitation
+		jQuery(".stfmessage textarea").bind("keyup keydown", function() {
+			var max = 250;
+			var value = jQuery(this).val();
+	
+			var left = max - value.length;
+			if(left < 0) {
+				jQuery(this).val( value.slice(0, left) );
+				left = 0;
+			}
+			jQuery(".stfmessage span.count").text(left);
+
+		});
+		
+	});
+	
+	// init send to friend message
+	function initMessageBox() {
+		<isif condition="${pdict.ViewMode == 'edit'}">		
+			// init left character count and max characters
+			var max = 250;
+			var text = jQuery(".stfmessage span.caption").html();
+			var count = jQuery(".stfmessage textarea").val().length;
+			jQuery(".stfmessage span.caption").html( text.replace("XXX", "<span class=\"count\"><\/span>").replace("YYY", max) );	
+			var left = max - count;
+			jQuery(".stfmessage span.count").text(left);
+		</isif>
+	}
+	
+	initMessageBox();
+//-->
+</script>

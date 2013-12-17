@@ -1,0 +1,15 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+
+<isinclude template="util/modules"/>
+<div class="horizontalcarouselheader"><!-- Header for Carousel --></div>
+<div class="horizontalcarousel">
+	<ul id="horicarousel">
+		<isloop items="${slotcontent.content}" var="product">
+			<li>
+				<div class="productcarousel">
+					<isproducttile product="${product}" showswatches="${true}" showpricing="${true}" showpromotion="${true}" showrating="${true}">
+				</div><!-- END: productcarousel -->
+			</li>
+		</isloop>
+	</ul>
+</div><!-- END: horizontalcarousel -->

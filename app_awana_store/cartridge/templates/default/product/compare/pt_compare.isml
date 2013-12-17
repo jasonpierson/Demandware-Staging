@@ -1,0 +1,57 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+
+<head>
+
+	<isscript>var pageContext={title:'Compare',type:'compare',ns:'compare'};</isscript>
+	<isinclude template="util/modules"/>
+	
+	<isinclude template="components/header/htmlhead"/>
+	<isinclude template="product/compare/pt_compare_UI"/>
+
+	<iscomment>Add template-specific header information here.</iscomment>	
+	
+</head>
+
+<body>
+
+	<div id="wrapper" class="pt_product-details">	
+	
+		<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	
+		<div id="main" role="main" class="full-width clearfix">
+			<isinclude template="components/browsertoolscheck"/>
+			<div id="primary" class="primary-content">
+				<isreplace/>
+			</div>
+			
+		</div>
+	
+		
+		<isinclude template="components/footer/footer"/>
+		<isinclude template="product/compare/pt_compare_VARS"/>
+		
+	</div>
+	
+    <isif condition="${dw.system.Site.getCurrent().ID != 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10437;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+    <isif condition="${dw.system.Site.getCurrent().ID == 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10976;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+	
+</body>
+</html>

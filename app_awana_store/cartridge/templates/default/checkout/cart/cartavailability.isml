@@ -1,0 +1,59 @@
+<iscomment>Expected parameters are product & quantity.</iscomment>
+
+<isset name="levels" value="${product.availabilityModel.getAvailabilityLevels(quantity)}" scope="page"/>
+
+<isif condition="${product.isMaster()}">
+	<isif condition="${!empty(product.variationModel.variants[0].availabilityModel.inventoryRecord.allocation) && product.variationModel.variants[0].availabilityModel.inventoryRecord.allocation == 0 && !empty(product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate) && product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate!=null && product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate.toDateString() && product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate > new Date()}">
+		<isset name="inStockDate" value="${product.variationModel.variants[0].availabilityModel.inventoryRecord.inStockDate.toDateString()}" scope="page"/>
+	<iselse/>
+		<isset name="inStockDate" value="${null}" scope="page"/>
+	</isif>						
+<iselseif condition="${!empty(product.availabilityModel.inventoryRecord.allocation) && product.availabilityModel.inventoryRecord.allocation == 0 && !empty(product.availabilityModel.inventoryRecord.inStockDate) && product.availabilityModel.inventoryRecord.inStockDate!=null && product.availabilityModel.inventoryRecord.inStockDate.toDateString() && product.availabilityModel.inventoryRecord.inStockDate > new Date()}">
+	<isset name="inStockDate" value="${product.availabilityModel.inventoryRecord.inStockDate.toDateString()}" scope="page"/>
+<iselse/>
+		<isset name="inStockDate" value="${null}" scope="page"/>
+</isif>
+
+<ul>
+<isif condition="${levels.inStock.value > 0}">
+	<isif condition="${levels.inStock.value == quantity}">
+		<li>${StringUtils.format(Resource.msg('global.instock','locale',null))}</li>
+	<iselse>
+		<li>${StringUtils.format(Resource.msg('global.quantityinstock','locale',null),levels.inStock.value)}</li>
+	</isif>
+</isif>
+
+<isif condition="${levels.preorder.value > 0}">
+	<isif condition="${levels.preorder.value == quantity}">
+		<li>${StringUtils.format(Resource.msg('global.allpreorder','locale',null))}</li>
+	<iselseif condition="${levels.preorder.value == 0}">
+		<li>${StringUtils.format(Resource.msg('global.remainingpreorder','locale',null))}</li>
+	<iselse>
+		<li>${StringUtils.format(Resource.msg('global.quantitypreorder','locale',null),levels.preorder.value)}</li>
+	</isif>
+	<isif condition="${inStockDate != null}">
+		<li>${StringUtils.format(Resource.msg('global.inStockDate','locale',null), inStockDate)}</li>
+	</isif>
+</isif>
+
+<isif condition="${levels.backorder.value > 0}">
+	<isif condition="${levels.backorder.value == quantity}">
+		<li>${StringUtils.format(Resource.msg('global.allbackorder','locale',null))}</li>
+	<iselseif condition="${levels.notAvailable.value == 0}">
+		<li>${StringUtils.format(Resource.msg('global.remainingbackorder','locale',null))}</li>
+	<iselse>
+		<li>${StringUtils.format(Resource.msg('global.quantitybackorder','locale',null),levels.backorder.value)}</li>
+	</isif>
+	<isif condition="${inStockDate != null}">
+		<li>${StringUtils.format(Resource.msg('global.inStockDate','locale',null), inStockDate)}</li>
+	</isif>
+</isif>
+
+<isif condition="${levels.notAvailable.value > 0}">
+	<isif condition="${levels.notAvailable.value == quantity}">
+		<li>${StringUtils.format(Resource.msg('global.allnotavailable','locale',null))}</li>
+	<iselse>
+		<li>${StringUtils.format(Resource.msg('global.remainingnotavailable','locale',null))}</li>
+	</isif>
+</isif>
+</ul>

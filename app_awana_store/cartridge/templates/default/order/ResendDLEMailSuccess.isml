@@ -1,0 +1,14 @@
+<!--- TEMPLATENAME: ResendDLEMailSuccess.isml --->
+<body>
+	<p>
+		<span style="color: rgb(0, 255, 0); ">
+			<span style="font-size: large; ">
+				<span style="font-family: Verdana; ">
+					<strong>
+						Download e-mail has been re-sent. Please follow up with the customer to make sure they received it. Thank you!
+					</strong>
+				</span>
+			</span>
+		</span>
+	</p>
+</body>

@@ -1,0 +1,71 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+
+<iscomment>This includes global utilities into the pages</iscomment>
+<isinclude template="util/modules"/>
+
+<iscomment>This page must be cachable. It inherits the caching attributes by the decorated template.</iscomment>
+
+<head>
+	<iscomment>
+		Include all important information globally , e.g. meta-data, link information, and
+		javascript.
+	</iscomment>
+	<isinclude template="components/header/htmlhead"/>
+	<isinclude template="account/orderhistory/pt_orderhistory_UI"/>
+
+	<iscomment>Add page type specific header information here.</iscomment>
+
+</head>
+<body>
+<div id="container" class="pt_order">
+	<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	<div id="main">
+		<isif condition="${empty(pdict.Order)}">
+			<isbreadcrumbs bcurl1="${URLUtils.https('Account-Show')}" bctext1="My Account" bctext2="Order History"/>
+		<iselse>
+			<isbreadcrumbs bcurl1="${URLUtils.https('Account-Show')}" bctext1="My Account" bcurl2="${URLUtils.https('Order-History')}" bctext2="Order History" bctext3="${pdict.Order.orderNo}"/>
+		</isif>
+		<div id="leftcolumn">
+			<div class="leftcolumn_top"></div>
+				<div class="leftcolumn_mid">
+					<isif condition="${pdict.CurrentCustomer.registered}">
+						<iscontentasset aid="account-nav-registered">
+					<iselse>
+						<iscontentasset aid="account-nav-unregistered">
+					</isif>
+					<div class="accountnavtext"><iscontentasset aid="account-nav-text"></div><!-- END: accountnavtext -->
+					<div class="clear"></div>
+				</div>
+			<div class="leftcolumn_btm"></div>
+		</div><!-- END: leftcolumn -->
+		<div id="content">
+			<isreplace/>
+		</div><!-- END: content -->
+		<div class="clear"></div>
+	</div><!-- END: main -->
+	<isinclude template="components/footer/footer"/>
+	<isinclude template="account/orderhistory/pt_orderhistory_VARS"/>
+</div><!-- END: container -->
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+    <isif condition="${dw.system.Site.getCurrent().ID != 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10437;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+    <isif condition="${dw.system.Site.getCurrent().ID == 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10976;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+</body>
+</html>

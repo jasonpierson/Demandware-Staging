@@ -1,0 +1,56 @@
+<isinclude template="util/modules.isml"/>
+<div class="account_addresses">
+	<isif condition="${!empty(pdict.CurrentCustomer.profile.addressBook.addresses)}">
+		<iscomment>addresses are sorted, preferred first, than alphabetic </iscomment>
+		
+		<isif condition="${pdict.Status != null && pdict.Status.isError()}">				 
+		 	<!--- Use the error code value to build an appropriate error message --->
+			<span class="error">
+				<isprint value="${Resource.msg('addressdetails.' + pdict.Status.code, 'account',null)}">
+			</span>
+		</isif>
+				
+		<isloop items="${pdict.CurrentCustomer.profile.addressBook.addresses}" var="address">
+			<div class="accountaddress">
+				<div class="defaultselection">
+					<iscomment>For B2B customers, only commanders can set default shipping address.  Billing address updates only allowed in Salesforce portal.</iscomment>
+					<input class="selectDefault"<isif condition="${!allowSetDefault}"> disabled</isif> type="radio" name="shipping" <isif condition="${(pdict.CurrentCustomer.profile.custom.defaultShippingAddressID!=null) && (pdict.CurrentCustomer.profile.custom.defaultShippingAddressID == address.ID)}">checked="checked"</isif> value="${address.ID}" /> ${Resource.msg('editaddress.defaultshipaddress','account',null)}<br />
+					<input class="selectDefault"<isif condition="${!allowEdit}"> disabled</isif> type="radio" name="billing" <isif condition="${(pdict.CurrentCustomer.profile.custom.defaultBillingAddressID!=null) && (pdict.CurrentCustomer.profile.custom.defaultBillingAddressID == address.ID)}">checked="checked"</isif> value="${address.ID}" /> ${Resource.msg('editaddress.defaultbilladdress','account',null)}
+				</div>
+				<isminiaddress p_address="${address}">
+
+				<isif condition="${allowEdit}"> 
+					<div class="actions">
+						<button class="editButton" type="button" name="${address.ID}"><span>${Resource.msg('global.edit','locale',null)}</span></button>
+						<a class="deletelink" title="${Resource.msg('addressinclude.delete','account',null)}" name="${address.ID}">${Resource.msg('addressinclude.delete','account',null)}</a>
+					</div>
+				</isif>
+				<div class="clear"></div>
+			</div>
+		</isloop><div class="clear"></div>
+	</isif>
+</div>
+<script type="text/javascript">
+<!--
+	jQuery(document).ready(function() {
+		
+		jQuery(".selectDefault").click(function() {
+			var setDefaultURL = app.util.appendParamToURL("${URLUtils.url('Address-SetDefault')}", "AddressID", this.value);
+			var setFinalDefaultURL = app.util.appendParamToURL(setDefaultURL, "Type", jQuery(this).attr('name'));
+			window.location.href = setFinalDefaultURL;
+		});
+		jQuery(".editButton").click(function(e) {			
+			var url = app.util.appendParamToURL("${URLUtils.url('Address-Edit')}", "AddressID", jQuery(this).attr('name'));
+			//jQuery.fn.colorbox({href:url, width:650, scrolling:false});
+			window.location.href = url;
+		});
+		jQuery(".deletelink").click(function() {
+			var accepted = confirm("${Resource.msg('forms.customeraddress.deleteaddressconfirm','forms',null)}");		
+			if( accepted ) {
+	   			var deleteURL = app.util.appendParamToURL("${URLUtils.url('Address-Delete')}", "AddressID", jQuery(this).attr('name'));
+				window.location.href = deleteURL;
+			}			
+		});
+	});
+//-->
+</script>

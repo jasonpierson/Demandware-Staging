@@ -1,0 +1,60 @@
+<iscomment>
+	This template renders a summary of all shipments of the basket which is
+	used below the order summary at the right hand side in the checkout
+	process.
+</iscomment>
+<isset name="Shipments" value="${pdict.Basket.shipments}" scope="page"/>
+
+<iscomment>the url to edit shipping addresses depends on the checkout scenario</iscomment>
+<isset name="editUrl" value="${URLUtils.https('COShipping-Start')}" scope="page"/>
+<isif condition="${pdict.CurrentForms.multishipping.entered.value}">
+	<isset name="editUrl" value="${URLUtils.https('COShippingMultiple-Start')}" scope="page"/>
+</isif>
+
+<isif condition="${!empty(Shipments)}">
+	<iscomment>render a box per shipment</iscomment>
+	<isset name="shipmentCount" value="${0}" scope="page"/>
+	<isloop items="${Shipments}" var="shipment" status="loopstate">
+		<isif condition="${(shipment.giftCertificateLineItems.size() > 0 && shipment.shippingAddress == null) || shipment.shippingAddress != null}">
+			<isset name="shipmentCount" value="${shipmentCount+1}" scope="page"/>
+			<div class="minishipment">
+	
+				<iscomment>omit the shipment name, if there is just one shipment</iscomment>
+				<isif condition="${Shipments.size() > 1}"><div class="name">Shipment ${'#' + shipmentCount}</div></isif>
+	
+				<div class="header">
+					<isif condition="${shipment.giftCertificateLineItems.size() > 0 && shipment.shippingAddress == null}">
+						${Resource.msg('minishipments.shipping','checkout',null)} <span>${Resource.msg('minishipments.giftcertdelivery','checkout',null)}</span>
+					<iselseif condition="${shipment.shippingAddress != null}"/>
+						<div class="fl">${Resource.msg('minishipments.shippingaddress','checkout',null)}</div>
+						<div class="edit fr"><a href="${editUrl}">${Resource.msg('global.edit','locale',null)}</a></div>
+						<div class="clear"></div>
+					</isif>
+				</div>
+	
+				<div class="details">
+					<iscomment>
+						render the detail section depending on whether this is a physical shipment with products
+						(shipped to an address) or if this is a gift certificate (send via email)
+					</iscomment>
+					<isif condition="${shipment.giftCertificateLineItems.size() > 0 && shipment.shippingAddress == null}">
+						<isloop items="${shipment.giftCertificateLineItems}" var="giftCertLI">
+							<div><isprint value="${giftCertLI.recipientName}"/></div>
+							<div>(<ismask p_string="${giftCertLI.recipientEmail}" p_maskchars="${6}">)</div>
+						</isloop>
+					<iselseif condition="${shipment.shippingAddress != null}"/>
+						<isset name="address" value="${shipment.shippingAddress}" scope="page"/>
+						<div><isprint value="${address.firstName}"/> <isprint value="${address.lastName}"/></div>
+						<div><isprint value="${address.address1}"/></div>
+						<isif condition="${!empty(address.address2)}">
+							<div><isprint value="${address.address2}"/></div>
+						</isif>
+						<div><isprint value="${address.city}"/>, <isprint value="${address.stateCode}"/> <isprint value="${address.postalCode}"/></div>
+						<div><isprint value="${address.countryCode}"/></div>
+					</isif>
+				</div>
+	
+			</div>
+		</isif>
+	</isloop>
+</isif>

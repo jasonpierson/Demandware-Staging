@@ -1,0 +1,42 @@
+/* SEND TO A FRIEND
+--------------------------------------------------------------------------------------- */
+.sendtofriend h2 {color: red;text-align: center;}
+.sendtofriend .emailform {margin: 0 auto;width:545px;}
+.sendtofriend form .formfield .label {width: 170px; padding-bottom:15px;}*/
+.sendtofriend .stfyourname a {color:black;margin: 0 0 0 5px;text-decoration:underline;}
+.sendtofriendmessage {text-align: center;padding: 8px 20px 20px 20px;}	
+.sendtofriend .sendtofriendlogo {margin: 5px 0 5px 0;text-align: center;}
+.sendtofriend .stfmessage .count {padding: 0 2px 0 0;}
+.previewpanel .previewfield	{font-size:1.1em; margin: 8px 0px 0px 0px; height:20px;}
+.previewpanel .stfmessage {padding: 0 0 20px 0;}	
+.stfpreviewmessage {color: red; font-weight: normal; text-align: center; margin-bottom:10px;}
+.stfpreviewmessage h2 {font-weight: bold; font-weight:bold; font-size:16px;}
+.sendtofriend .emailsignupcheckbox{float:left;margin: 0 4px 0 173px;}
+.sendtofriend .emailsignup{width:300px; float: left;}
+.sendtofriend .emailsignup a{text-decoration:underline;}
+.sendtofriend .actions {margin: 0px;padding: 20px 74px 0 0;text-align:right;}
+.confirmationcontainer {background: transparent url(../images/background_confirmation.png) repeat 0 0;text-align: center;}
+.confirmationcontainer h2{color:#D85226; font-size:20px; font-weight:bold;}
+
+.previewpanel .productinfo { height:155px; margin-bottom:30px; } 
+.previewpanel .productinfo .productimage { float:left; border:solid 1px #CECDCB; }
+.previewpanel .productinfo .producttext { width:380px; float:left; margin-left:10px; }
+.previewpanel .producttexttop h1 { font-size:20px; font-weight:bold; color:#D85226; }
+.previewpanel .producttexttop .bold { color:#000; }
+.previewpanel .productinfo .attribute div.label { float:left; font-weight:bold; color:#000; }
+.previewpanel .productinfo .attribute div.value { float:left; }
+
+previewpanel .producttext .producttextdesc { margin-top:10px; }
+.previewpanel .producttext .producttextdesc .title { font-weight:bold; color:#000; }
+
+.previewpanel .previewfield div.label { float:left; font-weight:bold; width:120px; text-align:right; color:#000; }
+.previewpanel .previewfield div.value { float:left; width:380px; }
+
+.sendtofriend button#editBtn {width:45px;height:20px;background:url(../images/buttons/btn-edit.gif) 0 0 no-repeat;}
+.sendtofriend button#editBtn span {display:none;}
+.sendtofriend button#previewBtn {width:64px;height:20px;background:url(../images/buttons/btn-preview.gif) 0 0 no-repeat;}
+.sendtofriend button#previewBtn span {display:none;}
+.sendtofriend button#sendBtn {width:64px;height:20px;background:url(../images/buttons/btn-send.gif) 0 0 no-repeat;}
+.sendtofriend button#sendBtn span {display:none;}
+.sendtofriend button#cancelBtn {width:64px;height:20px;background:url(../images/buttons/btn-cancel.gif) 0 0 no-repeat;}
+.sendtofriend button#cancelBtn span {display:none;}

@@ -1,0 +1,5 @@
+<html>
+	<isprint value="${pdict.Order.orderNo}"/>
+	<isprint value="${pdict.errorMessage}"/>
+	<isprint value="${pdict.ScriptLog}"/>
+</html>

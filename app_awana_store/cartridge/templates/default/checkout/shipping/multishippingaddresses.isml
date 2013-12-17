@@ -1,0 +1,122 @@
+<isdecorate template="checkout/pt_checkout">
+<isinclude template="util/modules"/>
+
+<iscomment>
+	This template visualizes the first step of the multi shipping checkout
+	scenario. It renders a list of all product line items and offers a shipping
+	address selection per product line item.
+</iscomment>
+
+<iscomment>Report this checkout step</iscomment>
+<isset name="checkoutstep" value="${2}" scope="page"/>
+<isset name="checkoutname" value="${'ShippingAddress'}" scope="page"/>
+<isinclude template="util/reporting/ReportCheckout.isml">
+
+<div class="checkout">
+    <iscomment>checkout progress indicator</iscomment>
+    <ischeckoutprogressindicator step="1" multishipping="true">
+	<form action="${URLUtils.continueURL()}" method="post">
+	<div class="checkoutmultishipping">
+		<table class="multishipaddressestable" summary="Select Addresses for items to ship to Multiple Addresses">
+			<thead>
+				<tr>
+					<th>${Resource.msg('global.product','locale',null)}</th>
+					<th>${Resource.msg('global.quantity','locale',null)}</th>
+					<th>${Resource.msg('multishippingaddresses.locationheader','checkout',null)}</th>
+				</tr>
+			</thead>	
+			<tbody>
+				<iscomment>Product line items (provide address selection for each)</iscomment>
+				<isloop items="${pdict.CurrentForms.multishipping.addressSelection.productLineItems}" var="listItem">
+					<isset name="productLI" value="${listItem.object}" scope="page"/>
+					<tr class="tablerow">
+						<td class="detailscolumn">
+							<span class="name"><isprint value="${productLI.lineItemText}"/></span>
+							
+							<isif condition="${productLI.product != null && productLI.product.isVariant()}">
+								- 
+								<isloop items="${productLI.product.variationModel.attributeDefinitions}" var="varAttr" status="loopstatus">
+									<isset name="selectedVarValue" value="${productLI.product.variationModel.getSelectedValue(varAttr)}" scope="page"/>
+									<isprint value="${varAttr.displayName}"/>:
+									<isif condition="${selectedVarValue != null}"><isprint value="${selectedVarValue.displayValue}"/><iselse/> - </isif><isif condition="${!loopstatus.last}">, </isif>
+								</isloop>
+							</isif>
+						</td>
+						<td class="quantitycolumn"><isprint value="${productLI.quantity}"/></td>
+						<td class="shippingaddress">
+							<iscomment>display select box with available addresses</iscomment>
+							<isif condition="${listItem.addressList.options.optionsCount > 0}">
+								<select class="selectbox" name="${listItem.addressList.htmlName}">
+									<isloop items="${listItem.addressList.options}" var="option">
+										<isset name="address" value="${option.object}" scope="page"/>
+										<isif condition="${!empty(address.ID)}">
+											<isset name="prefix" value="${'(' + address.ID + ')'}" scope="page"/>
+										<iselse/>
+											<isset name="prefix" value="${address.firstName + ' ' + address.lastName + ','}" scope="page"/>
+										</isif>
+										<option value="${option.optionId}" <isif condition="${option.selected}">selected="selected"</isif>><isprint value="${prefix}"/> <isprint value="${address.address1}"/>, <isprint value="${address.city}"/>, <isprint value="${address.stateCode}"/>, <isprint value="${address.postalCode}"/></option>
+									</isloop>
+								</select>
+							<iselse/>
+								${Resource.msg('multishippingaddresses.noaddresses','checkout',null)}
+							</isif>
+							<div class="editaddress">
+								<isif condition="${listItem.addressList.options.optionsCount > 0}">
+									<a href="${URLUtils.https('COShippingMultiple-EditAddress')}" class="edit" title="${Resource.msg('multishippingaddresses.editaddress','checkout',null)}">${Resource.msg('multishippingaddresses.editaddress','checkout',null)}</a> | 
+								</isif>
+								<a href="${URLUtils.https('COShippingMultiple-EditAddress')}" class="add" title="${Resource.msg('multishippingaddresses.addaddress','checkout',null)}">${Resource.msg('multishippingaddresses.addaddress','checkout',null)}</a>
+							</div>
+						</td>
+					</tr>
+				</isloop>
+		
+				<iscomment>Gift certificate line items</iscomment>
+				<isloop items="${pdict.Basket.giftCertificateLineItems}" var="gcLI">
+					<tr class="rowgiftcert">
+						<td class="detailscolumn"><span class="name">${Resource.msg('global.giftcertificate','locale',null)}</span> - <isprint value="${gcLI.price}"/> ${Resource.msg('global.deliveredviaemail','locale',null)}</td>
+						<td class="quantitycolumn">1</td>
+						<td class="shippingaddress"><ismask p_string="${gcLI.recipientEmail}" p_maskchars="${6}"></td>
+					</tr>
+				</isloop>
+			</tbody>
+		</table>
+		<div class="formactions">
+			<button class="checkoutbutton" type="submit" name="${pdict.CurrentForms.multishipping.addressSelection.save.htmlName}" value="${Resource.msg('global.continuecheckout','locale',null)}"><span>${Resource.msg('global.continuecheckout','locale',null)}</span></button>
+		</div><!-- END: formactions -->
+	</div><!-- END: multishipaddresses -->
+	</form>
+</div><!-- END: checkout -->
+<script type="text/javascript"><!--
+jQuery(document).ready(function() {
+	// edit address
+	jQuery(".editaddress a").click(function() {
+		var anchor = jQuery(this);
+		var url = anchor.attr("href");
+		var title = "Add New Address";
+		
+		if(anchor.hasClass("edit")) {
+			var addressID = anchor.parents("td.shippingaddress").children("select").val();
+			if(!addressID) {
+				return false;
+			}
+			url = app.util.appendParamToURL(url, "addressID", addressID);
+			title = "Edit Address";
+		}
+ 
+		app.dialog.open(url, title);
+		app.dialog.onApply(function() {
+			//updateAddressListEntry();
+			app.dialog.close();
+			location.href = "${URLUtils.https('COShippingMultiple-Start')}";
+		});
+		app.dialog.onDelete(function() {
+			//removeAddressListEntry();
+			app.dialog.close();
+			location.href = "${URLUtils.https('COShippingMultiple-Start')}";
+		});
+		return false;
+	});
+});
+
+//--></script>
+</isdecorate>

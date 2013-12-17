@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="pGetZipFromIP" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns:tns1="http://www.approuter.com/connectors/request/4/" xmlns="" xmlns:tns2="http://www.approuter.com/connectors/response/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/request/4/" xmlns:tns="http://www.approuter.com/connectors/request/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="GetZipFromIPRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="IPAddress" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/response/4/" xmlns:tns="http://www.approuter.com/connectors/response/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="GetZipFromIPResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Success" type="xs:boolean"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element name="ZipCode" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="pGetZipFromIPRequest">
+    <wsdl:part name="request" element="tns1:GetZipFromIPRequest"/>
+  </wsdl:message>
+  <wsdl:message name="pGetZipFromIPResponse">
+    <wsdl:part name="response" element="tns2:GetZipFromIPResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="pGetZipFromIPPort">
+    <wsdl:operation name="pGetZipFromIP">
+      <wsdl:input message="tns:pGetZipFromIPRequest"/>
+      <wsdl:output message="tns:pGetZipFromIPResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="pGetZipFromIPBinding" type="tns:pGetZipFromIPPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="pGetZipFromIP">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="pGetZipFromIPService">
+    <wsdl:port name="pGetZipFromIPPort" binding="tns:pGetZipFromIPBinding">
+      <soap:address location="https://ci4.awana.org:443/pGetZipFromIP"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

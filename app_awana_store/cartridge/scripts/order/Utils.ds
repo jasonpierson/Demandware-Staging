@@ -1,0 +1,224 @@
+/**
+ * This script provides utility functions shared across other order
+ * related scripts. Reused script components for order management 
+ * should be contained here, while this script is imported into the 
+ * requiring script.
+ */
+importPackage( dw.system );
+importPackage( dw.object );
+importPackage( dw.order );
+
+function GetNextProStoresOrderNumber() : Number
+{
+	var NextOrderNumber : Number;
+	var	ProStoresIterator : dw.util.SeekableIterator = dw.object.CustomObjectMgr.getAllCustomObjects("ProStoresOrderNumber");
+	var ProStoresObject : object = null;
+	
+	while (!empty(ProStoresIterator) && ProStoresIterator.hasNext())
+	{
+		ProStoresObject = ProStoresIterator.next();
+		NextOrderNumber = ProStoresObject.custom.ProStoresOrderNumber + 1;
+		ProStoresObject.custom.ProStoresOrderNumber = NextOrderNumber;		
+		break;
+	}
+		
+	return NextOrderNumber;
+}
+
+function getTaxForShipmentLineItem(accountID : String, shipment : Shipment, item : LineItem) : Number {
+
+	//values for tax from web service, collect all line items
+	var itemID : String = "";
+    var itemPrice : String = "";
+    var itemQty : String = "1";
+	var itemLineNum : String = "1";
+	var taxIncluded : String = "";
+		
+	Logger.debug("1. Line Item {0} with Tax Class {1} and Tax Rate {2}", item.lineItemText, item.taxClassID, item.taxRate);
+		
+	if ((item.priceValue != 0 && item instanceof ProductLineItem) || (item.priceValue != 0 && item instanceof ShippingLineItem) || (item.priceValue != 0 && item instanceof GiftCertificateLineItem)) {
+        //Prepare variables for web service call
+       	if (item instanceof ProductLineItem && shipment.shippingAddress != null) {
+			itemID = item.productID;
+        }
+        else if (item instanceof ShippingLineItem && shipment.shippingAddress != null) {
+			itemID = dw.system.Site.getCurrent().getCustomPreferenceValue('ShippingProductCode');
+        }
+
+		itemPrice = (item.priceValue==null)?0:item.priceValue;
+		
+		if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded')) && dw.system.Site.getCurrent().getCustomPreferenceValue('TaxIncluded')) {
+			var ProductExcludes = dw.system.Site.getCurrent().getCustomPreferenceValue('ProductsExcludedFromTaxInclusion');
+			var HasExclusion : Boolean = false;
+			for (var i = 0; i < ProductExcludes.length; i++) {
+				if (ProductExcludes[i] == itemID) {
+					taxIncluded = taxIncluded==""?"false": taxIncluded+ ",false";
+					HasExclusion = true;
+					break;
+				} 
+			}
+			if (!HasExclusion) {
+				taxIncluded = taxIncluded==""?"true": taxIncluded+ ",true";
+			}
+		}
+    }
+	
+	try {
+		
+		var webref : WebReference = webreferences.Avalara;
+	    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+			webref = webreferences.pAvalara;
+		}
+		var stub : Stub = webref.defaultService; 
+		
+		var request:WebReference = new webref.GetTax();
+		
+		request.lineNo = itemLineNum;
+		request.accountId = accountID;
+		request.itemNumber = itemID;
+		request.extendedPrice = itemPrice;
+		request.quantity = itemQty;		
+		
+		request.lineOneOrigin = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxOriginAddress1');
+		request.lineTwoOrigin = "";
+		request.lineThreeOrigin = "";
+		request.cityOrigin = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxOriginCity');
+		request.regionOrigin = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxOriginRegion');
+		request.zipCodeOrigin = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxOriginPostcode');
+		request.countryOrigin = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxOriginCountry');
+
+		request.lineOneDestination = shipment.shippingAddress.address1;
+		request.lineTwoDestination = shipment.shippingAddress.address2!=null?shipment.shippingAddress.address2:"";
+		request.lineThreeDestination = "";
+		request.cityDestination = shipment.shippingAddress.city;
+		request.regionDestination = shipment.shippingAddress.stateCode;
+		request.zipCodeDestination = shipment.shippingAddress.postalCode;
+		request.countryDestination = shipment.shippingAddress.countryCode.displayValue;
+		
+		request.docCode = "";
+		request.docType = "SalesOrder";
+		request.taxOverrideReason = "";
+		request.PONumber = "";
+		request.commit = "false";
+		
+		request.companyCode = dw.system.Site.getCurrent().getCustomPreferenceValue('TaxCompanyCode');
+		request.taxIncluded = taxIncluded;
+		//request.taxIncluded = false;
+		
+		var dateNow : Date = new Date();
+		request.taxDate = (dateNow.getMonth()+1).toString() + "/" + dateNow.getDate().toString() + "/" + dateNow.getFullYear().toString();
+		
+		var response = stub.getTax(request);
+		if (response.getTaxResult[0].totalTax == 0 && response.getTaxResult[0].message != "") {
+			//Error in web service, return 0 for tax amount
+			Logger.debug("Error in tax service {0}", response.getTaxResult[0].message);
+		}
+		
+		return response.getTaxResult[0].totalTax;
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return -100;
+	}
+}
+
+function GetTaxForBasketLineItems( basket : Basket ) : Number {
+	var totalTax : Number = 0;    	
+	var items : dw.util.Collection = basket.getAllProductLineItems();
+	var item;	
+	var accountID : String = !empty(basket.customer)&&!empty(basket.customer.profile)?basket.customer.profile.custom.SFMailingAddressBookID:"0";
+	var shipment : Shipment = basket.shipments[0];
+			   
+	for( var i = 0; i < items.size(); i++ ) {
+	    item = items[i];			
+	    totalTax = totalTax + Math.abs(getTaxForShipmentLineItem(accountID, shipment, item)); 
+	}	
+	
+	//update the tax rate for each line item in the basket
+	ReCalcBasketTax(totalTax, basket, shipment);
+	
+	return totalTax;
+}
+
+function GetTaxForOrderLineItems( order : dw.order.Order ) : Number {
+	var totalTax : Number = 0;    	
+	var items : dw.util.Collection = order.getAllProductLineItems();
+	var item;	
+	var accountID : String = !empty(order.customer)&&!empty(order.customer.profile)?order.customer.profile.custom.SFMailingAddressBookID:"0";
+	var shipment : Shipment = order.shipments[0];
+			   
+	for( var i = 0; i < items.size(); i++ ) {
+	    item = items[i];			
+	    totalTax = totalTax + Math.abs(getTaxForShipmentLineItem(accountID, shipment, item)); 
+	}	
+	
+	return totalTax;
+}
+
+function ReCalcBasketTax(orderTax : Number, basket : Basket, shipment : Shipment) {
+	try {
+		var taxValue : String;
+		var shipmentLineItems2 : Iterator = shipment.getAllLineItems().iterator();
+		while(shipmentLineItems2.hasNext())
+		{	
+			var lineItem2 : LineItem = shipmentLineItems2.next();
+			
+			if (lineItem2 instanceof ProductLineItem){
+				lineItem2.updateTax(orderTax/basket.merchandizeTotalNetPrice.value);
+		    	basket.updateTotals();
+			} else {
+		    	lineItem2.updateTax(0);
+			}
+			
+		}	
+		
+	   if(!basket.getPriceAdjustments().empty || !basket.getShippingPriceAdjustments().empty)
+	    {
+	        // calculate a mix tax rate from
+	        var basketPriceAdjustmentsTaxRate : Number = (basket.getMerchandizeTotalGrossPrice().value / basket.getMerchandizeTotalNetPrice().value) - 1; 	
+		        	
+		    var basketPriceAdjustments : Iterator = basket.getPriceAdjustments().iterator();
+		    while(basketPriceAdjustments.hasNext())
+		    {
+				var basketPriceAdjustment : PriceAdjustment = basketPriceAdjustments.next();
+				basketPriceAdjustment.updateTax(basketPriceAdjustmentsTaxRate); 
+				
+				//if tax is negative, make it 0
+				if (!empty(basketPriceAdjustment) && basketPriceAdjustment.tax < 0) {
+					basketPriceAdjustment.updateTax(0);        	
+			    }				       	
+		    }    
+	
+		    var basketShippingPriceAdjustments : Iterator = basket.getShippingPriceAdjustments().iterator();
+		    while(basketShippingPriceAdjustments.hasNext())
+		    {
+				var basketShippingPriceAdjustment : PriceAdjustment = basketShippingPriceAdjustments.next();
+				basketShippingPriceAdjustment.updateTax(basketPriceAdjustmentsTaxRate); 
+				
+				//if tax is negative, make it 0
+				if (!empty(basketShippingPriceAdjustment) && basketShippingPriceAdjustment.tax < 0) {
+					basketShippingPriceAdjustment.updateTax(0);        	
+			    }			       	
+		    }	    
+		}
+		
+		basket.updateTotals();
+	} catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return -100;
+	}		
+}
+
+function toDate(date : String) : Date {
+	 var now = dw.util.DateUtils.nowForSite();
+	 var newDate = new dw.util.Calendar(now);
+ 	 args.endingDate = newDate.getTime();	
+}

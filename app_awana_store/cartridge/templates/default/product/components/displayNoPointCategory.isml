@@ -1,0 +1,34 @@
+<isinclude template="util/modules">
+
+		<iscomment>
+			Tell the user there are no points for this product
+		</iscomment>
+
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				jQuery.fn.colorbox({ width:"400px", inline:true, href:"#noPointsIDMsg"});
+
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					jQuery.fn.colorbox.close();
+				});
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					window.location.reload();
+				});
+				jQuery("#cboxClose").click(function() {
+					window.location.reload();
+				});
+				
+			});
+		</script>
+
+		<div style='display:none'>
+			<div id="noPointsIDMsg">
+				<div class="colorboxDialogHeader">
+					<h3>Product Has No Points</h3>
+					<div id="colorboxDialogCloseButton"></div>
+				</div>
+				<div style="margin:20px; padding:20px; font-size:12px;">
+					Apparently this product has no points at all. Sparky has been notified and he's on it. Check back with us soon.
+				</div>
+			</div>
+		</div>	

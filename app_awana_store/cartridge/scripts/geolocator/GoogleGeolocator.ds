@@ -1,0 +1,86 @@
+/**
+* GoogleGeolocator.ds
+*
+* The script takes a collection of stores and performs google
+* geocoding http calls to retrieve their LatLng co-ordinates
+* for storage in the system.  
+*
+* A Demandware xml file is written for import as these attributes 
+* are read only.  The file name is then passed out of the script 
+* so the import can be triggered.
+*
+*   @input Stores : dw.util.Iterator This is a sample comment.
+*   @output FileName : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+importPackage( dw.net );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	
+	var stores : Iterator = args.Stores;
+	
+	if(!empty(stores)) {
+		
+    	// Get API Key from Site preference
+    	var googlekey : String = dw.system.Site.getCurrent().getCustomPreferenceValue('googleAPIKey');
+    	
+    	if(empty(googlekey)){
+    		Logger.error('## GoogleGeolocator: No Google API Key available!');
+    		return PIPELET_ERROR;
+    	}
+    	
+    	// Build query URL
+    	var URL : String = "http://maps.google.com/maps/api/geocode/json?address={0}&sensor=false&key=" + googlekey;
+    	
+    	// Initialize StreamWriter and httpClient
+    	var filename : String = '/marketing/stores_' + new Date().getTime() + '.xml';
+    	
+    	var writer : FileWriter = new FileWriter(new File(File.IMPEX+'/src'+filename),'UTF-8');
+    
+    	var xmlwriter : XMLStreamWriter = new XMLStreamWriter(writer);
+    
+    	xmlwriter.writeRaw('<?xml version="1.0" encoding="UTF-8"?><stores xmlns="http://www.demandware.com/xml/impex/store/2007-04-30">');
+		
+		var client : HTTPClient = new HTTPClient();
+		
+		// Perform query for stores in collection
+		while(stores.hasNext()) {
+			
+			var store : dw.catalog.Store = stores.next();
+			
+			var address : String = (!empty(store.address1) ? '+' + store.address1.replace(' ','+','g') : '') + ',';
+			address += (!empty(store.address2) ? '+' + store.address2.replace(' ','+','g') : '') + ',';
+			address += (!empty(store.city) ? '+' + store.city.replace(' ','+','g') : '') + ',';
+			address += (!empty(store.postalCode) ? '+' + store.postalCode.replace(' ','+','g') : '') + ',';
+			address += (!empty(store.stateCode) ? '+' + store.stateCode.replace(' ','+','g') : '') + ',';
+			address += (!empty(store.countryCode) ? '+' + store.countryCode.value.replace(' ','+','g') : '') + ',';
+			
+			client.open('GET', encodeURI(StringUtils.format(URL,address)));
+			client.send();
+			
+			var response : Object = JSON.parse(client.getText());	
+			
+			if(!empty(response["results"][0]["geometry"]["location"])) {
+				xmlwriter.writeRaw('<store store-id="' + store.ID + '"><latitude>' + response["results"][0]["geometry"]["location"]["lat"] + '</latitude><longitude>' + response["results"][0]["geometry"]["location"]["lng"] + '</longitude></store>');
+		
+			}
+		}
+		
+		xmlwriter.writeRaw('</stores>');
+		
+		xmlwriter.close();
+		
+		args.FileName = filename;
+		
+		return PIPELET_NEXT;
+		
+	}else{
+	    
+		return PIPELET_NEXT;
+		
+	}
+}

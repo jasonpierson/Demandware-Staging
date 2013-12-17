@@ -1,0 +1,45 @@
+<isdecorate template="content/pt_customerservice">
+<div id="getsat-widget-52"></div>
+<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+<script type="text/javascript">
+if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+</script>
+<style type="text/css">
+.gsfn-left {
+	left:inherit !important;
+	right:-80px !important;
+}
+</style>
+<isinclude template="util/modules"/>
+
+<div class="customerservice">
+	<iscontentasset aid="cs-landing"/>
+	
+	<isif condition="${!empty(pdict.CustomerServiceLinks)}">
+	<div class="customerservice_directory">
+		
+		<isloop items="${pdict.CustomerServiceLinks.keySet()}" var="links" status="loopstate">
+			
+			<div class="customerservicesection" <isif condition="${loopstate.first}"> first <iselseif condition="${loopstate.last}"> last</isif>">
+
+				<h5><isprint value="${links}"/></h5>
+				<ul>
+					<!-- Loop Through Customer Service Libraries -->
+					<isloop items="${pdict.CustomerServiceLinks.get(links)}" var="ContentAsset" status="loopcounter">
+						<li>
+							<a href="${URLUtils.url('Page-Show','cid', ContentAsset.ID)}" title="${ContentAsset.ID}">
+								<isprint value="${ContentAsset.name}"/>
+							</a>
+						</li>
+					</isloop>
+				</ul>
+				
+			</div>
+			
+		</isloop>
+		
+	</div>
+	</isif>
+</div>
+
+</isdecorate>

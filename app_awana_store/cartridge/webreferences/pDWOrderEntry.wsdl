@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Process_Opps" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns:tns1="http://www.approuter.com/connectors/request/9707/" xmlns="" xmlns:tns2="http://www.approuter.com/connectors/response/9707/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/request/9707/" xmlns:tns="http://www.approuter.com/connectors/request/9707/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="WSInputParams">
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="Opportunity" nillable="false">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AddressNumber" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="BillingAddressAge" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="BillingAddressID" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="BillingCounty" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingStreet" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingCity" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingFirstName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingCountry" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingLastName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFABillingPhone" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFABillingState" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChargentSFABillingZip" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFAEmail" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFATransactionTotal" nillable="false" type="xs:decimal"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardYear" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardMonth" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardType" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardSecurity" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardNumber" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFACardName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ChargentSFAChargeAmount" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="PurchaseOrder" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingAddressAge" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingAddressID" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShipToName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShipToFirstName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShipToLastName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingCity" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ShippingCounty" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingState" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ShippingStreet" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingZipCode" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingType" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ShippingCountry" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="1" name="OpportunityLineItem" nillable="false">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="ItemNumber" nillable="false" type="xs:string"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="Quantity" nillable="true" type="xs:integer"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="UnitPrice" nillable="true" type="xs:decimal"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="LineType" nillable="false" type="xs:string"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PriceAfterDiscount" nillable="true" type="xs:decimal"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PriceBeforeDiscount" nillable="true" type="xs:decimal"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PromoCode" nillable="false" type="xs:string"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PromoName" nillable="false" type="xs:string"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="QuantityGivenAway" nillable="true" type="xs:integer"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="ChurchRewardsPointsRedeemed" nillable="true" type="xs:integer"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="ChurchRewardsPointsGained" nillable="true" type="xs:integer"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PreOrderBackOrderHandling" nillable="true" type="xs:string"/>
+                                    <xs:element maxOccurs="1" minOccurs="1" name="PriceOfDiscount" nillable="true" type="xs:decimal"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AccountID" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="PaymentType" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AuthCode" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AuthTransID" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AuthResponse" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ExternalOrderNumber" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="LoginEMail" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="CustomerType" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="CurrencyCode" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="HasDiscounts" nillable="true" type="xs:boolean"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ChurchRewardsSponsoredChurch" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="TotalChurchRewardsPointsGained" nillable="true" type="xs:integer"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="TotalChurchRewardsPointsRedeemed" nillable="true" type="xs:integer"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="AccountStatus" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="OrderSource" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="PrimaryCampaignSource" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="IsSplitOrder" nillable="true" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="WSInputParams" type="tns:WSInputParams"/>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/response/9707/" xmlns:tns="http://www.approuter.com/connectors/response/9707/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="WSReply">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="Response" nillable="false">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="Success" nillable="true" type="xs:boolean"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="OpportunityName" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ErrorCode" nillable="true" type="xs:integer"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ErrorMsg" nillable="false" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="WSReply" type="tns:WSReply"/>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Process_OppsRequest">
+    <wsdl:part name="request" element="tns1:WSInputParams"/>
+  </wsdl:message>
+  <wsdl:message name="Process_OppsResponse">
+    <wsdl:part name="response" element="tns2:WSReply"/>
+  </wsdl:message>
+  <wsdl:portType name="Process_OppsPort">
+    <wsdl:operation name="Process_Opps">
+      <wsdl:input message="tns:Process_OppsRequest"/>
+      <wsdl:output message="tns:Process_OppsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Process_OppsBinding" type="tns:Process_OppsPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Process_Opps">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Process_OppsService">
+    <wsdl:port name="Process_OppsPort" binding="tns:Process_OppsBinding">
+      <soap:address location="https://ci4.awana.org:443/pDWOrderEntry"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

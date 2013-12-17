@@ -1,0 +1,51 @@
+/**
+*-   @input ExampleIn : String This is a sample comment.
+*    @output KMCustomers : dw.util.List
+*
+*/
+importPackage( dw.system );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var webref : WebReference = webreferences.GetKMCustomersDev;
+	if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		webref = webreferences.pGetKMCustomers;
+	}
+	
+	var stub : Stub = webref.defaultService; 
+	
+	var getCustomers:WebReference = new webref.GetKMCustomersRequest();
+	getCustomers.request = new webref.GetKMCustomersRequestRequest();
+	getCustomers.request.randomParameter = 'x';
+	
+	var response = stub.provide_Service(getCustomers);
+
+	var kmCustomerList:ArrayList = new dw.util.ArrayList();
+	for each (kmCustomer in response) {
+		var tempCustomer : Object = new Object();
+		tempCustomer.address1 = kmCustomer.address1;
+		tempCustomer.address2 = kmCustomer.address2;
+		tempCustomer.city = kmCustomer.city;
+		tempCustomer.country = kmCustomer.country;
+		tempCustomer.firstName = kmCustomer.firstName;
+		tempCustomer.lastName = kmCustomer.lastName;
+		tempCustomer.shipToAddress1 = kmCustomer.shipToAddress1;
+		tempCustomer.shipToAddress2 = kmCustomer.shipToAddress2;
+		tempCustomer.shipToCity = kmCustomer.shipToCity;
+		tempCustomer.shipToCountry = kmCustomer.shipToCountry;
+		tempCustomer.shipToEMail = kmCustomer.shipToEMail;
+		tempCustomer.shipToFirstName = kmCustomer.shipToFirstName;
+		tempCustomer.shipToLastName = kmCustomer.shipToLastName;
+		tempCustomer.shipToName = kmCustomer.shipToName;
+		tempCustomer.shipToPhone = kmCustomer.shipToPhone;
+		tempCustomer.shipToState = kmCustomer.shipToState;
+		tempCustomer.shipToZip = kmCustomer.shipToZip;		
+		tempCustomer.state = kmCustomer.state;
+		tempCustomer.zip = kmCustomer.zip;
+		kmCustomerList.add(tempCustomer);
+	}
+	args.KMCustomers = kmCustomerList;
+			
+   return PIPELET_NEXT;
+}

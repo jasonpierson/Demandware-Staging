@@ -1,0 +1,86 @@
+/**
+ * Creates a shipping address for the given shipment and copies
+ * the address details stored in the given address form to the
+ * created shipment address.
+ * The method additionally sets the given gift options to the 
+ * shipment.
+ *
+ * @input Shipment : dw.order.Shipment The shipment to create the address for.
+ * @input AddressForm : dw.web.FormGroup The address form.
+ * @input GiftOptionsForm : dw.web.FormGroup The gift options form.
+ * 
+ * @output ShippingAddress : dw.order.OrderAddress The shipment's shipping address.
+ * @output AddressID : String 
+ */
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.web );
+importPackage( dw.object );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var shipment : Shipment = pdict.Shipment;
+	var addressFields : FormGroup = pdict.AddressForm.addressFields;
+	var giftOptions : FormGroup = pdict.GiftOptionsForm;
+	var shippingAddress : OrderAddress = shipment.shippingAddress;
+	var newUUID : String = dw.util.UUIDUtils.createUUID();
+	
+	// if the shipment has no shipping address yet, create one
+	if( shippingAddress == null )
+	{
+		shippingAddress = shipment.createShippingAddress();	
+	}
+
+	/***********************************************************************************************
+	 BEGIN WRITE OF ORIGINAL ADDRESS TO NULL ADDRESS PROBLEM OBJECT
+	***********************************************************************************************/
+	if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('CaptureAddressesAtCheckout')) && dw.system.Site.getCurrent().getCustomPreferenceValue('CaptureAddressesAtCheckout')) {
+		var custObj : CustomObject = CustomObjectMgr.createCustomObject("NullAddressProblem", newUUID);
+		custObj.custom.OriginalShippingAddress = addressFields.address1.value;
+		custObj.custom.OriginalShippingCity = addressFields.city.value;
+		custObj.custom.OriginalShippingFirstName = addressFields.firstName.value;
+		custObj.custom.OriginalShippingLastName = addressFields.lastName.value;
+		custObj.custom.OriginalShippingZip = addressFields.zip.value;
+		pdict.AddressID = newUUID;
+	}
+	/***********************************************************************************************
+	 END WRITE OF ORIGINAL ADDRESS TO NULL ADDRESS PROBLEM OBJECT
+	***********************************************************************************************/	
+	
+	// copy the address details
+	shippingAddress.setFirstName( addressFields.firstName.value );
+	shippingAddress.setLastName( addressFields.lastName.value );
+	shippingAddress.setAddress1( addressFields.address1.value );
+	shippingAddress.setAddress2( addressFields.address2.value );
+	shippingAddress.setCity( addressFields.city.value );
+	shippingAddress.setPostalCode( addressFields.zip.value );
+	shippingAddress.setStateCode( addressFields.states.state.value );
+	shippingAddress.setCountryCode( addressFields.country.value );
+	shippingAddress.setPhone( addressFields.phone.value );
+	
+	/***********************************************************************************************
+	 BEGIN WRITE OF MODIFIED ADDRESS TO NULL ADDRESS PROBLEM OBJECT
+	***********************************************************************************************/
+	if (!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('CaptureAddressesAtCheckout')) && dw.system.Site.getCurrent().getCustomPreferenceValue('CaptureAddressesAtCheckout')) {
+		custObj.custom.ShippingAddressFromQAS = shippingAddress.address1;
+		custObj.custom.ShippingCityFromQAS = shippingAddress.city;
+		custObj.custom.ShippingFirstNameFromQAS = shippingAddress.firstName;
+		custObj.custom.ShippingLastNameFromQAS = shippingAddress.lastName;
+		custObj.custom.ShippingZipFromQAS = shippingAddress.postalCode;
+	}
+	/***********************************************************************************************
+	 END WRITE OF MODIFIED ADDRESS TO NULL ADDRESS PROBLEM OBJECT
+	***********************************************************************************************/	
+	
+	// copy the gift options
+	if( giftOptions != null)
+	{
+		shipment.setGift( giftOptions.isGift.value );
+		shipment.setGiftMessage( giftOptions.giftMessage.value );
+	}
+	
+	// output shipping address
+	pdict.ShippingAddress = shippingAddress;
+		
+    return PIPELET_NEXT;
+}

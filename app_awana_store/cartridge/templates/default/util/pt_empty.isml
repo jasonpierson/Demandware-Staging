@@ -1,0 +1,8 @@
+<isreplace/>
+<iscomment>
+	This decorator just place the decorated template in order to produce
+	correct partial pages (e.g. only the inner template) if needed.
+	This is necessary to provide a partial page only, e.g. a category landing
+	page if it was requested through an Ajax request, where an additional
+	decoration has to be omitted.
+</iscomment>

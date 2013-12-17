@@ -1,0 +1,19 @@
+<!-- i.e. for category pages and productlistings, is multiple -->
+
+<script type="text/javascript"><!--
+
+  var pr_page_id = "${pdict.Product.ID}";
+
+  // avoid securitiy warnings with registered users: (mixed content)
+  var pr_write_review = "${URLUtils.http('PowerReviews-WriteReview')}?pid=${pdict.Product.ID}";
+  var pr_read_review = "javascript:app.ProductCache.readReviews();";
+
+  // full url to custom css to control review display
+  var pr_style_sheet = null;
+
+  if (typeof(snippet) != "undefined")
+  {
+    snippet(document);
+  }
+
+//--></script>

@@ -1,0 +1,14 @@
+<!--- TEMPLATENAME: ResendDLEMailFailure.isml --->
+<body>
+	<p>
+		<span style="color: rgb(255, 0, 0); ">
+			<span style="font-size: large; ">
+				<span style="font-family: Verdana; ">
+					<strong>
+						Download e-mail has NOT been re-sent. Please send e-mail to help@awana.org along with the order number and e-mail address of the customer. Thank you!
+					</strong>
+				</span>
+			</span>
+		</span>
+	</p>
+</body>

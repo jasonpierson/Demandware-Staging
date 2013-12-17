@@ -1,0 +1,16 @@
+avStatus: "${AVM.availabilityStatus}",
+inStock: ${AVM.inStock},
+<!---<isset name="levels" value="${AVM.getAvailabilityLevels((empty(pdict.CurrentHttpParameterMap.Quantity.stringValue) ? 1 : pdict.CurrentHttpParameterMap.Quantity.intValue))}" scope="page"/>--->
+<isif condition="${pdict.Product.availabilityModel.inventoryRecord != null}">
+	<isif condition="${pdict.Product.availabilityModel.inventoryRecord.ATS.value > 0}">
+		<isset name="levels" value="${AVM.getAvailabilityLevels((pdict.Product.availabilityModel.inventoryRecord!=null?pdict.Product.availabilityModel.inventoryRecord.ATS.value:1))}" scope="page"/>
+		<isif condition="${!empty(levels)}">
+			avLevels: {"${dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK}": ${levels.inStock.value},
+			"${dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER}": ${levels.preorder.value},
+			"${dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER}": ${levels.backorder.value},
+			"${dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_NOT_AVAILABLE}": ${levels.notAvailable.value}},
+			ATS: <isif condition="${!empty(AVM.inventoryRecord)}">${AVM.inventoryRecord.ATS.value}<iselse>0</isif>,
+			inStockDate: "${AVM.inventoryRecord != null ? AVM.inventoryRecord.inStockDate : ''}"
+		</isif>
+	</isif>
+</isif>

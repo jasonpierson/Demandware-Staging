@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Provide_Service" targetNamespace="http://www.approuter.com/connectors/wsdl" xmlns="" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns1="http://www.approuter.com/connectors/request/4/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://www.approuter.com/connectors/response/4/" xmlns:tns="http://www.approuter.com/connectors/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/request/4/" xmlns:tns="http://www.approuter.com/connectors/request/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="GetKMCustomersRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="request">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="RandomParameter" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.approuter.com/connectors/response/4/" xmlns:tns="http://www.approuter.com/connectors/response/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="rows" type="tns:RowsType"/>
+    <xs:complexType name="RowsType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="row" type="tns:ColSetType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ColSetType">
+        <xs:sequence>
+            <xs:element name="FirstName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>FirstName</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LastName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>LastName</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Address1" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>Address1</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Address2" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>Address2</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="City" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>City</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="State" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>State</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Zip" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>Zip</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Country" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>Country</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToName</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToAddress1" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToAddress1</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToAddress2" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToAddress2</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToCity" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToCity</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToState" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToState</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToZip" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToZip</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToCountry" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToCountry</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToPhone" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToPhone</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToEMail" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToEMail</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToFirstName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToFirstName</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ShipToLastName" nillable="true" type="xs:string">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <app:node-app-info xmlns:app="http://www.approuter.com/schemas/2007/Mapping/AppInfo">
+                            <app:node-name>ShipToLastName</app:node-name>
+                            <app:node-description>Column Name</app:node-description>
+                        </app:node-app-info>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Provide_ServiceRequest">
+    <wsdl:part name="request" element="tns1:GetKMCustomersRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Provide_ServiceResponse">
+    <wsdl:part name="response" element="tns2:rows">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Provide_ServicePort">
+    <wsdl:operation name="Provide_Service">
+      <wsdl:input message="tns:Provide_ServiceRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:Provide_ServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Provide_ServiceBinding" type="tns:Provide_ServicePort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Provide_Service">
+      <soap:operation soapAction=""/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Provide_ServiceService">
+    <wsdl:port name="Provide_ServicePort" binding="tns:Provide_ServiceBinding">
+      <soap:address location="http://ci5.awana.org:80/GetKMCustomers"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

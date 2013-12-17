@@ -1,0 +1,73 @@
+/**
+ * This script updates the shipping method of the given shipment. If a shipping 
+ * method ID is not given, the given shipping method used to update
+ * the shipment.
+ * 
+ * @input Basket: dw.order.Basket Basket object
+ * @input Method: dw.order.ShippingMethod Shipping Method object
+ * @output ShippingCost : Object The shipping method calculated costs.
+ */
+importPackage( dw.customer );
+importPackage( dw.order );
+importPackage( dw.campaign );
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.web );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var shipment : Shipment 	= pdict.Basket.defaultShipment,
+		method : ShippingMethod = pdict.Method, 
+		basket : Basket 		= pdict.Basket;
+		
+	if( shipment != null )
+	{
+		var discountPlan : DiscountPlan 		= PromotionMgr.getDiscounts(basket), 
+			productShippingCosts : Array		= [], // array to hold product level shipping costs (fixed or surcharges), each entry is an object containing product name and shipping cost
+			productShippingDiscounts : ArrayList= new ArrayList, // list holds all products shipping discounts NOT promotions e.g. fixed shipping discount or free shipping for individual products discount
+			productIter : Iterator				= basket.allProductLineItems.iterator(),
+			priceAdjArray : Array				= [], // array to hold shipping price adjustments data (we have to create objects since price adjustments get lost after applying a shipping method 
+			priceAdjIter : Iterator 			= shipment.shippingPriceAdjustments.iterator();
+			
+		// iterate over all products in the basket 
+		// and calculate their shipping cost and shipping discounts
+		while (productIter.hasNext()) {
+			var pli : ProductLineItem = productIter.next();
+			var product = pli.product;
+			if (product != null) {
+				productShippingCosts[productShippingCosts.length] = {"name": product.name, "shippingCost": ShippingMgr.getProductShippingModel(product).getShippingCost(method), "qty" : pli.getQuantity()};
+				
+				//productShippingDiscounts.addAll(discountPlan.getProductShippingDiscounts(pli));
+				//productShippingDiscounts.addAll(pli.shippingLineItem.priceAdjustments);
+				if (pli.shippingLineItem != null) {
+				var pdiscountsiter : Iterator = pli.shippingLineItem.priceAdjustments.iterator();
+				while (pdiscountsiter.hasNext()){
+					var priceAdj : PriceAdjustment = pdiscountsiter.next();
+					if (priceAdj != null && priceAdj.promotion !== null) {
+						productShippingDiscounts.add({"price": priceAdj.price, "calloutMsg": priceAdj.promotion.calloutMsg});
+					}
+				}
+				}
+			}
+		}
+		
+		// iterate over all shipping price adjustments and 
+		// grab price and calloutMsg objects
+		while (priceAdjIter.hasNext()) {
+			var priceAdj : PriceAdjustment = priceAdjIter.next();
+			if (priceAdj != null && priceAdj.promotion !== null) {
+				priceAdjArray[priceAdjArray.length] = {"price": priceAdj.price, "calloutMsg": priceAdj.promotion.calloutMsg};
+			} 
+		}
+		
+		var calculatedShipCostObj = {	"shippingExclDiscounts": 	basket.shippingTotalPrice,
+										"shippingInclDiscounts":	basket.getAdjustedShippingTotalPrice(), 
+										"productShippingCosts": 	productShippingCosts,
+										"productShippingDiscounts": productShippingDiscounts,
+										"shippingPriceAdjustments": priceAdjArray};
+			
+		pdict.ShippingCost = calculatedShipCostObj;
+	}	
+	
+    return PIPELET_NEXT;
+}

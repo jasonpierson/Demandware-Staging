@@ -1,0 +1,279 @@
+<isdecorate template="checkout/pt_checkout">
+<isinclude template="util/modules"/>
+
+<iscomment>
+	This template visualizes the second step of the multi shipping checkout
+	scenario. It renders a list of all shipments (created by distinct shipping
+	addresses) and provides a shipping method selection per shipment.
+</iscomment>
+
+<iscomment>Report this checkout step</iscomment>
+<isset name="checkoutstep" value="${3}" scope="page"/>
+<isset name="checkoutname" value="${'ShippingMethod'}" scope="page"/>
+<isinclude template="util/reporting/ReportCheckout.isml"/>
+
+<iscomment>the url to edit shipping addresses depends on the checkout scenario</iscomment>
+<isset name="editUrl" value="${URLUtils.https('COShippingMultiple-Start')}" scope="page"/>
+
+<div class="checkout">
+    <iscomment>checkout progress indicator</iscomment>
+    <ischeckoutprogressindicator step="2" multishipping="true">
+
+	<form action="${URLUtils.continueURL()}" method="post">
+	    <iscomment>list all shipments</iscomment>
+		<isloop items="${pdict.CurrentForms.multishipping.shippingOptions.shipments}" var="shipmentItem" status="shipmentloop">
+			<isset name="shipment" value="${shipmentItem.object}" scope="page"/>
+			<div class="checkoutmultishipping">
+			<h2>${Resource.msg('multishippingshipments.shipment','checkout',null)} ${'#' + shipmentloop.count}</h2>
+			<div class="shippingmethods">
+				<iscomment>render shipping method selection based on type of shipment (physical or gift certificate)</iscomment>
+				<isif condition="${shipment.giftCertificateLineItems.size() > 0 && shipment.shippingAddress == null}">
+					${Resource.msg('multishippingshipments.gcshipment','checkout',null)}
+				<iselse/>
+					
+					<iscomment>shipping promotions for this shipment</iscomment>
+					<div class="shippingpromotions">
+						<isif condition="${shipment.shippingPriceAdjustments.size() > 0}">
+							<isloop items="${shipment.shippingPriceAdjustments}" var="shippingPA">
+								<isset name="shippingPromotion" value="${shippingPA.promotion}" scope="page"/>
+								<isif condition="${shippingPromotion != null}">
+									<div>
+										<isprint value="${Resource.msg('shipment.qualifiesfor','checkout',null)}"/> <isprint value="${shippingPromotion.calloutMsg}"/>
+									</div>
+								</isif>
+							</isloop>
+						</isif>
+					</div>
+					
+					<iscomment>get the shipping model for the shipment, which is used to calculate the shipping costs</iscomment>
+					<isscript>
+						var shippingModel : dw.order.ShipmentShippingModel = dw.order.ShippingMgr.getShipmentShippingModel( shipment );
+					</isscript>
+					${Resource.msg('multishippingshipments.selectmethod','checkout',null)}
+					<select name="${shipmentItem.shippingMethodID.htmlName}">
+						<isloop items="${shipmentItem.shippingMethodID.options}" var="option">
+							<isset name="shippingMethod" value="${option.object}" scope="page"/>
+							<option value="${shippingMethod.ID}" <isif condition="${option.selected}">selected="selected"</isif>><isprint value="${shippingMethod.displayName}">: <isprint value="${shippingModel.getShippingCost(shippingMethod).getAmount()}"> (<isprint value="${shippingMethod.description}">)</option>
+						</isloop>
+					</select>
+					<span class="hidden">${shipment.UUID}</span>
+				</isif>
+			</div>
+			<table class="multishipshipmentstable" summary="Multiple Shipments Table">
+				<thead>
+					<tr>
+						<th>${Resource.msg('global.product','locale',null)}</th>
+						<th>${Resource.msg('global.quantity','locale',null)}</th>
+						<th>${Resource.msg('multishippingshipments.shippingdetails','checkout',null)}</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<iscomment>Shipment containing product line items</iscomment>
+					<isloop items="${shipment.productLineItems}" var="productLI" status="pliLoopstatus">
+						<tr>
+							<td>
+								<isprint value="${productLI.lineItemText}"/>
+								
+								<isif condition="${productLI.product != null && productLI.product.isVariant()}">
+									- 
+									<isloop items="${productLI.product.variationModel.attributeDefinitions}" var="varAttr" status="vaLoopstatus">
+										<isset name="selectedVarValue" value="${productLI.product.variationModel.getSelectedValue(varAttr)}" scope="page"/>
+										<isprint value="${varAttr.displayName}"/>:
+										<isif condition="${selectedVarValue != null}"><isprint value="${selectedVarValue.displayValue}"/><iselse/> - </isif><isif condition="${!vaLoopstatus.last}">, </isif>
+									</isloop>
+								</isif>
+							</td>
+							<td><isprint value="${productLI.quantity}"/></td>
+							<isif condition="${pliLoopstatus.first}">
+								<isset name="rowspan" value="${shipment.productLineItems.size() + 1}" scope="page"/>
+								<td rowspan="${rowspan.toFixed()}">
+									<div class="address">							
+										<div class="header">
+											<a href="${editUrl}">${Resource.msg('global.edit','locale',null)}</a>
+											${Resource.msg('minishipments.shippingaddress','checkout',null)}
+										</div>
+							
+										<div class="details">
+											<isif condition="${shipment.shippingAddress != null}"/>
+												<isset name="address" value="${shipment.shippingAddress}" scope="page">
+												<div><isprint value="${address.firstName}"> <isprint value="${address.lastName}"></div>
+												<div><isprint value="${address.address1}"></div>
+												<isif condition="${!empty(address.address2)}">
+													<div><isprint value="${address.address2}"></div>
+												</isif>
+												<div><isprint value="${address.city}">, <isprint value="${address.stateCode}"> <isprint value="${address.postalCode}"></div>
+												<div><isprint value="${address.countryCode}"></div>
+											</isif>
+										</div>
+									</div>
+								</td>
+							</isif>
+						</tr>
+					</isloop>
+					
+					<iscomment>Shipment gift options</iscomment>
+					<isif condition="${shipment.productLineItems.size() > 0}">
+						<tr>
+							<td colspan="2" class="giftoptions">
+								<div class="formfield giftmessage">
+									<div class="label">${Resource.msg(pdict.CurrentForms.singleshipping.shippingAddress.isGift.label,'forms',null)}:</div>
+						    		<div class="value">
+						    			<input class="isgiftyes" type="radio" name="${shipmentItem.isGift.htmlName}" id="isgiftyes${shipmentItem.itemIndex}" value="true" <isif condition="${shipmentItem.isGift.value}">checked="checked"</isif> /> <label for="isgiftyes${shipmentItem.itemIndex}">Yes</label>
+						    			<input class="isgiftno" type="radio" name="${shipmentItem.isGift.htmlName}" id="isgiftno${shipmentItem.itemIndex}" value="false" <isif condition="${!shipmentItem.isGift.value}">checked="checked"</isif> /> <label for="isgiftno${shipmentItem.itemIndex}">No</label>
+						    		</div><!-- END: value -->
+							    	<div class="clear"><!-- FLOAT CLEAR --></div>
+							    </div><!-- END: giftmessage -->
+					    		<div class="giftmessagetext">
+							    	<isinputfield formfield="${shipmentItem.giftMessage}" type="textarea" value="false">
+							    	<isinputfield formfield="${shipmentItem.giftMessage}" type="textarea" label="false" attribute1="rows" value1="4" attribute2="cols" value2="10">
+							    	<div class="clear"><!-- FLOAT CLEAR --></div>
+							    </div><!-- END: giftmessagetext -->
+							</td>
+						</tr>
+					</isif>
+
+					<iscomment>Shipment containing gift certificate line items</iscomment>
+					<isloop items="${shipment.giftCertificateLineItems}" var="giftCertLI" status="loopstatus">
+						<tr>
+							<td>${Resource.msg('global.giftcertificate','locale',null)} - <isprint value="${giftCertLI.price}"/></td>
+							<td>1</td>
+							<isif condition="${loopstatus.first}">
+								<isset name="rowspan" value="${shipment.giftCertificateLineItems.size()*2}" scope="page"/>
+								<td rowspan="${rowspan.toFixed()}">
+									<div class="address">
+										<div class="header">
+											${Resource.msg('minishipments.shippingaddress','checkout',null)}
+										</div>
+										<div class="details">
+											<div><isprint value="${giftCertLI.recipientName}"></div>
+											<div>(<ismask p_string="${giftCertLI.recipientEmail}" p_maskchars="${6}">)</div>
+											<div>${Resource.msg('multishippingshipments.gcshipment','checkout',null)}</div>
+											<div>${Resource.msg('multishippingshipments.shipimmediante','checkout',null)}</div>
+										</div>
+									</div>
+								</tr>
+							</isif>
+						</tr>
+						<tr>
+							<td colspan="2">
+								${Resource.msg('multishippingshipments.giftmessage','checkout',null)} <isprint value="${giftCertLI.message}"/>
+							</td>
+						<tr>
+					</isloop>
+				</tbody>
+			</table>
+			</div>
+		</isloop>
+
+		<div class="formactions">
+			<div class="continuecheckoutbutton">
+				<button class="checkoutbutton" type="submit" name="${pdict.CurrentForms.multishipping.shippingOptions.save.htmlName}" value="${Resource.msg('global.continuecheckout','locale',null)}"><span>${Resource.msg('global.continuecheckout','locale',null)}</span></button>
+			</div><!-- END: continuecheckoutbutton -->
+		</div><!-- END: continuecheckout -->
+	</form>
+</div> <!-- end checkout div -->
+
+<script type="text/javascript"><!--
+// init gift message box
+function initGiftMessageBoxes() {
+	// show gift message box, if shipment is gift
+	jQuery("input.isgiftno").each(function() {
+		var radio = jQuery(this)[0];
+		if(radio.checked) {
+			jQuery(this).parents(".giftoptions").children(".giftmessagetext").hide();
+		} else {
+			jQuery(this).parents(".giftoptions").children(".giftmessagetext").show();
+		}
+	});
+
+	// init left character count and max characters
+	jQuery(".giftmessagetext").each(function() {
+		var max = 250;
+		var text = jQuery(this).find("span.caption").html();
+		jQuery(this).find("span.caption").html( text.replace("XXX", "<span class=\"count\"><\/span>").replace("YYY", max) );
+		var count = jQuery(this).find("textarea").val().length;
+		var left = max - count;
+		jQuery(this).find("span.count").text(left);
+		
+		// gift message character limitation
+		jQuery(this).find("textarea").bind("keyup keydown", function(countElem) {
+			var max = 250;
+			var value = jQuery(this).val();
+			var left = max - value.length;
+			if(left < 0) {
+				jQuery(this).val( value.slice(0, left) );
+				left = 0;
+			}
+			jQuery(this).nextAll("span.caption").find("span.count").text(left);
+		});
+	});
+}
+
+// updates the order summary based on a possibly recalculated 
+// basket after a shipping promotion has been applied
+function updateSummary() {
+	var url = "${URLUtils.url('COBilling-UpdateSummary')}";
+
+	// indicate progress
+	jQuery("#rightcolumn").html(app.showProgress());
+
+	// load the updated summary area
+	jQuery("#rightcolumn").load( url, function() {
+		jQuery("#rightcolumn").fadeIn("fast");
+	});
+}
+
+// selects a shipping method for the given shipment ID
+// and updates the summary section on the right hand side
+function selectShippingMethod(shippingMethodID, shipmentID, selectObj) {
+	// nothing entered
+	if(!shippingMethodID || !shipmentID || !selectObj) {
+		return;
+	}
+	// attempt to set shipping method
+	var url = app.util.appendParamToURL("${URLUtils.https('COShipping-SelectShippingMethod')}","shippingMethodID",shippingMethodID);
+	url = app.util.appendParamToURL(url,"shipmentID",shipmentID);
+	var result = app.ajax.getJson({
+		url: url,
+		callback: function(data) {
+			updateSummary();
+			if(!data || !data.shippingMethodID) {
+				alert("Couldn't select shipping method.");
+				return false;
+			}
+			// display promotion in UI and update the summary section,
+			// if some promotions were applied
+			var promoContainer = selectObj.parent().find(".shippingpromotions");
+			promoContainer.empty();
+			if(data.shippingPriceAdjustments && data.shippingPriceAdjustments.length > 0) {
+				for(var i=0; i<data.shippingPriceAdjustments.length; i++) {
+					var spa = data.shippingPriceAdjustments[i];
+					promoContainer.append("<div>${Resource.msg('shipment.qualifiesfor','checkout',null)} " + spa.calloutMessage + "<\/div>");
+				}
+			}
+		}
+	});
+}
+
+jQuery(document).ready(function() {
+	// gift message box toggling
+	jQuery(".isgiftyes").click(function() { 
+		jQuery(this).parents(".giftoptions").children(".giftmessagetext").show();
+	});
+	jQuery(".isgiftno").click(function() {
+		jQuery(this).parents(".giftoptions").children(".giftmessagetext").hide();
+	});
+
+	// gift message character limitation
+	initGiftMessageBoxes();
+
+	// bind shipping method selection
+	jQuery(".shippingmethods select").change(function() {
+		var selectedMethodID = jQuery(this).val();
+		var shipmentID = jQuery(this).data("data");
+		selectShippingMethod(selectedMethodID, shipmentID, jQuery(this));
+	});
+});
+//--></script>
+</isdecorate>

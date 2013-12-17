@@ -1,0 +1,138 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*   @input AccountID : String
+*   @input ContactID : String
+*   @input UserID : String    
+*   @output errorMessage : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+
+	try {
+		if (!empty(args.AccountID)) {
+			/***********************************************************************************************
+			 DELETE SFDC ACCOUNT
+			***********************************************************************************************/
+		    var webref : WebReference = webreferences.DeleteSFDCAccountDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pDeleteSFDCAccount;
+		    }
+		    
+			var stub : Stub = webref.defaultService; 
+			
+			var deleteAccount:WebReference = new webref.DeleteSFDCAccountRequest();
+			deleteAccount.request = new webref.DeleteSFDCAccountRequestRequest();
+			deleteAccount.request.SFDCAccountID = args.AccountID;
+			
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pDeleteSFDCAccount(deleteAccount);
+			} else {
+				var response = stub.deleteSFDCAccount(deleteAccount);
+			}
+			
+			/***********************************************************************************************
+			 CAPTURE WEBSERVICE RESPONSE AND GENERATE SCRIPT OUTPUT
+			***********************************************************************************************/
+			if (response.response.success) {
+				args.errorMessage = null;
+			} else {
+				Logger.error(response.response.success + "-" + args.AccountID);
+				args.errorMessage = response.response.message;
+				return PIPELET_ERROR;
+			}				
+		}	
+	
+		if (!empty(args.ContactID)) {	
+			/***********************************************************************************************
+			 DELETE SFDC CONTACT
+			***********************************************************************************************/		
+		    var webref : WebReference = webreferences.DeleteSFDCContactDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pDeleteSFDCContact;
+		    }
+		    
+			var stub : Stub = webref.defaultService; 
+			
+			var deleteContact:WebReference = new webref.DeleteSFDCContactRequest();
+			deleteContact.request = new webref.DeleteSFDCContactRequestRequest();
+			deleteContact.request.SFDCContactID = args.ContactID;
+			
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pDeleteSFDCContact(deleteContact);
+			} else {
+				var response = stub.deleteSFDCContact(deleteContact);
+			}
+			
+			/***********************************************************************************************
+			 CAPTURE WEBSERVICE RESPONSE AND GENERATE SCRIPT OUTPUT
+			***********************************************************************************************/
+			if (response.response.success) {
+				args.errorMessage = null;
+			} else {
+				Logger.error(response.response.success + "-" + args.ContactID);
+				args.errorMessage = response.response.message;
+				return PIPELET_ERROR;
+			}						
+		}
+		
+		if (!empty(args.UserID)) {		
+			/***********************************************************************************************
+			 DEACTIVATE SFDC USER
+			***********************************************************************************************/			
+		    var webref : WebReference = webreferences.DeactivateSFDCUserDev;
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	webref = webreferences.pDeactivateSFDCUser;
+		    }
+		    
+			var stub : Stub = webref.defaultService; 
+			
+			var deactivateUser:WebReference = new webref.DeactivateSFDCUserRequest();
+			deactivateUser.request = new webref.DeactivateSFDCUserRequestRequest();
+			deactivateUser.request.SFDCUserID = args.UserID;
+			
+		    if ((dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM) || dw.system.Site.getCurrent().getCustomPreferenceValue('useProductionWebServices')) {
+		    	var response = stub.pDeactivateSFDCUser(deactivateUser);
+			} else {
+				var response = stub.deactivateSFDCUser(deactivateUser);
+			}
+			
+			/***********************************************************************************************
+			 CAPTURE WEBSERVICE RESPONSE AND GENERATE SCRIPT OUTPUT
+			***********************************************************************************************/
+			if (response.response.success) {
+				args.errorMessage = null;
+			} else {
+				Logger.error(response.response.success + "-" + args.UserID);
+				args.errorMessage = response.response.message;
+				return PIPELET_ERROR;
+			}				
+		}					   
+	}
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 
+   	return PIPELET_NEXT;
+}

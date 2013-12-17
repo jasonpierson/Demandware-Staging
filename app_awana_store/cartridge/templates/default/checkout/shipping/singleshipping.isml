@@ -1,0 +1,545 @@
+<isdecorate template="checkout/pt_checkout">
+	<isinclude template="util/modules"/>
+	
+	<iscomment>
+		This template visualizes the first step of the single shipping checkout
+		scenario. It renders a form for the shipping address and shipping method
+		selection. Both are stored at a single shipment only.
+	</iscomment>
+	
+	<iscomment>
+		Check to see if this is a b2b user or a b2c, only b2c can add to address book.  
+	</iscomment>
+	<isif condition="${pdict.CurrentCustomer != null && pdict.CurrentCustomer.authenticated && pdict.CurrentCustomer.profile.custom.CustomerType != null}">
+		<isset name="allowEdit" value="${true}" scope="page"/>
+	<iselse>
+		<isset name="allowEdit" value="${false}" scope="page"/>
+	</isif>
+	
+	<iscomment>Report this checkout step (we need to report two steps)</iscomment>
+	<isset name="checkoutstep" value="${2}" scope="page"/>
+	<isset name="checkoutname" value="${'ShippingAddress'}" scope="page"/>
+	
+	<isinclude template="util/reporting/ReportCheckout.isml"/>
+	
+	<isset name="checkoutstep" value="${3}" scope="page"/>
+	<isset name="checkoutname" value="${'ShippingMethod'}" scope="page"/>
+	
+	<isscript>
+		importScript("cart/CartUtils.ds");	
+		var productListAddresses = CartUtils.getAddressList(pdict.Basket, pdict.CurrentCustomer, true);		
+	</isscript>
+	
+	<isinclude template="util/reporting/ReportCheckout.isml"/>
+
+	<div class="checkout">
+	    <ischeckoutprogressindicator step="1" rendershipping="${pdict.Basket.productLineItems.size() == 0 ? 'false' : 'true'}">
+	    <div style="height:10px;"></div>
+	    
+	    <iscomment>points box area</iscomment>
+	    <isif condition="${!empty(pdict.CurrentCustomer) && pdict.CurrentCustomer.authenticated && pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+	    	<isif condition="${pdict.errorChurchMessage!=null}">
+	    		<!--- 
+	    		TODO: CHURCH REWARDS
+	    		Place error message here regarding the church selection 
+	    		
+	    		--->
+	    	</isif>
+			<iscomment>
+				Display the box indicating that the user is tied to a specific church (give name) with edit/remove tag
+			</iscomment>
+			<div class="sponsorinfo">
+				<isprint value="${Resource.msg('singleshipping.sponsorinfo','checkout',null)}" />
+				<span class="churchname"><isprint value="${pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchName}" /></span>.
+				<div class="sponsoractions">
+					<div id="WorkingMessage" class="fr" style="display:none;"><button id="ChurchWorkingButton" class="imagebutton rewardsworking" type="button" disabled="disabled" name="loading" value="${Resource.msg('global.submitorder','locale',null)}"></button></div>
+					<a class="editsponsor" id="editlink" href="${URLUtils.url('Church-Search')}"><isprint value="${Resource.msg('global.edit','locale',null)}" /></a>
+					<span class="divider" id="churchrewardsdivider"> | </span>
+					<a class="removesponsor" id="removelink" onclick="disablelinks();" href="${URLUtils.url('Church-Remove')}"><isprint value="${Resource.msg('global.remove','locale',null)}" /></a>	
+				</div>						
+			</div>		
+			<div class="sponsorsuccess">
+				<isprint value="${Resource.msg('singleshipping.sponsorsuccess','checkout',null)}" />
+				<span class="churchname"><!-- sponsor name goes here after it's been selected --></span>.
+				<div class="sponsoractions">
+					<div id="WorkingMessage" class="fr" style="display:none;"><button id="ChurchWorkingButton" class="imagebutton rewardsworking" type="button" disabled="disabled" name="loading" value="${Resource.msg('global.submitorder','locale',null)}"></button></div>
+					<a class="editsponsor" id="editlink" href="${URLUtils.url('Church-Search')}"><isprint value="${Resource.msg('global.edit','locale',null)}" /></a>
+					<span class="divider" id="churchrewardsdivider"> | </span>
+					<a class="removesponsor" id="removelink" onclick="disablelinks();" href="${URLUtils.url('Church-Remove')}"><isprint value="${Resource.msg('global.remove','locale',null)}" /></a>
+				</div>										
+			</div>				
+		<iselse>
+			<isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+				<isif condition="${empty(pdict.CurrentCustomer) || empty(pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor) || !empty(pdict.CurrentCustomer) && !pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor}">
+					<div class="selectsponsor">
+						<a class="clickhere" href="${URLUtils.url('Church-Search')}">${Resource.msg('global.clickhere','locale',null)}</a> ${Resource.msg('singleshipping.sponsorchurch','checkout',null)}
+					</div>
+					<div class="sponsorsuccess">
+						<isprint value="${Resource.msg('singleshipping.sponsorsuccess','checkout',null)}" />
+						<span class="churchname"><!-- sponsor name goes here after it's been selected --></span>.
+						<div class="sponsoractions">
+							<div id="WorkingMessage" class="fr" style="display:none;"><button id="ChurchWorkingButton" class="imagebutton rewardsworking" type="button" disabled="disabled" name="loading" value="${Resource.msg('global.submitorder','locale',null)}"></button></div>					
+							<a class="editsponsor" id="editlink" href="${URLUtils.url('Church-Search')}"><isprint value="${Resource.msg('global.edit','locale',null)}" /></a>
+							<span class="divider" id="churchrewardsdivider"> | </span>
+							<a class="removesponsor" id="removelink" onclick="disablelinks();" href="${URLUtils.url('Church-Remove')}"><isprint value="${Resource.msg('global.remove','locale',null)}" /></a>	
+						</div>						
+					</div>
+					
+					<script type="text/javascript"><!--
+						function disablelinks() {
+							testing3 = $("div[id='WorkingMessage']");
+							testing3[0].style.display = "";					
+							testing2 = $("a[id='editlink']");
+							testing2[0].style.display="none";
+							testing1 = $("span[id='churchrewardsdivider']");
+							testing1[0].style.display="none";										
+							testing = $("a[id='removelink']");
+							testing[0].style.display="none";									
+						}
+					//--></script>	
+									
+					<div id="churchSearchForm" style="display: none">
+						<div id="innerSearchForm">
+							This will be the search form for a church!
+						</div>
+					</div>
+				</isif>
+			</isif>
+		</isif>
+		
+	    <div style="height:10px;"></div>
+	    <div class="checkoutshipping">
+		<form action="${URLUtils.continueURL()}" method="post" id="${pdict.CurrentForms.singleshipping.shippingAddress.htmlName}">
+			<div id="addressform" class="addressform">
+				<div class="header">
+					<div style="padding-left:20px;">${Resource.msg('singleshipping.enteraddress','checkout',null)}</div>
+				</div>
+				
+				<div class="container">
+					<iscomment>Entry point for Multi-Shipping (disabled on purpose)</iscomment>
+					<isif condition="${pdict.Basket.productLineItems.size() > 1 && false}">
+						<div class="shiptomultiple">
+							${Resource.msg('singleshipping.multiple','checkout',null)} <button class="shiptomultiplebutton textbutton" type="submit" name="${pdict.CurrentForms.singleshipping.shipToMultiple.htmlName}" value="${Resource.msg('global.yes','locale',null)}"><span>${Resource.msg('global.yes','locale',null)}</span></button>
+						</div>
+					</isif>
+					
+					<iscomment>display select box with stored addresses if customer is authenticated</iscomment>
+					<isif condition="${pdict.CurrentCustomer.authenticated}">
+						<div class="addresslist">
+							
+							<select name="${pdict.CurrentForms.singleshipping.addressList.htmlName}">
+								<option value="" selected="selected">${Resource.msg('forms.address.list.select','forms',null)}</option>
+		
+								<isif condition="${pdict.CurrentCustomer.profile.addressBook.addresses.size() == 0}">
+									<option value="">${Resource.msg('forms.address.list.none','forms',null)}</option>
+								<iselse/>
+									<isloop items="${pdict.CurrentCustomer.profile.addressBook.addresses}" var="address">
+										<option value="${address.ID}">(<isprint value="${address.ID}"/>) <isprint value="${address.address1}"/>, <isprint value="${address.city}"/>, <isprint value="${address.stateCode}"/>, <isprint value="${address.postalCode}"/></option>
+									</isloop>
+								</isif>
+							</select>
+						</div>
+					</isif>	
+					
+				    <div class="formfield firstname">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.firstName}" type="input" >
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield lastname">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.lastName}" type="input">
+				    	<div class="clear"></div>
+				    </div>						    
+				    <div class="formfield address1">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.address1}" type="input">					    	
+				    	<span class="formfieldtooltip">(<a class="tooltip">${Resource.msg('singleshipping.apofpo','checkout',null)}<div class="tooltip-body" style="display:none"><div class="tooltipcontainer"><iscontentasset aid="apo-fpo"></div></div></a>)</span>
+				    	<div class="clear"></div>
+						<isif condition="${dw.system.Site.getCurrent().ID == 'AwanaCA'}">	
+					    	<div class="nopoboxes">		    	
+						    	${Resource.msg('singleshipping.nopoboxes','checkout',null)}
+						    </div>	
+						<iselse/>
+							<br/>
+				    	</isif>			    	
+				    	<div class="clear"></div>				    		
+				    </div>	    
+				    <div class="formfield address2">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.address2}" type="input">
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield country">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country}" type="select">
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield state">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.states.state}" type="select">
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield city">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.city}" type="input">
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield zip">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.zip}" type="input">
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="formfield phone">
+			    		<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.phone}" type="input" xhtmlclass="phoneUS">
+				    	<span class="formfieldtooltip">(<a class="tooltip">${Resource.msg('singleshipping.phonerequired','checkout',null)}<div class="tooltip-body" style="display:none"><div class="tooltipcontainer"><iscontentasset aid="help-telephone"></div></div></a>)</span>		    	
+				    	<div class="clear"></div>			
+				    </div>
+
+				    <div class="formfield addressoptions">
+				    	<div class="label">&nbsp;</div>
+				    	<div class="value">	
+				    		<iscomment>Add address to Address Book</iscomment>
+				    		<isif condition="${pdict.CurrentCustomer.authenticated}">
+				    			<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.addToAddressBook}" type="checkbox" xhtmlclass="checkbx">
+				    		</isif>
+				    		<iscomment>Use address for Billing Address</iscomment>
+				    		<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.useAsBillingAddress}" type="checkbox" xhtmlclass="checkbx">
+			    		</div>
+				    	<div class="clear"></div>
+				    </div>
+
+					<!---
+					<div class="formfield giftmessage"<isif condition="${true}"> style="display:none;"</isif>>
+				    	<div class="label"><isprint value="${Resource.msg(pdict.CurrentForms.singleshipping.shippingAddress.isGift.label,'forms',null)}">:</div>
+			    		<div class="value">
+			    			<input class="isgiftyes" type="radio" name="${pdict.CurrentForms.singleshipping.shippingAddress.isGift.htmlName}" id="isgiftyes" value="true" <isif condition="${pdict.CurrentForms.singleshipping.shippingAddress.isGift.value}">checked="checked"</isif> /> <label for="isgiftyes">Yes</label>
+			    			<input class="isgiftno" type="radio" name="${pdict.CurrentForms.singleshipping.shippingAddress.isGift.htmlName}" id="isgiftno" value="false" <isif condition="${!pdict.CurrentForms.singleshipping.shippingAddress.isGift.value}">checked="checked"</isif> /> <label for="isgiftno">No</label>
+			    		</div>
+				    	<div class="clear"></div>
+				    </div>
+				    <div class="giftmessagetext">
+				    	<isinputfield formfield="${pdict.CurrentForms.singleshipping.shippingAddress.giftMessage}" type="textarea" attribute1="rows" value1="4" attribute2="cols" value2="10">
+				    	<div class="clear"></div>
+				    </div>
+				    --->
+				</div>
+				    
+			</div>
+	
+			<div id="shippingmethodform"></div>
+	
+			<div class="formactions">
+				<div class="continuecheckoutbutton" style="margin-right:20px; margin-bottom:20px;">
+					<button class="imagebutton continuecheckout" type="submit" name="${pdict.CurrentForms.singleshipping.shippingAddress.save.htmlName}" value="${Resource.msg('global.continuecheckout','locale',null)}"></button>
+				</div>
+				<iscomment>Entry point for Multi-Shipping (disabled on purpose)</iscomment>
+				<isif condition="${pdict.Basket.productLineItems.size() > 1 && false}">
+					<div class="shiptomultiple">
+						${Resource.msg('singleshipping.multiple','checkout',null)} <a href="${URLUtils.https('COShippingMultiple-Start')}">${Resource.msg('global.yes','locale',null)}</a>
+					</div>
+				</isif>
+			</div>
+		</form>
+		</div>
+	</div>	
+	
+	<script type="text/javascript">
+		var shippingMethods;
+		
+		// init gift message box
+		/*function initGiftMessageBox() {
+			// show gift message box, if shipment is gift
+			if(jQuery("input.isgiftno:checked").length == 1) jQuery(".giftmessagetext").hide();
+			else jQuery(".giftmessagetext").show();
+
+			// init left character count and max characters
+			var max = 250;
+			var text = jQuery(".giftmessagetext span.caption").html();
+			jQuery(".giftmessagetext span.caption").html( text.replace("XXX", "<span class=\"count\"><\/span>").replace("YYY", max) );
+			var count = jQuery(".giftmessagetext textarea").val().length;
+			var left = max - count;
+			jQuery(".giftmessagetext span.count").text(left);
+		}*/
+
+		// updates the address form with the attributes of a given address
+		function updateAddressForm(addressID)
+		{
+			// load address details
+			var url = app.util.appendParamToURL("${URLUtils.https('Address-GetAddressDetails')}", "addressID", addressID);
+			url = app.util.appendParamToURL(url, "addressType", "Shipping");
+			var result = app.ajax.getJson({
+				url: url,
+				callback: function(data) {
+					if(!data || !data.address) {
+						alert("${Resource.msg('checkout.addressloaderror','checkout',null)}");
+						return false;
+					}
+					// fill the form
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.firstName.htmlName}]").val(data.address.firstName);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.lastName.htmlName}]").val(data.address.lastName);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.address1.htmlName}]").val(data.address.address1);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.address2.htmlName}]").val(data.address.address2);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.city.htmlName}]").val(data.address.city);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.zip.htmlName}]").val(data.address.postalCode);
+					changeFormSelection(jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.states.state.htmlName}]")[0], data.address.stateCode);
+					changeFormSelection(jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country.htmlName}]")[0], data.address.countryCode);
+					jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.phone.htmlName}]").val(data.address.phone);
+					// remove error messaging
+					jQuery("#addressform span.errormessage").remove();
+					jQuery("#addressform input.errormessage").removeClass("errormessage");
+					jQuery("#addressform .errorlabel").removeClass("errorlabel");
+
+					// Check if the list of shipping methods needs to change
+					updateShippingMethodList();
+				}
+			});
+		}
+
+		// changes the selection of the given form select to the given value
+		function changeFormSelection(selectElem, selectedValue)
+		{
+			if(!selectElem) return;
+			var options = selectElem.options;
+			if(options.length > 0) {
+				// find index of value to select
+				var idx = 0;
+				for(var i=0; i<options.length; i++) {
+					if(options[i].value != selectedValue) continue;
+					idx = i; break;
+				}
+				selectElem.selectedIndex = idx;
+			}
+		}
+
+		// updates the current address list entry with the updated address details
+		function updateAddressListEntry() {
+			// get the current address ID and load address details
+			var addressID = jQuery("select[name=${pdict.CurrentForms.singleshipping.addressList.htmlName}]").val();
+			var url = app.util.appendParamToURL("${URLUtils.https('Address-GetAddressDetails')}", "addressID", addressID);
+			var result = app.ajax.getJson({
+				url: url,
+				callback: function(data) {
+					if(!data || !data.address) {
+						alert("${Resource.msg('checkout.addressloaderror','checkout',null)}");
+						return false;
+					}
+					// update the address select entry
+					var addressLine = "(" + data.address.ID + ") " + data.address.address1 + ", " + data.address.city +
+						", " + data.address.stateCode + ", " + data.address.postalCode;
+
+					// update address list entry
+					var optionElem = jQuery("select[name=${pdict.CurrentForms.singleshipping.addressList.htmlName}] > option[value=" + data.address.ID + "]");
+					optionElem.html(addressLine);
+				}
+			});
+		}
+
+		// removes the current address list entry
+		function removeAddressListEntry() {
+			// get the current address ID
+			var addressID = jQuery("select[name=${pdict.CurrentForms.singleshipping.addressList.htmlName}]").val();
+			// remove the option element
+			var optionElem = jQuery("select[name=${pdict.CurrentForms.singleshipping.addressList.htmlName}] > option[value=" + addressID + "]");
+			optionElem.remove();
+			// reset selection to first entry
+			jQuery("select[name=${pdict.CurrentForms.singleshipping.addressList.htmlName}]")[0].selectedIndex = 0;
+		}
+
+		// selects a shipping method for the default shipment
+		// and updates the summary section on the right hand side
+		function selectShippingMethod(shippingMethodID) {
+			// nothing entered
+			if(!shippingMethodID) {
+				return;
+			}
+			// attempt to set shipping method
+			var url = getShippingMethodURL("${URLUtils.https('COShipping-SelectShippingMethod')}");
+			url = app.util.appendParamToURL(url, "shippingMethodID", shippingMethodID);
+			var result = app.ajax.getJson({
+				url: url,
+				callback: function(data) {
+					updateSummary();
+					if(!data || !data.shippingMethodID) {
+						alert("Couldn't select shipping method.");
+						return false;
+					}
+					// display promotion in UI and update the summary section,
+					// if some promotions were applied
+					jQuery(".shippingpromotions").empty();
+					if(data.shippingPriceAdjustments && data.shippingPriceAdjustments.length > 0) {
+						for(var i=0; i<data.shippingPriceAdjustments.length; i++) {
+							var spa = data.shippingPriceAdjustments[i];
+							jQuery(".shippingpromotions").append("<div>${Resource.msg('shipment.qualifiesfor','checkout',null)} " + spa.calloutMessage + "<\/div>");
+						}
+					}
+				}
+			});
+		}
+
+		// updates the order summary based on a possibly recalculated 
+		// basket after a shipping promotion has been applied
+		function updateSummary() {
+			var url = "${URLUtils.url('COBilling-UpdateSummary')}";
+
+			// indicate progress
+			jQuery("#rightcolumn").html(app.showProgress());
+
+			// load the updated summary area
+			jQuery("#rightcolumn").load( url, function() {
+				jQuery("#rightcolumn").fadeIn("fast");
+			});
+		}
+
+		/**
+		 * Helper method which constructs a URL for an AJAX request using the 
+		 * entered address information as URL request parameters.
+		 */
+		function getShippingMethodURL(url) 
+		{
+			var countryCode = jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country.htmlName}]").val();
+			var stateCode = jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.states.state.htmlName}]").val();
+			var postalCode = jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.zip.htmlName}]").val();
+			var city = jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.city.htmlName}]").val();
+
+			url = app.util.appendParamToURL(url, "countryCode", countryCode);
+			url = app.util.appendParamToURL(url, "stateCode", stateCode);
+			url = app.util.appendParamToURL(url, "postalCode", postalCode);
+			url = app.util.appendParamToURL(url, "city", city);
+
+			return url;
+		}
+
+
+		/**
+		 * Make an AJAX request to the server to retrieve the list of applicable shipping methods
+		 * based on the merchandise in the cart and the currently entered shipping address 
+		 * (the address may be only partially entered).  If the list of applicable shipping methods 
+		 * has changed because new address information has been entered, then issue another AJAX 
+		 * request which updates the currently selected shipping method (if needed) and also updates
+		 * the UI.  In particular, the list of available shipping methods and the right hand summary
+		 * must change.
+		 */
+		function updateShippingMethodList() {
+
+			var url = getShippingMethodURL("${URLUtils.https('COShipping-GetApplicableShippingMethodsJSON')}");
+
+			var result = app.ajax.getJson({
+				url: url,
+				callback: function(data) {
+					if(!data) {
+						alert("Couldn't get list of applicable shipping methods.");
+						return false;
+					}
+					if (shippingMethods != null && shippingMethods.toString() == data.toString())
+					{
+						// No need to update the UI.  The list has not changed.
+						return true;
+					}
+
+					// We need to update the UI.  The list has changed.
+					// Cache the array of returned shipping methods.
+					shippingMethods = data;
+			
+					url = getShippingMethodURL("${URLUtils.https('COShipping-UpdateShippingMethodList')}");
+
+					// indicate progress
+					jQuery("#shippingmethodform").html(app.showProgress());
+
+					// load the shipping method form
+					jQuery("#shippingmethodform").load( url, function() {
+						jQuery("#shippingmethodform").fadeIn("fast");
+
+						// rebind the radio buttons onclick function to a handler.
+						jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.shippingMethodID.htmlName}]").click(function() {
+							var selectedMethodID = jQuery(this).val();
+							selectShippingMethod(selectedMethodID);
+						});
+
+						// activate the tooltips in the newly loaded AJAX section
+						app.tooltipDefault();
+						
+						// update the summary
+						updateSummary();
+					});
+				}
+			});
+		}
+
+		// updates the state label depending on the given country code
+		// if the flag updateSelection is set to true the state selection
+		// changes to the first possible select option based on the country
+		function updateStateLabel(countryCode, updateSelection) {
+			var label = "${Resource.msg('forms.state','forms',null)}:";
+			if(countryCode == "CA") {
+				label = "${Resource.msg('forms.province','forms',null)}:";
+			}
+			jQuery("div.state > .label > .labeltext").html(label);
+
+			if(updateSelection) {
+				var initialOption = "##";
+				if(countryCode == "US") {
+					initialOption = "";
+				} else if(countryCode == "CA") {
+					initialOption = "AB";
+				}
+				changeFormSelection(jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.states.state.htmlName}]")[0], initialOption);
+			}
+		}
+		
+		jQuery(document).ready(function() {
+			// select address from list
+			jQuery(".addresslist select").change(function() {
+				var addressID = jQuery(this).val();
+				if(!addressID) return false;
+				updateAddressForm(addressID);
+				return false;
+			});
+			jQuery(".sponsoractions a.editsponsor").colorbox();
+			jQuery(".selectsponsor a.clickhere").colorbox();
+
+			// gift message box toggling
+			//jQuery(".isgiftyes").click(function() { jQuery(".giftmessagetext").show(); });
+			//jQuery(".isgiftno").click(function() { jQuery(".giftmessagetext").hide(); });
+		
+			// gift message character limitation
+			//initGiftMessageBox();
+			/*jQuery(".giftmessagetext textarea").bind("keyup keydown", function() {
+				var max = 250;
+				var value = jQuery(this).val();
+				var left = max - value.length;
+				if(left < 0) {
+					jQuery(this).val( value.slice(0, left) );
+					left = 0;
+				}
+				jQuery(".giftmessagetext span.count").text(left);
+			});*/
+		
+		
+			// update shipping method list on load
+			updateShippingMethodList();
+		
+			// bind shipping method selection
+			jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.shippingMethodID.htmlName}]").click(function() {
+				var selectedMethodID = jQuery(this).val();
+				selectShippingMethod(selectedMethodID);
+			});
+		
+			// update state label upon entering page
+			updateStateLabel(jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country.htmlName}]").val(), false);
+		
+			// update state label upon country selection
+			jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country.htmlName}]").change(function() {
+				updateStateLabel(jQuery(this).val(), true);
+			});
+		
+			// Update shipping method list if country, state, city, or zip changes.
+			jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.country.htmlName}]").change(function() {
+				updateShippingMethodList();
+			});
+			jQuery("select[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.states.state.htmlName}]").change(function() {
+				updateShippingMethodList();
+			});
+			jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.city.htmlName}]").change(function() {
+				updateShippingMethodList();
+			});
+			jQuery("input[name=${pdict.CurrentForms.singleshipping.shippingAddress.addressFields.zip.htmlName}]").change(function() {
+				updateShippingMethodList();
+			});
+		});
+		
+	</script>
+
+</isdecorate>

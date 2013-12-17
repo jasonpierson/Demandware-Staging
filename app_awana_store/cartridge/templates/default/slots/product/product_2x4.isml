@@ -1,0 +1,31 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+
+<isinclude template="util/modules"/>
+
+	<!-- product grid  -->
+	<div class="product-grid">
+		<div class="product-grid-row">
+			<div class="product-grid-cap">
+				<isloop items="${slotcontent.content}" var="product" begin="0" end="3" status="loopstate">
+					<isobject object="${product}" view="recommendation">
+						<isproducttile product="${product}" showswatches="${true}" showpricing="${true}" showpromotion="${true}" showrating="${true}" isend="${loopstate.last}">
+					</isobject>
+				</isloop>
+			</div>
+		</div>
+	</div>
+	<!-- end product grid -->
+	
+	<!-- product grid  -->
+	<div class="product-grid">
+		<div class="product-grid-row">
+			<div class="product-grid-cap">
+				<isloop items="${slotcontent.content}" var="product" begin="4" end="7" status="loopstate">
+					<isobject object="${product}" view="recommendation">
+						<isproducttile product="${product}" showswatches="${true}" showpricing="${true}" showpromotion="${true}" showrating="${true}" isend="${loopstate.last}">
+					</isobject>
+				</isloop>
+			</div>
+		</div>
+	</div>
+	<!-- end product grid -->

@@ -1,0 +1,54 @@
+<iscomment>
+	This is the footer for all pages. Be careful caching it if it contains
+	user dependent information. Cache its elements instead if necessary (do not forget
+	to change the isinclude into a pipeline include for that).
+</iscomment>
+<div id="footer">
+	<div id="footer_content">
+		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'footer-copy')}" />
+	
+		<div id="footer_media">
+			<div id="download_catalog">
+				<isinclude url="${URLUtils.url('Page-Include', 'cid', 'online-catalog')}" />
+			</div>
+			<div id="connect">
+				<h6>Stay Connected</h6>
+				<form>
+				<div id="email_signup">
+					<!---<input type="text" value="Enter Your Email Address" id="user_email" />
+					<button type="submit" value="Sign-Up"><span>Sign-Up</span></button>--->
+					Want to signup for Awana newsletter? <a href="http://www2.awana.org/subscriptions/" target="_blank">Click here</a>
+				</div>
+				</form>
+				
+				<div id="social_media">
+					<ul>
+						<li id="facebook">
+							<a href="http://www.facebook.com/pages/Streamwood-IL/AWANA/62342221439?ref=ts" target="_blank"><img src="${URLUtils.staticURL('/images/facebook-icn.gif')}" alt="facebook" width="16" height="16" /></a>
+						</li>
+						<li id="twitter">
+							<a href="http://www.twitter.com/awana" target="_blank"><img src="${URLUtils.staticURL('/images/twitter-icn.gif')}" alt="twitter" width="16" height="16" /></a>
+						</li>
+						<li id="youtube">
+							<a href="http://www.youtube.com/user/awana1950" target="_blank"><img src="${URLUtils.staticURL('/images/youtube-icn.gif')}" alt="youtube" width="16" height="16" /></a>
+						</li>
+						<li id="pinterest">
+							<a href="http://pinterest.com/awana/" target="_blank"><img src="${URLUtils.staticURL('/images/pinterest.png')}" alt="Pinterest" width="16" height="16" /></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+	
+		</div>
+	
+	</div>
+</div>
+
+<iscomment>
+	Customer registration can happen everywhere in the page flow. As special tag in the pdict
+	is indicating it. So we have to check on every page, if we have to report this event for
+	the reporting engine.
+</iscomment>
+<isinclude template="util/reporting/ReportUserRegistration.isml"/>
+<isinclude template="components/footer/googleAnalytics.isml"/>
+<isinclude url="${URLUtils.url('SeeWhy-Include')}"/>

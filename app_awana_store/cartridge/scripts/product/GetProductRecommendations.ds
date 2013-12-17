@@ -1,0 +1,24 @@
+/**
+*	 @input Product : dw.catalog.Product
+*    @input MaxRecommendations : Number
+*	 @input RecommendationType : Number
+*
+*    @output RecommendedProducts : dw.util.List
+*/
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	// get all orderable cross sell recommendations (1 = cross sell)
+	var __recommendations : ArrayList = args.Product.getOrderableRecommendations(1);
+	var __maxRec : Number = args.MaxRecommendations;
+	var __recLen : Number = __recommendations.length;
+	
+	__recommendations.shuffle();
+	
+	args.RecommendedProducts = __recommendations.subList(0, (__maxRec < __recLen ? __maxRec : __recLen));
+
+   return PIPELET_NEXT;
+}

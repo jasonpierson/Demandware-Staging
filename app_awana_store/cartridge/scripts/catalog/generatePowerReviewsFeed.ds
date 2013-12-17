@@ -1,0 +1,234 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*
+*/
+importPackage( dw.system );
+importPackage( dw.catalog );
+importPackage( dw.io );
+importPackage( dw.net );
+importPackage( dw.object );
+
+function execute( args : PipelineDictionary ) : Number
+{
+   (new dw.io.File(dw.io.File.IMPEX +'/src/affiliatefeeds/')).mkdirs();
+	var exportFileWriter : StringWriter = new StringWriter();
+	var exportWriter : StringWriter = new StringWriter();
+	
+	//First build the header in the string, this is going to be a tab delimited file
+	exportWriter.write("product_url\tpage_id\tbrand\tname\tdescription\timage_url\tprice\tcategory\tin_stock\r\n");
+	
+	var siteCatalog:dw.catalog.Catalog = dw.catalog.ProductMgr.queryAllSiteProducts();
+	var products : Iterator = siteCatalog;
+	var counter = 0;
+
+	var productLink;
+	var productID;
+	var brand = "";
+	var name = "";
+	var description = "";
+	var imageLink;
+	var productPrice;
+	var category;
+	var in_stock : String = "1";
+		
+	var productList: dw.util.List = products.asList();
+	for each(var product:Product in productList)
+	{
+		if (product != null && !product.master && !product.productSet && product.isOnline())
+		{
+			productLink = dw.web.URLUtils.http('Product-Show','pid', product.ID);
+			//productLink = productLink.toString().replace("production.web.awana.demandware.net", "www.awana.org/shop");
+			//productLink = productLink.toString().replace("staging.web.awana.demandware.net", "www.awana.org/shop");
+
+			productID = product.ID;
+			
+			//Check to see if brand is null
+			if (product.brand != null)
+				brand = product.brand;
+			else
+				brand = "";
+			
+			name = product.name;
+			
+			if (product.longDescription != null)
+				description = product.longDescription.markup.replace("\r\n", "").replace("\t","");
+			else if (product.shortDescription != null)
+				description = product.shortDescription.markup.replace("\r\n", "").replace("\t",""); 
+			else
+				description = "Description coming soon.";
+				
+			description = stripHTML(description.toString());	
+			
+			productPrice = getProductPrice(product);
+			
+			imageLink = getImageLink(product);
+			//imageLink = imageLink.toString().replace("staging.web.awana.demandware.net", "www.awana.org/shop");
+			
+			//Build categories
+			category = getCategoryList(product);
+			
+			//Now write each field in the file
+			if ((productPrice != "N/A" && productPrice != "0"))	
+				exportWriter.write(productLink + "\t" + productID + "\t" + brand + "\t" + name + "\t" + description + "\t" + imageLink + "\t" + productPrice + "\t" + category + "\t" + in_stock + "\r\n");
+		}
+	}
+	
+	// write data to file
+	exportWriter.flush();
+	exportFileWriter.write(exportWriter.toString());
+	exportWriter.close();
+	
+	try
+	{		
+		if (dw.system.Site.getCurrent().ID == 'kidzmatter') {
+			var file	 : File = new dw.io.File(dw.io.File.IMPEX + '/src/affiliatefeeds/km_powerreviews_product_feed.txt');
+		} else {
+			var file	 : File = new dw.io.File(dw.io.File.IMPEX + '/src/affiliatefeeds/awana_powerreviews_product_feed.txt');
+		}
+		var content  : String = exportFileWriter.toString();
+	
+		if(!file.exists()) 
+		{
+			if(!file.createNewFile())
+			{
+				Logger.error("File "+file.name+" could not be created!");
+				return PIPELET_ERROR;
+			}
+		} 
+		else
+		{
+			Logger.debug("File "+file.name+" exists and gets overwritten!");
+		}	
+
+		var out : FileWriter = new FileWriter(file);
+		out.write(content);
+		out.flush();
+		out.close();
+	}
+	catch(e)
+	{
+		Logger.error("An error occured while exporting power reviews products {0}.", e);
+		return PIPELET_ERROR;
+	}	
+	
+	return PIPELET_NEXT;
+}
+
+function getCategoryList(inProduct: Product) : String
+{
+	var categoryList : String;
+	var isFirst:Boolean;
+	var siteCatalog : Catalog = dw.catalog.CatalogMgr.getSiteCatalog();
+	var root : Category = null;
+	if ( siteCatalog != null ) { root = siteCatalog.getRoot(); }
+	
+	for each (var cat:Category in inProduct.getCategories())
+	{
+		isFirst = true;
+		//Now get the heirarchy of the category assignment
+		if (cat != root) {
+			while (cat.parent != root)
+			{
+				if (isFirst)
+					categoryList = cat.displayName.toLowerCase();
+				else
+					categoryList =  cat.displayName.toLowerCase() + ">" + categoryList;
+					
+				cat = cat.parent;
+				isFirst = false;
+			}
+			
+			//Add top level
+			categoryList =  cat.displayName.toLowerCase() + ">" + categoryList;
+		}	
+		break;
+	}	
+	return categoryList;
+}
+
+function getProductPrice(inProduct: Product) : String
+{
+	var price : String = "N/A";
+	var PriceModel:ProductPriceModel;
+	
+	if (!inProduct.master)
+  	{
+  		PriceModel = inProduct.getPriceModel();
+  		price = PriceModel.getPrice().toNumberString();
+  	}
+  	else
+  	{
+  		try {
+	  		//If no price range
+	  		if (inProduct.master && !inProduct.priceModel.isPriceRange() && inProduct.variationModel.variants.size() > 0) {
+	  			PriceModel = inProduct.variationModel.variants[0].getPriceModel();	
+	  			price = PriceModel.getPrice().toNumberString();
+	  		} else {
+	  			//price = inProduct.priceModel.minPrice.toNumberString() + "-" + inProduct.priceModel.maxPrice.toNumberString();
+	  			price = inProduct.priceModel.maxPrice.toNumberString();
+	  		}
+	  	}
+		catch(e)
+		{
+			Logger.error("GetProductPrice is acting up for ", inProduct.ID);
+			return PIPELET_ERROR;
+		}	
+  	}	
+  	
+  	return price;
+}
+
+function stripHTML(oldString:String) : String
+{
+   var newString:String = "";
+   var inTag:Boolean = false;
+   for(var i = 0; i < oldString.length; i++) {
+   
+        if(oldString.charAt(i) == '\n' || oldString.charAt(i) == '\r' || oldString.charAt(i) == '<' && (oldString.charAt(i+1) == 'b' || oldString.charAt(i+1) == 'B') && (oldString.charAt(i+2) == 'r' || oldString.charAt(i+2) == 'R')) inTag = true;
+        if(oldString.charAt(i) == '>') {
+              if(oldString.charAt(i+1)=="<" || (oldString.charAt(i-1) != 'r' || oldString.charAt(i-1) != 'R') && (oldString.charAt(i-2) != 'b' || oldString.charAt(i-2) != 'B'))
+              {
+              		//dont do anything
+				}
+				else
+				{
+					inTag = false;
+					i++;
+				}
+        }
+	 if(!inTag) newString += oldString.charAt(i);
+   }
+  
+   return newString;
+}
+
+function getImageLink(inProduct : Product) : String
+{
+	var imgFile:File=null;
+	var Link : String;
+	if (inProduct!=null)
+	{
+		if(empty(inProduct.getImage('medium',0)))	{
+			Link = dw.web.URLUtils.httpStatic('/images/no_image.jpg').toString();
+		} else {
+			Link = inProduct.getImage('medium',0).httpURL;
+		}
+		return Link;
+	}
+	else
+	{
+		return dw.web.URLUtils.httpStatic('/images/no_image.jpg').toString();
+	}			
+}

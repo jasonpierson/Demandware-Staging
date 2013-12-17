@@ -1,0 +1,982 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SaveTaxForJDE2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrderNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BillTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationAddressLine1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationAddressLine2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationState" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationZip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationCountry" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TaxClass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginAddressLine1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginAddressLine2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginState" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginZip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginCountry" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveTaxForJDE2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveTaxForJDE2Result" type="tns:ArrayOfWebServiceOutputPRC10000113" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000113">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000113" nillable="true" type="tns:WebServiceOutputPRC10000113" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000113">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTaxForJDE2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BillTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationAddressLine1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationAddressLine2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationState" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationZip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DestinationCountry" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TaxClass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginAddressLine1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginAddressLine2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginCity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginState" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginZip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OriginCountry" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxForJDE2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxForJDE2Result" type="tns:ArrayOfWebServiceOutputPRC10000112" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000112">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000112" nillable="true" type="tns:WebServiceOutputPRC10000112" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000112">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTaxForJDE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BillTo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxForJDEResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxForJDEResult" type="tns:ArrayOfWebServiceOutputPRC10000107" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000107">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000107" nillable="true" type="tns:WebServiceOutputPRC10000107" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000107">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SaveTaxForJDE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrderNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BillTo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveTaxForJDEResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveTaxForJDEResult" type="tns:ArrayOfWebServiceOutputPRC10000111" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000111">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000111" nillable="true" type="tns:WebServiceOutputPRC10000111" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000111">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTax">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineOneOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineTwoOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineThreeOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CityOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegionOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZipCodeOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CountryOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineOneDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineTwoDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineThreeDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CityDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegionDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZipCodeDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CountryDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DocCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DocType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Commit" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TaxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TaxOverrideReason" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PONumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CompanyCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TaxIncluded" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxResult" type="tns:ArrayOfWebServiceOutputPRC10000100" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000100">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000100" nillable="true" type="tns:WebServiceOutputPRC10000100" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000100">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTaxForCI">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ItemNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ExtendedPrice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineOneOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineTwoOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineThreeOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CityOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegionOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZipCodeOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CountryOrigin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineOneDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineTwoDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LineThreeDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CityDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RegionDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ZipCodeDestination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CountryDestination" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxForCIResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxForCIResult" type="tns:ArrayOfWebServiceOutputPRC10000108" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000108">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000108" nillable="true" type="tns:WebServiceOutputPRC10000108" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000108">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TotalTax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddressValidation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Line1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Line2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Line3" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Zipcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddressValidationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddressValidationResult" type="tns:ArrayOfWebServiceOutputPRC10000102" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfWebServiceOutputPRC10000102">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebServiceOutputPRC10000102" nillable="true" type="tns:WebServiceOutputPRC10000102" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebServiceOutputPRC10000102">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Line1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Line2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Line3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZiCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ArrayOfWebServiceOutputPRC10000113" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000113" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000112" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000112" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000107" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000107" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000111" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000111" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000100" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000100" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000108" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000108" />
+      <s:element name="ArrayOfWebServiceOutputPRC10000102" nillable="true" type="tns:ArrayOfWebServiceOutputPRC10000102" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SaveTaxForJDE2SoapIn">
+    <wsdl:part name="parameters" element="tns:SaveTaxForJDE2" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDE2SoapOut">
+    <wsdl:part name="parameters" element="tns:SaveTaxForJDE2Response" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2SoapIn">
+    <wsdl:part name="parameters" element="tns:GetTaxForJDE2" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2SoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxForJDE2Response" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDESoapIn">
+    <wsdl:part name="parameters" element="tns:GetTaxForJDE" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDESoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxForJDEResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDESoapIn">
+    <wsdl:part name="parameters" element="tns:SaveTaxForJDE" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDESoapOut">
+    <wsdl:part name="parameters" element="tns:SaveTaxForJDEResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTax" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCISoapIn">
+    <wsdl:part name="parameters" element="tns:GetTaxForCI" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCISoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxForCIResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationSoapIn">
+    <wsdl:part name="parameters" element="tns:AddressValidation" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationSoapOut">
+    <wsdl:part name="parameters" element="tns:AddressValidationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDE2HttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="OrderNumber" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+    <wsdl:part name="DestinationAddressLine1" type="s:string" />
+    <wsdl:part name="DestinationAddressLine2" type="s:string" />
+    <wsdl:part name="DestinationCity" type="s:string" />
+    <wsdl:part name="DestinationState" type="s:string" />
+    <wsdl:part name="DestinationZip" type="s:string" />
+    <wsdl:part name="DestinationCountry" type="s:string" />
+    <wsdl:part name="TaxClass" type="s:string" />
+    <wsdl:part name="OriginAddressLine1" type="s:string" />
+    <wsdl:part name="OriginAddressLine2" type="s:string" />
+    <wsdl:part name="OriginCity" type="s:string" />
+    <wsdl:part name="OriginState" type="s:string" />
+    <wsdl:part name="OriginZip" type="s:string" />
+    <wsdl:part name="OriginCountry" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDE2HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000113" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2HttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+    <wsdl:part name="DestinationAddressLine1" type="s:string" />
+    <wsdl:part name="DestinationAddressLine2" type="s:string" />
+    <wsdl:part name="DestinationCity" type="s:string" />
+    <wsdl:part name="DestinationState" type="s:string" />
+    <wsdl:part name="DestinationZip" type="s:string" />
+    <wsdl:part name="DestinationCountry" type="s:string" />
+    <wsdl:part name="TaxClass" type="s:string" />
+    <wsdl:part name="OriginAddressLine1" type="s:string" />
+    <wsdl:part name="OriginAddressLine2" type="s:string" />
+    <wsdl:part name="OriginCity" type="s:string" />
+    <wsdl:part name="OriginState" type="s:string" />
+    <wsdl:part name="OriginZip" type="s:string" />
+    <wsdl:part name="OriginCountry" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000112" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDEHttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDEHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000107" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDEHttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="OrderNumber" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDEHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000111" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxHttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="AccountId" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="LineOneOrigin" type="s:string" />
+    <wsdl:part name="LineTwoOrigin" type="s:string" />
+    <wsdl:part name="LineThreeOrigin" type="s:string" />
+    <wsdl:part name="CityOrigin" type="s:string" />
+    <wsdl:part name="RegionOrigin" type="s:string" />
+    <wsdl:part name="ZipCodeOrigin" type="s:string" />
+    <wsdl:part name="CountryOrigin" type="s:string" />
+    <wsdl:part name="LineOneDestination" type="s:string" />
+    <wsdl:part name="LineTwoDestination" type="s:string" />
+    <wsdl:part name="LineThreeDestination" type="s:string" />
+    <wsdl:part name="CityDestination" type="s:string" />
+    <wsdl:part name="RegionDestination" type="s:string" />
+    <wsdl:part name="ZipCodeDestination" type="s:string" />
+    <wsdl:part name="CountryDestination" type="s:string" />
+    <wsdl:part name="DocCode" type="s:string" />
+    <wsdl:part name="DocType" type="s:string" />
+    <wsdl:part name="Commit" type="s:string" />
+    <wsdl:part name="TaxDate" type="s:string" />
+    <wsdl:part name="TaxOverrideReason" type="s:string" />
+    <wsdl:part name="PONumber" type="s:string" />
+    <wsdl:part name="CompanyCode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000100" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCIHttpGetIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="AccountId" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="LineOneOrigin" type="s:string" />
+    <wsdl:part name="LineTwoOrigin" type="s:string" />
+    <wsdl:part name="LineThreeOrigin" type="s:string" />
+    <wsdl:part name="CityOrigin" type="s:string" />
+    <wsdl:part name="RegionOrigin" type="s:string" />
+    <wsdl:part name="ZipCodeOrigin" type="s:string" />
+    <wsdl:part name="CountryOrigin" type="s:string" />
+    <wsdl:part name="LineOneDestination" type="s:string" />
+    <wsdl:part name="LineTwoDestination" type="s:string" />
+    <wsdl:part name="LineThreeDestination" type="s:string" />
+    <wsdl:part name="CityDestination" type="s:string" />
+    <wsdl:part name="RegionDestination" type="s:string" />
+    <wsdl:part name="ZipCodeDestination" type="s:string" />
+    <wsdl:part name="CountryDestination" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCIHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000108" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationHttpGetIn">
+    <wsdl:part name="Line1" type="s:string" />
+    <wsdl:part name="Line2" type="s:string" />
+    <wsdl:part name="Line3" type="s:string" />
+    <wsdl:part name="City" type="s:string" />
+    <wsdl:part name="Region" type="s:string" />
+    <wsdl:part name="Zipcode" type="s:string" />
+    <wsdl:part name="Country" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000102" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDE2HttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="OrderNumber" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+    <wsdl:part name="DestinationAddressLine1" type="s:string" />
+    <wsdl:part name="DestinationAddressLine2" type="s:string" />
+    <wsdl:part name="DestinationCity" type="s:string" />
+    <wsdl:part name="DestinationState" type="s:string" />
+    <wsdl:part name="DestinationZip" type="s:string" />
+    <wsdl:part name="DestinationCountry" type="s:string" />
+    <wsdl:part name="TaxClass" type="s:string" />
+    <wsdl:part name="OriginAddressLine1" type="s:string" />
+    <wsdl:part name="OriginAddressLine2" type="s:string" />
+    <wsdl:part name="OriginCity" type="s:string" />
+    <wsdl:part name="OriginState" type="s:string" />
+    <wsdl:part name="OriginZip" type="s:string" />
+    <wsdl:part name="OriginCountry" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDE2HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000113" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2HttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+    <wsdl:part name="DestinationAddressLine1" type="s:string" />
+    <wsdl:part name="DestinationAddressLine2" type="s:string" />
+    <wsdl:part name="DestinationCity" type="s:string" />
+    <wsdl:part name="DestinationState" type="s:string" />
+    <wsdl:part name="DestinationZip" type="s:string" />
+    <wsdl:part name="DestinationCountry" type="s:string" />
+    <wsdl:part name="TaxClass" type="s:string" />
+    <wsdl:part name="OriginAddressLine1" type="s:string" />
+    <wsdl:part name="OriginAddressLine2" type="s:string" />
+    <wsdl:part name="OriginCity" type="s:string" />
+    <wsdl:part name="OriginState" type="s:string" />
+    <wsdl:part name="OriginZip" type="s:string" />
+    <wsdl:part name="OriginCountry" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDE2HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000112" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDEHttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForJDEHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000107" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDEHttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="ShipTo" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="OrderNumber" type="s:string" />
+    <wsdl:part name="BillTo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SaveTaxForJDEHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000111" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxHttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="AccountId" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="LineOneOrigin" type="s:string" />
+    <wsdl:part name="LineTwoOrigin" type="s:string" />
+    <wsdl:part name="LineThreeOrigin" type="s:string" />
+    <wsdl:part name="CityOrigin" type="s:string" />
+    <wsdl:part name="RegionOrigin" type="s:string" />
+    <wsdl:part name="ZipCodeOrigin" type="s:string" />
+    <wsdl:part name="CountryOrigin" type="s:string" />
+    <wsdl:part name="LineOneDestination" type="s:string" />
+    <wsdl:part name="LineTwoDestination" type="s:string" />
+    <wsdl:part name="LineThreeDestination" type="s:string" />
+    <wsdl:part name="CityDestination" type="s:string" />
+    <wsdl:part name="RegionDestination" type="s:string" />
+    <wsdl:part name="ZipCodeDestination" type="s:string" />
+    <wsdl:part name="CountryDestination" type="s:string" />
+    <wsdl:part name="DocCode" type="s:string" />
+    <wsdl:part name="DocType" type="s:string" />
+    <wsdl:part name="Commit" type="s:string" />
+    <wsdl:part name="TaxDate" type="s:string" />
+    <wsdl:part name="TaxOverrideReason" type="s:string" />
+    <wsdl:part name="PONumber" type="s:string" />
+    <wsdl:part name="CompanyCode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000100" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCIHttpPostIn">
+    <wsdl:part name="ItemNumber" type="s:string" />
+    <wsdl:part name="AccountId" type="s:string" />
+    <wsdl:part name="ExtendedPrice" type="s:string" />
+    <wsdl:part name="Quantity" type="s:string" />
+    <wsdl:part name="LineNo" type="s:string" />
+    <wsdl:part name="LineOneOrigin" type="s:string" />
+    <wsdl:part name="LineTwoOrigin" type="s:string" />
+    <wsdl:part name="LineThreeOrigin" type="s:string" />
+    <wsdl:part name="CityOrigin" type="s:string" />
+    <wsdl:part name="RegionOrigin" type="s:string" />
+    <wsdl:part name="ZipCodeOrigin" type="s:string" />
+    <wsdl:part name="CountryOrigin" type="s:string" />
+    <wsdl:part name="LineOneDestination" type="s:string" />
+    <wsdl:part name="LineTwoDestination" type="s:string" />
+    <wsdl:part name="LineThreeDestination" type="s:string" />
+    <wsdl:part name="CityDestination" type="s:string" />
+    <wsdl:part name="RegionDestination" type="s:string" />
+    <wsdl:part name="ZipCodeDestination" type="s:string" />
+    <wsdl:part name="CountryDestination" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxForCIHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000108" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationHttpPostIn">
+    <wsdl:part name="Line1" type="s:string" />
+    <wsdl:part name="Line2" type="s:string" />
+    <wsdl:part name="Line3" type="s:string" />
+    <wsdl:part name="City" type="s:string" />
+    <wsdl:part name="Region" type="s:string" />
+    <wsdl:part name="Zipcode" type="s:string" />
+    <wsdl:part name="Country" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddressValidationHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfWebServiceOutputPRC10000102" />
+  </wsdl:message>
+  <wsdl:portType name="AvalaraWebServicesSoap">
+    <wsdl:operation name="SaveTaxForJDE2">
+      <wsdl:input message="tns:SaveTaxForJDE2SoapIn" />
+      <wsdl:output message="tns:SaveTaxForJDE2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <wsdl:input message="tns:GetTaxForJDE2SoapIn" />
+      <wsdl:output message="tns:GetTaxForJDE2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <wsdl:input message="tns:GetTaxForJDESoapIn" />
+      <wsdl:output message="tns:GetTaxForJDESoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <wsdl:input message="tns:SaveTaxForJDESoapIn" />
+      <wsdl:output message="tns:SaveTaxForJDESoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <wsdl:input message="tns:GetTaxSoapIn" />
+      <wsdl:output message="tns:GetTaxSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <wsdl:input message="tns:GetTaxForCISoapIn" />
+      <wsdl:output message="tns:GetTaxForCISoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <wsdl:input message="tns:AddressValidationSoapIn" />
+      <wsdl:output message="tns:AddressValidationSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AvalaraWebServicesHttpGet">
+    <wsdl:operation name="SaveTaxForJDE2">
+      <wsdl:input message="tns:SaveTaxForJDE2HttpGetIn" />
+      <wsdl:output message="tns:SaveTaxForJDE2HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <wsdl:input message="tns:GetTaxForJDE2HttpGetIn" />
+      <wsdl:output message="tns:GetTaxForJDE2HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <wsdl:input message="tns:GetTaxForJDEHttpGetIn" />
+      <wsdl:output message="tns:GetTaxForJDEHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <wsdl:input message="tns:SaveTaxForJDEHttpGetIn" />
+      <wsdl:output message="tns:SaveTaxForJDEHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <wsdl:input message="tns:GetTaxHttpGetIn" />
+      <wsdl:output message="tns:GetTaxHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <wsdl:input message="tns:GetTaxForCIHttpGetIn" />
+      <wsdl:output message="tns:GetTaxForCIHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <wsdl:input message="tns:AddressValidationHttpGetIn" />
+      <wsdl:output message="tns:AddressValidationHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AvalaraWebServicesHttpPost">
+    <wsdl:operation name="SaveTaxForJDE2">
+      <wsdl:input message="tns:SaveTaxForJDE2HttpPostIn" />
+      <wsdl:output message="tns:SaveTaxForJDE2HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <wsdl:input message="tns:GetTaxForJDE2HttpPostIn" />
+      <wsdl:output message="tns:GetTaxForJDE2HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <wsdl:input message="tns:GetTaxForJDEHttpPostIn" />
+      <wsdl:output message="tns:GetTaxForJDEHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <wsdl:input message="tns:SaveTaxForJDEHttpPostIn" />
+      <wsdl:output message="tns:SaveTaxForJDEHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <wsdl:input message="tns:GetTaxHttpPostIn" />
+      <wsdl:output message="tns:GetTaxHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <wsdl:input message="tns:GetTaxForCIHttpPostIn" />
+      <wsdl:output message="tns:GetTaxForCIHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <wsdl:input message="tns:AddressValidationHttpPostIn" />
+      <wsdl:output message="tns:AddressValidationHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AvalaraWebServicesSoap" type="tns:AvalaraWebServicesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SaveTaxForJDE2">
+      <soap:operation soapAction="http://tempuri.org/SaveTaxForJDE2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <soap:operation soapAction="http://tempuri.org/GetTaxForJDE2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <soap:operation soapAction="http://tempuri.org/GetTaxForJDE" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <soap:operation soapAction="http://tempuri.org/SaveTaxForJDE" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <soap:operation soapAction="http://tempuri.org/GetTax" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <soap:operation soapAction="http://tempuri.org/GetTaxForCI" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <soap:operation soapAction="http://tempuri.org/AddressValidation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AvalaraWebServicesSoap12" type="tns:AvalaraWebServicesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SaveTaxForJDE2">
+      <soap12:operation soapAction="http://tempuri.org/SaveTaxForJDE2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <soap12:operation soapAction="http://tempuri.org/GetTaxForJDE2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <soap12:operation soapAction="http://tempuri.org/GetTaxForJDE" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <soap12:operation soapAction="http://tempuri.org/SaveTaxForJDE" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <soap12:operation soapAction="http://tempuri.org/GetTax" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <soap12:operation soapAction="http://tempuri.org/GetTaxForCI" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <soap12:operation soapAction="http://tempuri.org/AddressValidation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AvalaraWebServicesHttpGet" type="tns:AvalaraWebServicesHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="SaveTaxForJDE2">
+      <http:operation location="/SaveTaxForJDE2" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <http:operation location="/GetTaxForJDE2" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <http:operation location="/GetTaxForJDE" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <http:operation location="/SaveTaxForJDE" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <http:operation location="/GetTax" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <http:operation location="/GetTaxForCI" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <http:operation location="/AddressValidation" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AvalaraWebServicesHttpPost" type="tns:AvalaraWebServicesHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="SaveTaxForJDE2">
+      <http:operation location="/SaveTaxForJDE2" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE2">
+      <http:operation location="/GetTaxForJDE2" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForJDE">
+      <http:operation location="/GetTaxForJDE" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTaxForJDE">
+      <http:operation location="/SaveTaxForJDE" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTax">
+      <http:operation location="/GetTax" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxForCI">
+      <http:operation location="/GetTaxForCI" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddressValidation">
+      <http:operation location="/AddressValidation" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AvalaraWebServices">
+    <wsdl:port name="AvalaraWebServicesSoap" binding="tns:AvalaraWebServicesSoap">
+      <soap:address location="http://nap29.awana.org/EASYProcessWebServices/Avalara/AvalaraWebServices.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AvalaraWebServicesSoap12" binding="tns:AvalaraWebServicesSoap12">
+      <soap12:address location="http://nap29.awana.org/EASYProcessWebServices/Avalara/AvalaraWebServices.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AvalaraWebServicesHttpGet" binding="tns:AvalaraWebServicesHttpGet">
+      <http:address location="http://nap29.awana.org/EASYProcessWebServices/Avalara/AvalaraWebServices.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AvalaraWebServicesHttpPost" binding="tns:AvalaraWebServicesHttpPost">
+      <http:address location="http://nap29.awana.org/EASYProcessWebServices/Avalara/AvalaraWebServices.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

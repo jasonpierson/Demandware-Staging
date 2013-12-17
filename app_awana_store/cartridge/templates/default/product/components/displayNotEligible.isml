@@ -1,0 +1,34 @@
+<isinclude template="util/modules">
+
+		<iscomment>
+			Tell the user they are not a commander and cannot purchase redeemable rewards products 
+		</iscomment>
+
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				jQuery.fn.colorbox({ width:"400px", inline:true, href:"#noPointsIDMsg"});
+
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					jQuery.fn.colorbox.close();
+				});
+				jQuery("#colorboxDialogCloseButton").click(function() {
+					window.location.reload();
+				});
+				jQuery("#cboxClose").click(function() {
+					window.location.reload();
+				});
+				
+			});
+		</script>
+
+		<div style='display:none'>
+			<div id="noPointsIDMsg">
+				<div class="colorboxDialogHeader">
+					<h3>Product Not Available</h3>
+					<div id="colorboxDialogCloseButton"></div>
+				</div>
+				<div style="margin:20px; padding:20px; font-size:12px;">
+				Church rewards products are available to commanders only. Please log in as a commander to purchase this product.<br/><br/>
+				</div>
+			</div>
+		</div>	

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	<group formid="customer">
+		<field formid="firstname" label="forms.profile.001" type="string" mandatory="true" binding="firstName" max-length="50"/>
+		<field formid="lastname" label="forms.profile.002" type="string" mandatory="true" binding="lastName" max-length="50"/>
+		<field formid="churchname" label="forms.profile.030" type="string" mandatory="false" binding="ChurchName" max-length="150"/>
+		<field formid="churchregistrationnumber" label="forms.profile.031" type="string" mandatory="false" binding="ChurchRegistrationNumber" max-length="15"/>		
+		<field formid="email" label="forms.profile.email.label" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$" parse-error="forms.profile.email.parse-error" binding="email" max-length="50" value-error="forms.profile.011"/>
+		<field formid="emailconfirm" label="Confirm Email" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$" parse-error="forms.profile.email.parse-error" max-length="50" value-error="forms.profile.026"/>
+
+		<field formid="birthday" label="forms.profile.004"  description="forms.profile.005" type="date" mandatory="false" format="MM/dd/yyyy" max="now" binding="birthday" max-length="10"/>		
+		<field formid="phone" label="forms.profile.006" type="string" description="forms.profile.007" mandatory="false" binding="phoneHome" max-length="50"/>		
+		<field formid="addtoemaillist" label="forms.giftregistry.items.public"  type="boolean"/>
+		<action formid="editprofile" valid-form="true"/>
+	</group>	
+
+	<group formid="login">
+	
+		<field formid="username" 
+			label="label.username" 
+			description="forms.5_20characters" 
+			type="string" 
+			mandatory="true" 
+			binding="login" 
+			regexp="^[-\w\.@_ ]{5,100}$" 
+			parse-error="forms.profile.usernamecontain"
+			value-error="forms.profile.011" />
+			   
+		<field formid="password" label="label.password" description="forms.8_20characters" type="string" mandatory="true" min-length="8" max-length="20"
+			   range-error="forms.8_20characters" />
+			   	
+		<field formid="passwordconfirm" label="forms.profile.015" type="string" mandatory="true" min-length="8" max-length="20"
+			   range-error="forms.8_20characters"	
+			   value-error="forms.profile.017"/>
+			   
+		<field formid="question" label="forms.profile.018" type="string" mandatory="false" binding="passwordQuestion">
+			<options>
+				<option optionid="MothersMaidenName" value="Mother's Maiden Name" label="forms.profile.019"/>
+				<option optionid="MakeOfFirstCar" value="Make of First Car" label="forms.profile.020"/>
+				<option optionid="FavouritePetsName" value="Favourite Pet's Name" label="forms.profile.021"/>
+				<option optionid="FathersFirstName" value="Father's First Name" label="forms.profile.022"/>
+				<option optionid="PlaceOfBirth" value="Place of Birth" label="forms.profile.023"/>
+			</options>	
+		</field>
+		<field formid="answer" label="forms.profile.024" type="string" mandatory="true" binding="passwordAnswer" max-length="50"/>
+		<field formid="rememberme" label="forms.profile.025" type="boolean" mandatory="false" />
+		<field formid="accounttype" label="forms.profile.027" value="" type="string" mandatory="true" binding="accountType">
+			<options>		
+				<option optionid="blank" label="forms.select" value=""/>			
+				<option optionid="Church" value="Church Contact" label="forms.profile.028"/>
+				<option optionid="Individual" value="Individual" label="forms.profile.029"/>
+			</options>	
+		</field>		
+
+		<action formid="editlogin" valid-form="true"/>
+	</group>	
+
+	<include formid="address" name="customeraddress"/>
+	
+	<group formid="addressbook">
+		<list formid="addresses">
+			<action formid="edit" valid-form="false"/>
+			<action formid="remove" valid-form="false"/>
+		</list>	
+		<action formid="add" valid-form="false"/>
+	</group>
+	
+	<action formid="confirm" valid-form="false"/>
+	<action formid="register" valid-form="true"/>
+	<action formid="cancel" valid-form="false"/>
+</form>
