@@ -1,0 +1,1998 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="view">
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Assign CustomerAddress object and start processing</description>
+        </text-node>
+        <node-display x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="CustAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="CustAddress" secure="false"/>
+        <node-display x="1" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="Address.address1" key="From_0"/>
+          <key-binding alias="origAdd1" key="To_0"/>
+          <key-binding alias="Address.address2" key="From_1"/>
+          <key-binding alias="origAdd2" key="To_1"/>
+          <key-binding alias="Address.city" key="From_2"/>
+          <key-binding alias="origCity" key="To_2"/>
+          <key-binding alias="Address.stateCode" key="From_3"/>
+          <key-binding alias="origState" key="To_3"/>
+          <key-binding alias="Address.postalCode" key="From_4"/>
+          <key-binding alias="origZip" key="To_4"/>
+          <key-binding alias="Address.countryCode.value" key="From_5"/>
+          <key-binding alias="origCountry" key="To_5"/>
+          <key-binding alias="&quot;&quot;" key="From_6"/>
+          <key-binding alias="verificationLevel" key="To_6"/>
+          <key-binding alias="&quot;CustomerAddress&quot;" key="From_7"/>
+          <key-binding alias="returnType" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-Start"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_3">
+    <segment>
+      <node>
+        <text-node>
+          <description>Assign shipping Address and start processing</description>
+        </text-node>
+        <node-display x="2" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ShippingAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ShippingAddress" secure="false"/>
+        <node-display x="3" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="ShippingAddress.address1" key="From_0"/>
+          <key-binding alias="origAdd1" key="To_0"/>
+          <key-binding alias="ShippingAddress.address2" key="From_1"/>
+          <key-binding alias="origAdd2" key="To_1"/>
+          <key-binding alias="ShippingAddress.city" key="From_2"/>
+          <key-binding alias="origCity" key="To_2"/>
+          <key-binding alias="ShippingAddress.stateCode" key="From_3"/>
+          <key-binding alias="origState" key="To_3"/>
+          <key-binding alias="ShippingAddress.postalCode" key="From_4"/>
+          <key-binding alias="origZip" key="To_4"/>
+          <key-binding alias="ShippingAddress.countryCode.value" key="From_5"/>
+          <key-binding alias="origCountry" key="To_5"/>
+          <key-binding alias="&quot;&quot;" key="From_6"/>
+          <key-binding alias="verificationLevel" key="To_6"/>
+          <key-binding alias="&quot;ShippingAddress&quot;" key="From_7"/>
+          <key-binding alias="returnType" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-Start"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_5">
+    <segment>
+      <node>
+        <text-node>
+          <description>Assign billing Address and start processing</description>
+        </text-node>
+        <node-display x="4" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="BillingAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="BillingAddress" secure="false"/>
+        <node-display x="5" y="0"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="Basket.billingAddress.address1" key="From_0"/>
+          <key-binding alias="origAdd1" key="To_0"/>
+          <key-binding alias="Basket.billingAddress.address2" key="From_1"/>
+          <key-binding alias="origAdd2" key="To_1"/>
+          <key-binding alias="Basket.billingAddress.city" key="From_2"/>
+          <key-binding alias="origCity" key="To_2"/>
+          <key-binding alias="Basket.billingAddress.stateCode" key="From_3"/>
+          <key-binding alias="origState" key="To_3"/>
+          <key-binding alias="Basket.billingAddress.postalCode" key="From_4"/>
+          <key-binding alias="origZip" key="To_4"/>
+          <key-binding alias="Basket.billingAddress.countryCode.value" key="From_5"/>
+          <key-binding alias="origCountry" key="To_5"/>
+          <key-binding alias="&quot;&quot;" key="From_6"/>
+          <key-binding alias="verificationLevel" key="To_6"/>
+          <key-binding alias="&quot;BillingAddress&quot;" key="From_7"/>
+          <key-binding alias="returnType" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-Start"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_7">
+    <segment>
+      <node>
+        <text-node>
+          <description>Use this to enter a test address</description>
+        </text-node>
+        <node-display x="6" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Test">
+    <segment>
+      <node>
+        <start-node name="Test" secure="false"/>
+        <node-display x="7" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="enter" transaction-required="false">
+          <template buffered="true" dynamic="false" name="EnterAddress"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="success">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="&quot;&quot;" key="From_5"/>
+                <key-binding alias="verificationLevel" key="To_5"/>
+                <key-binding alias="CurrentForms.addForm.country.value" key="From_6"/>
+                <key-binding alias="origCountry" key="To_6"/>
+                <key-binding alias="&quot;Test&quot;" key="From_7"/>
+                <key-binding alias="returnType" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Start"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="VerifyAJAXAddress">
+    <segment>
+      <node>
+        <start-node name="VerifyAJAXAddress" secure="false">
+          <start-parameter value="language"/>
+        </start-node>
+        <node-display x="10" y="0"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="CurrentHttpParameterMap.address1.stringValue" key="From_0"/>
+          <key-binding alias="origAdd1" key="To_0"/>
+          <key-binding alias="CurrentHttpParameterMap.address2.stringValue" key="From_1"/>
+          <key-binding alias="origAdd2" key="To_1"/>
+          <key-binding alias="CurrentHttpParameterMap.city.stringValue" key="From_2"/>
+          <key-binding alias="origCity" key="To_2"/>
+          <key-binding alias="CurrentHttpParameterMap.state.stringValue" key="From_3"/>
+          <key-binding alias="origState" key="To_3"/>
+          <key-binding alias="CurrentHttpParameterMap.zip.stringValue" key="From_4"/>
+          <key-binding alias="origZip" key="To_4"/>
+          <key-binding alias="CurrentHttpParameterMap.country.stringValue" key="From_5"/>
+          <key-binding alias="verificationLevel" key="To_6"/>
+          <key-binding alias="&quot;AJAX&quot;" key="From_7"/>
+          <key-binding alias="returnType" key="To_7"/>
+          <key-binding alias="&quot;ajax&quot;" key="From_8"/>
+          <key-binding alias="format" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+          <key-binding alias="origCountry" key="To_5"/>
+          <key-binding alias="&quot;&quot;" key="From_6"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-Start"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_10">
+    <segment>
+      <node>
+        <text-node>
+          <description>Start of the main processing, addresses are passed to the web service for cleaning, and depending on the verification level that comes back the appropriate pipelette is called</description>
+        </text-node>
+        <node-display x="0" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Start">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Start" secure="false"/>
+        <node-display x="1" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="cleanAdd.ds"/>
+          <key-binding alias="verificationLevel" key="verificationLevel"/>
+          <key-binding alias="interAdd1" key="interAdd1"/>
+          <key-binding alias="interAdd2" key="interAdd2"/>
+          <key-binding alias="interCity" key="interCity"/>
+          <key-binding alias="interState" key="interState"/>
+          <key-binding alias="interZip" key="interZip"/>
+          <key-binding alias="origAdd1" key="origAdd1"/>
+          <key-binding alias="origAdd2" key="origAdd2"/>
+          <key-binding alias="origCity" key="origCity"/>
+          <key-binding alias="origState" key="origState"/>
+          <key-binding alias="origZip" key="origZip"/>
+          <key-binding alias="pickListDisplay" key="pickListDisplay"/>
+          <key-binding alias="verificationLevel" key="verificationLevelIn"/>
+          <key-binding alias="origCountry" key="origCountry"/>
+          <key-binding alias="interCounty" key="interCounty"/>
+          <key-binding alias="ScriptLog" key="ScriptLog"/>
+        </pipelet-node>
+        <node-display x="0" y="2"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-HandleError"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="Verified"/>
+        <node-display x="0" y="2"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="InteractionRequired"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b4" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-InterReq"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="PremisesPartial"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b5" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-PremPartial"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="StreetPartial"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b6" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-StPartial"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="Multiple"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b7" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Mult"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="None"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b8" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-None"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="CanApt"/>
+        <node-display x="2" y="0"/>
+        <branch basename="b9" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AddCanApt"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="-1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-HandleError"/>
+        <node-display orientation="horizontal" x="2" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_12">
+    <segment>
+      <node>
+        <text-node>
+          <description>refine on picklists</description>
+        </text-node>
+        <node-display x="3" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Refine">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Refine" secure="false"/>
+        <node-display x="4" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="refine.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="interAdd1" key="interAdd1"/>
+          <key-binding alias="interAdd2" key="interAdd2"/>
+          <key-binding alias="interCity" key="interCity"/>
+          <key-binding alias="interState" key="interState"/>
+          <key-binding alias="interZip" key="interZip"/>
+          <key-binding alias="verificationLevel" key="verificationLevel"/>
+          <key-binding alias="mon" key="mon"/>
+          <key-binding alias="pickListDisplay" key="pickListDisplay"/>
+          <key-binding alias="origCountry" key="origCountry"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-HandleError"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="verificationLevel" condition-operator="str-eq" condition-value="Verified"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-PremPartial"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_14">
+    <segment>
+      <node>
+        <text-node>
+          <description>submit an address to be cleaned again</description>
+        </text-node>
+        <node-display x="6" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Resubmit">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Resubmit" secure="false"/>
+        <node-display x="7" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-Start"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_16">
+    <segment>
+      <node>
+        <text-node>
+          <description>Determine what to do with cleaned address</description>
+        </text-node>
+        <node-display x="8" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptAddress" secure="false"/>
+        <node-display x="9" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="returnType" condition-operator="str-eq" condition-value="CustomerAddress"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptCustomerAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="returnType" condition-operator="str-eq" condition-value="ShippingAddress"/>
+        <node-display x="1" y="0"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptShippingAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="returnType" condition-operator="str-eq" condition-value="BillingAddress"/>
+        <node-display x="1" y="0"/>
+        <branch basename="b4" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptBillingAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+          <bend-point relative-to="source" x="1" y="-1"/>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="returnType" condition-operator="str-eq" condition-value="AJAX"/>
+        <node-display x="1" y="0"/>
+        <branch basename="b5" source-connector="yes">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAJAXAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-AcceptTestAddress"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_18">
+    <segment>
+      <node>
+        <text-node>
+          <description>assign address back to CustomerAddress object</description>
+        </text-node>
+        <node-display x="15" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptCustomerAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptCustomerAddress" secure="false"/>
+        <node-display x="16" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="true"/>
+          <key-binding alias="interAdd1" key="From_0"/>
+          <key-binding alias="Address.address1" key="To_0"/>
+          <key-binding alias="interAdd2" key="From_1"/>
+          <key-binding alias="Address.address2" key="To_1"/>
+          <key-binding alias="interCity" key="From_2"/>
+          <key-binding alias="Address.city" key="To_2"/>
+          <key-binding alias="interState" key="From_3"/>
+          <key-binding alias="Address.stateCode" key="To_3"/>
+          <key-binding alias="interZip" key="From_4"/>
+          <key-binding alias="Address.postalCode" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_20">
+    <segment>
+      <node>
+        <text-node>
+          <description>assign address back to OrderAddress object</description>
+        </text-node>
+        <node-display x="18" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptShippingAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptShippingAddress" secure="false"/>
+        <node-display x="19" y="5"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="true"/>
+          <key-binding alias="interAdd1" key="From_0"/>
+          <key-binding alias="ShippingAddress.address1" key="To_0"/>
+          <key-binding alias="interAdd2" key="From_1"/>
+          <key-binding alias="ShippingAddress.address2" key="To_1"/>
+          <key-binding alias="interCity" key="From_2"/>
+          <key-binding alias="ShippingAddress.city" key="To_2"/>
+          <key-binding alias="interState" key="From_3"/>
+          <key-binding alias="ShippingAddress.stateCode" key="To_3"/>
+          <key-binding alias="interZip" key="From_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+          <key-binding alias="ShippingAddress.postalCode" key="To_4"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_22">
+    <segment>
+      <node>
+        <text-node>
+          <description>assign address back to OrderAddress object</description>
+        </text-node>
+        <node-display x="21" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptBillingAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptBillingAddress" secure="false"/>
+        <node-display x="22" y="5"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="true"/>
+          <key-binding alias="interAdd1" key="From_0"/>
+          <key-binding alias="Basket.billingAddress.address1" key="To_0"/>
+          <key-binding alias="interAdd2" key="From_1"/>
+          <key-binding alias="Basket.billingAddress.address2" key="To_1"/>
+          <key-binding alias="interCity" key="From_2"/>
+          <key-binding alias="Basket.billingAddress.city" key="To_2"/>
+          <key-binding alias="interState" key="From_3"/>
+          <key-binding alias="Basket.billingAddress.stateCode" key="To_3"/>
+          <key-binding alias="interZip" key="From_4"/>
+          <key-binding alias="Basket.billingAddress.postalCode" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_24">
+    <segment>
+      <node>
+        <text-node>
+          <description>Return accepted message</description>
+        </text-node>
+        <node-display x="24" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptAJAXAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptAJAXAddress" secure="false"/>
+        <node-display x="25" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="successjson"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_26">
+    <segment>
+      <node>
+        <text-node>
+          <description>display address immediately to screen</description>
+        </text-node>
+        <node-display x="27" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AcceptTestAddress">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AcceptTestAddress" secure="false"/>
+        <node-display x="28" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="addressAccepted"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_28">
+    <segment>
+      <node>
+        <text-node>
+          <description>Assign original address to cleaned address, mark verification type as error, send address to be accepted</description>
+        </text-node>
+        <node-display x="30" y="5"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="HandleError">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="HandleError" secure="false"/>
+        <node-display x="31" y="5"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="&quot;Error&quot;" key="From_0"/>
+          <key-binding alias="verificationLevel" key="To_0"/>
+          <key-binding alias="origAdd1" key="From_1"/>
+          <key-binding alias="interAdd1" key="To_1"/>
+          <key-binding alias="origAdd2" key="From_2"/>
+          <key-binding alias="interAdd2" key="To_2"/>
+          <key-binding alias="origCity" key="From_3"/>
+          <key-binding alias="interCity" key="To_3"/>
+          <key-binding alias="origState" key="From_4"/>
+          <key-binding alias="interState" key="To_4"/>
+          <key-binding alias="origZip" key="From_5"/>
+          <key-binding alias="interZip" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_30">
+    <segment>
+      <node>
+        <text-node>
+          <description>Depending on verification level returned from jump to appropriate pipelette</description>
+        </text-node>
+        <node-display x="0" y="9"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_31">
+    <segment>
+      <node>
+        <text-node>
+          <description>Verify changes made to address with user</description>
+        </text-node>
+        <node-display x="1" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="InterReq">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="InterReq" secure="false"/>
+        <node-display x="2" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="interaction" transaction-required="false">
+          <template buffered="true" dynamic="false" name="interactionRequired"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="acceptInter">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="2"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b4" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_33">
+    <segment>
+      <node>
+        <text-node>
+          <description>Prompt user for Apt/Ste level information</description>
+        </text-node>
+        <node-display x="6" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="PremPartial">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="PremPartial" secure="false"/>
+        <node-display x="7" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="premises" transaction-required="false">
+          <template buffered="true" dynamic="false" name="premisesPartial"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="newApt">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="addApt.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="origAdd1" key="origAdd1"/>
+                <key-binding alias="origAdd2" key="origAdd2"/>
+                <key-binding alias="origCity" key="origCity"/>
+                <key-binding alias="origState" key="origState"/>
+                <key-binding alias="origZip" key="origZip"/>
+                <key-binding alias="origAdd1" key="add1"/>
+                <key-binding alias="origAdd2" key="add2"/>
+                <key-binding alias="origCity" key="city"/>
+                <key-binding alias="origState" key="state"/>
+                <key-binding alias="origZip" key="zip"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <jump-node start-name-ref="VerifyAddress-HandleError"/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="refine">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.moniker.value" key="From_0"/>
+                <key-binding alias="mon" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="-1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Refine"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b4" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b5" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="2" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_35">
+    <segment>
+      <node>
+        <text-node>
+          <description>Prompt user for Building number</description>
+        </text-node>
+        <node-display x="11" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="StPartial">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="StPartial" secure="false"/>
+        <node-display x="12" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="street" transaction-required="false">
+          <template buffered="true" dynamic="false" name="streetPartial"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="newStreet">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="addStreet.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="origAdd1" key="add1"/>
+                <key-binding alias="origAdd2" key="add2"/>
+                <key-binding alias="origCity" key="city"/>
+                <key-binding alias="origState" key="state"/>
+                <key-binding alias="origZip" key="zip"/>
+                <key-binding alias="origAdd1" key="origAdd1"/>
+                <key-binding alias="origAdd2" key="origAdd2"/>
+                <key-binding alias="origCity" key="origCity"/>
+                <key-binding alias="origState" key="origState"/>
+                <key-binding alias="origZip" key="origZip"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <jump-node start-name-ref="VerifyAddress-HandleError"/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="refine">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="-1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.moniker.value" key="From_0"/>
+                <key-binding alias="mon" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="2" y="-1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Refine"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b4" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b5" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="2" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_37">
+    <segment>
+      <node>
+        <text-node>
+          <description>Multiple matches were found on address, prompt user to select the correct one</description>
+        </text-node>
+        <node-display x="16" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Mult">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Mult" secure="false"/>
+        <node-display x="17" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="mul" transaction-required="false">
+          <template buffered="true" dynamic="false" name="multiple"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="selMult">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.moniker.value" key="From_0"/>
+                <key-binding alias="mon" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Refine"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b4" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_39">
+    <segment>
+      <node>
+        <text-node>
+          <description>No matches found, prompt user to edit address.</description>
+        </text-node>
+        <node-display x="20" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="None">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="None" secure="false"/>
+        <node-display x="21" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="no" transaction-required="false">
+          <template buffered="true" dynamic="false" name="none"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_41">
+    <segment>
+      <node>
+        <text-node>
+          <description>Canadian addresses only. Address is a Large Volume Reciever (LVR). It is likely that there is apt/ste information, prompt user for this info</description>
+        </text-node>
+        <node-display x="24" y="12"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="AddCanApt">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="AddCanApt" secure="false"/>
+        <node-display x="25" y="12"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-continue-node secure="false" start-name="canApt" transaction-required="false">
+          <template buffered="true" dynamic="false" name="canAddApt"/>
+        </interaction-continue-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="newApt">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="canAddApt.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="interAdd2" key="add2"/>
+                <key-binding alias="interAdd2" key="interAdd2"/>
+                <key-binding alias="interAdd1" key="add1"/>
+                <key-binding alias="interAdd1" key="interAdd1"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <jump-node start-name-ref="VerifyAddress-HandleError"/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="noApt">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="-1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="canNoApt.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="interAdd1" key="add1"/>
+                <key-binding alias="interAdd2" key="add2"/>
+                <key-binding alias="interAdd1" key="interAdd1"/>
+                <key-binding alias="interAdd2" key="interAdd2"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="2" y="-1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="2"/>
+                    <bend-point relative-to="target" x="-1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <jump-node start-name-ref="VerifyAddress-HandleError"/>
+                    <node-display orientation="horizontal" x="1" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b4" source-connector="reSubmit">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="CurrentForms.addForm.add1.value" key="From_0"/>
+                <key-binding alias="origAdd1" key="To_0"/>
+                <key-binding alias="CurrentForms.addForm.add2.value" key="From_1"/>
+                <key-binding alias="origAdd2" key="To_1"/>
+                <key-binding alias="CurrentForms.addForm.city.value" key="From_2"/>
+                <key-binding alias="origCity" key="To_2"/>
+                <key-binding alias="CurrentForms.addForm.state.value" key="From_3"/>
+                <key-binding alias="origState" key="To_3"/>
+                <key-binding alias="CurrentForms.addForm.zip.value" key="From_4"/>
+                <key-binding alias="origZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="-1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-Resubmit"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b5" source-connector="useOrig">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="origAdd1" key="From_0"/>
+                <key-binding alias="interAdd1" key="To_0"/>
+                <key-binding alias="origAdd2" key="From_1"/>
+                <key-binding alias="interAdd2" key="To_1"/>
+                <key-binding alias="origCity" key="From_2"/>
+                <key-binding alias="interCity" key="To_2"/>
+                <key-binding alias="origState" key="From_3"/>
+                <key-binding alias="interState" key="To_3"/>
+                <key-binding alias="origZip" key="From_4"/>
+                <key-binding alias="interZip" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="2" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <jump-node start-name-ref="VerifyAddress-AcceptAddress"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

@@ -1,0 +1,81 @@
+<!--- TEMPLATENAME: streetPartial.isml --->
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+<isif condition="${!empty(pdict.format) && pdict.format == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+<isdecorate template="${DecoratorTemplate}">
+
+	<script type="text/javascript">
+
+		function subMoniker(mon)
+		{
+			document.getElementById("moniker").value = mon;
+			document.getElementById("monikerSubmit").click();
+		}
+		
+		$(document).ready(function(){
+			$(".newAddressText").click(function(){
+				$(".newAddress").slideToggle("slow");
+				$(".oldAddress").slideToggle("slow");
+			});
+			
+			$(".showHide").click(function(){
+				$(".picklist").slideToggle("slow");
+			});
+			
+		});
+		
+	</script>
+	
+	<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />
+		
+	<div class="header_prompt">
+		<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+			<b>${Resource.msg('streetpartial.header1','spanishmessage',null)}</b>
+			<br />
+			${Resource.msg('streetpartial.header2','spanishmessage',null)}		
+		<iselse>
+			<b>${Resource.msg('streetpartial.header1','message',null)}</b>
+			<br />
+			${Resource.msg('streetpartial.header2','message',null)}		
+		</isif>	
+	</div>
+	
+	<table>
+		<tr>
+			<td>
+				<div class="enter_partial">
+					<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<div class="prompt">${Resource.msg('streetpartial.prompt','spanishmessage',null)}</div>
+						<iselse>
+							<div class="prompt">${Resource.msg('streetpartial.prompt','message',null)}</div>
+						</isif>					
+						<fieldset>
+							<table>
+								<tr>
+								<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+									<td>${Resource.msg('streetpartial.field','spanishmessage',null)}</td>
+								<iselse>
+									<td>${Resource.msg('streetpartial.field','message',null)}</td>
+								</isif>
+									<td><input class="refineField" type="text" name="${pdict.CurrentForms.addForm.street.htmlName}" /></td>
+								</tr>
+							</table>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<button type="submit" name="${pdict.CurrentForms.addForm.newStreet.htmlName}"><span>${Resource.msg('streetpartial.button','spanishmessage',null)}</span></button>
+							<iselse>
+								<button type="submit" name="${pdict.CurrentForms.addForm.newStreet.htmlName}"><span>${Resource.msg('streetpartial.button','message',null)}</span></button>
+							</isif>
+						</fieldset>
+					</form>
+				</div>
+			</td>
+			<td>
+				<isinclude template="rightSide.isml" />
+			</td>
+		</tr>
+	</table>
+	<isprint value="${pdict.pickListDisplay}" encoding="off" />
+
+</isdecorate>

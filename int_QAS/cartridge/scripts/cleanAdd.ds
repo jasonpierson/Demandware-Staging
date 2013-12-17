@@ -1,0 +1,366 @@
+/**
+*cleanAdd.ds
+*This script is the main script in the VerifyAddress pipeline. It is used to take in 
+* an address, send it to the QAS OnDemand web service for verification, retrieve the 
+* result and based on the verification level, take appropriate action. After appropriate 
+* user interaction, this script may be called again to verify the address with the missing 
+* info appended. This script also generates picklists of potential addresses to be 
+* displayed to the user when appropriate.
+*
+*Verification Levels:
+* Verified: The address is good, continue without user interaction
+* Interaction Required: An address was found, but changes were made requiring confirmation by the user
+* Premises Partial: The address was found to the premise level but secondary info was wrong or missing, prompt the user for this info
+* Street Partial: The address was found to the street level, but building number was wrong or missing, prompt user for building number
+* Multiple: Multiple addresses were matched to, prompt user to select the correct address
+* None: No addresses were matched to, prompt user to re-enter address 
+*
+*
+* @output verificationLevel : String
+* @output interAdd1 : String
+* @output interAdd2 : String
+* @output interCity : String
+* @output interState : String
+* @output interZip : String
+* @output interCounty : String
+* @output pickListDisplay : String
+*
+* @input origAdd1 : String
+* @input origAdd2 : String
+* @input origCity : String
+* @input origState : String
+* @input origZip : String
+* @input origCountry : String
+* @input verificationLevelIn : String 
+* 
+* 
+*/
+
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.customer );
+importPackage( dw.web );
+
+importScript("int_QAS:credentials.ds");
+
+var webref : WebReference;
+var stub : Stub;
+var countrySet : String;
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+
+	var stpHr = "";
+
+	//convert DW country codes to QAS country codes, if address isn't from USA or CAN, mark as verified and stop processing
+	if(pdict.origCountry == "US" || pdict.origCountry == "USA")
+	{
+		countrySet = "USA"; 
+	}
+	else if(pdict.origCountry == "CA" || pdict.origCountry == "CAN")
+	{
+		countrySet = "CAN";
+	}
+	else
+	{
+		pdict.verificationLevel="Verified";
+		
+		pdict.interAdd1 = pdict.origAdd1;
+		pdict.interAdd2 = pdict.origAdd2;
+		pdict.interCity = pdict.origCity;
+		pdict.interState = pdict.origState;
+		pdict.interZip = pdict.origZip;
+		
+		return PIPELET_NEXT;
+	}
+
+	pdict.pickListDisplay = "";
+
+	//set wsdl info
+	webref = webreferences.QASOnDemand_v21;
+	stub = webref.getDefaultService();
+
+	var result : QASearchResult;
+	
+	//initialize address fields to be sent to QAS OnDemand web service
+	var add1 = "";
+	var add2 = "";
+	var city = "";
+	var state = "";
+	var zip = "";
+	
+	if(!empty(pdict.origAdd1)) add1=pdict.origAdd1;
+	if(!empty(pdict.origAdd2)) add2=pdict.origAdd2;
+	if(!empty(pdict.origCity)) city=pdict.origCity;
+	if(!empty(pdict.origState)) state=pdict.origState;
+	if(!empty(pdict.origZip)) zip=pdict.origZip;
+	
+	//Set header to handle username and password for QAS OnDemand webservice	
+	SetCredentials( stub );
+
+	//create search string from submitted address
+	var searchString : String = add1 + "|" + add2 + "|" + city + "|" + state + "|" + zip;
+
+	//get cleaned address
+	result = search(searchString);
+	if(result == PIPELET_ERROR)
+	{
+		return PIPELET_ERROR;
+	}
+
+	//depending on previous interactions, change the verify level retrieved from the web service
+	var tempverificationLevel = result.getVerifyLevel();
+	if(tempverificationLevel == null)
+	{
+		pdict.verificationLevel = "None";
+	}
+	else {
+		pdict.verificationLevel = tempverificationLevel.value;
+	}
+
+	if(pdict.verificationLevel == "InteractionRequired" && (pdict.verificationLevelIn == "PremisesPartial" || pdict.verificationLevelIn == "StreetPartial"))
+	{
+		pdict.verificationLevel = "Verified";
+	}
+
+	//depending on verification level, retrieve appropriate information
+	switch(pdict.verificationLevel)
+	{
+		case "Verified":
+		try
+		{
+			var addressFromQAS = result.getQAAddress();
+		
+			if(countrySet == "USA")
+			{
+				pdict.interAdd1 = addressFromQAS[0].line;
+				pdict.interAdd2 = addressFromQAS[1].line;
+				pdict.interCity = addressFromQAS[3].line;
+				pdict.interState = addressFromQAS[4].line;
+				pdict.interZip = addressFromQAS[5].line;
+				pdict.interCounty = addressFromQAS[7].line;
+			}
+			if(countrySet == "CAN")
+			{
+				pdict.interAdd1 = addressFromQAS[0].line;
+				pdict.interAdd2 = addressFromQAS[1].line;
+				pdict.interCity = addressFromQAS[3].line;
+				pdict.interState = addressFromQAS[4].line;
+				pdict.interZip = addressFromQAS[5].line;
+	
+				if(addressFromQAS[6].line != null && addressFromQAS[6].line !="" && addressFromQAS[1].line != null)
+				{
+					var tempAdd2 = addressFromQAS[1].line;
+					var hasApt : boolean = false;
+					for(var i=0; i < tempAdd2.length;i++)
+					{
+						if(tempAdd2.charAt(i) == "-"){hasApt = true;}
+					}
+					if(!hasApt)
+					{
+						pdict.verificationLevel = "CanApt";
+					}
+				}
+			}
+		}catch(e){
+			Logger.error("2: Unable to retrieve address lines");
+			Logger.error(e);
+			return PIPELET_ERROR;
+		}
+		break;
+		
+		case "InteractionRequired":
+		
+		try
+		{
+			var addressFromQAS = result.getQAAddress();
+			if(countrySet=="USA")
+			{
+				pdict.interAdd1 = addressFromQAS[0].line;
+				pdict.interAdd2 = addressFromQAS[1].line;
+				pdict.interCity = addressFromQAS[3].line;
+				pdict.interState = addressFromQAS[4].line;
+				pdict.interZip = addressFromQAS[5].line;
+			}
+			if(countrySet=="CAN")
+			{
+				pdict.interAdd1 = addressFromQAS[0].line;
+				pdict.interAdd2 = addressFromQAS[1].line;
+				pdict.interCity = addressFromQAS[3].line;
+				pdict.interState = addressFromQAS[4].line;
+				pdict.interZip = addressFromQAS[5].line;
+			}
+		}catch(e){
+			Logger.error("3: Unable to retrieve address lines");
+			Logger.error(e);
+			return PIPELET_ERROR;
+		}
+		break;
+		
+		case "PremisesPartial":
+		var listDisplay = getPickList(result, pdict.CurrentForms.addForm.htmlName, pdict.CurrentForms.addForm.moniker.htmlName, pdict.CurrentForms.addForm.refine.htmlName);
+		if(listDisplay == PIPELET_ERROR)
+		{
+			return PIPELET_ERROR;
+		}
+		pdict.pickListDisplay = listDisplay;
+		break;
+		
+		case "StreetPartial":
+		var listDisplay = getPickList(result, pdict.CurrentForms.addForm.htmlName, pdict.CurrentForms.addForm.moniker.htmlName, pdict.CurrentForms.addForm.refine.htmlName);
+		if(listDisplay == PIPELET_ERROR)
+		{
+			return PIPELET_ERROR;
+		}
+		pdict.pickListDisplay = listDisplay;
+		break;
+		
+		case "Multiple":
+		var listDisplay = getMultPickList(result, pdict.CurrentForms.addForm.moniker.htmlName);
+		if(listDisplay == PIPELET_ERROR)
+		{
+			return PIPELET_ERROR;
+		}
+		pdict.pickListDisplay = listDisplay;
+		break;
+		
+		case "None":
+		break;
+		
+		default:
+		pdict.verificationLevel = "Error";
+		break;
+	}
+	return PIPELET_NEXT;
+}
+
+//submit a search to the QAS OnDemand Service and retrieve the result
+function search( searchString : String ) : QASearchResult
+{	
+	var returnValue : QASearchResult;
+	var engine = new webref.EngineType("Verification");
+	var eit = webref.EngineIntensityType.fromString("Close");
+	engine.setIntensity(eit);
+	engine.setFlatten(true);
+	var pset = webref.PromptSetType.fromString("Default");
+	engine.setPromptSet(pset);
+
+	var request = new webref.QASearch();
+	if(countrySet=="USA")
+	{
+		request.setCountry("USA");
+		request.setLayout("USA3 Dataplus1 Caps Retention DPV"); //line 3: City, line 4: State, line 5: Zip, line 6: 3-character ISO Country Code, line 7: County Name, line 8: 2-character ISO Country Code, line 9: Country Name
+	}
+	if(countrySet=="CAN")
+	{
+		request.setCountry("CAN");
+		request.setLayout("Database layout");
+	}
+	request.setEngine(engine);
+	request.setSearch(searchString);
+
+	try
+	{
+		returnValue = stub.doSearch(request);
+	}catch(e){
+		Logger.error("1: Search Failed");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+
+	return 	stub.doSearch(request);
+}
+
+//generate a picklist for the PremisesPartial and StreetPartial matchtypes
+function getPickList( result : QASearchResult, form : String, mon : String, next : String) : String
+{
+	var listDisplay : String;
+	var index = 0;
+
+	try 
+	{
+		var temp = result.getQAPicklist();
+		var pList = temp.getPicklistEntry();
+	}catch(e){
+		Logger.error("4: Unable to retrieve Partial Picklist");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+
+	if(!empty(pdict) && !empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish') {
+		listDisplay = "<p class=\"showHide\">" + Resource.msg('picklist.text','spanishmessage',null) + "</p><br /><div style=\"display:none\" class=\"picklist\"><form action=\"" + URLUtils.httpsContinue() + "\" method=\"post\" id=\"" + form + "\"><fieldset><table class=\"partialPickList\">";
+	} else {
+		listDisplay = "<p class=\"showHide\">" + Resource.msg('picklist.text','message',null) + "</p><br /><div style=\"display:none\" class=\"picklist\"><form action=\"" + URLUtils.httpsContinue() + "\" method=\"post\" id=\"" + form + "\"><fieldset><table class=\"partialPickList\">";
+	}
+
+	try
+	{
+		for(index = 0; index < pList.length; index++)
+		{
+			//if the picklist item is a full address, make it clickable, so the user can select this directly
+			if(pList[index].fullAddress == true)
+			{
+				listDisplay = listDisplay + "<tr class=\"pListClickable\"><td><a onclick=\"subMoniker('" + pList[index].moniker + "')\">" + pList[index].picklist + "</a></td><td>" + pList[index].postcode + "</td></tr>";	
+			}
+			else
+			{
+				listDisplay = listDisplay + "<tr><td>" + pList[index].picklist + "</td><td>" + pList[index].postcode + "</td></tr>";	
+			}
+		}
+	}catch(e){
+		Logger.error("5: Unable to generate Partial Picklist");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+
+	listDisplay = listDisplay + "</table><input type=\"hidden\" id=\"moniker\" name=\"" + mon + "\" /><input type=\"submit\" name=\"" + next + "\" style=\"visibility:hidden\" id=\"monikerSubmit\" /></fieldset></form></div>";
+	return listDisplay;
+}
+
+//generate a picklist for teh multiple matchtype
+function getMultPickList( result : QASearchResult, mon : String ) : String
+{
+	var listDisplay : String;
+	var index = 0;
+
+	try
+	{
+		var temp = result.getQAPicklist();
+		var pList = temp.getPicklistEntry();
+	}catch(e){
+		Logger.error("6: Unable to retrieve Multiple Picklist");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+
+	listDisplay = "<table class=\"multPickList\">";
+
+	try
+	{
+		for(index = 0; index < pList.length; index++)
+		{
+			listDisplay = listDisplay + "<tr><td><input type=\"radio\" name=\"" + mon + "\" value=\"" + pList[index].moniker + "\"></input></td><td>" + pList[index].picklist + "</td><td>" + pList[index].postcode + "</td></tr>";	
+		}
+	}catch(e){
+		Logger.error("7: Unable to generate Multiple Picklist");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+	
+
+	listDisplay = listDisplay + "</table>";
+
+	return listDisplay;
+}
+
+
+
+
+
+
+
+
+
+
+
+

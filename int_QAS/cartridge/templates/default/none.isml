@@ -1,0 +1,45 @@
+<!--- TEMPLATENAME: none.isml --->
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+<isif condition="${!empty(pdict.format) && pdict.format == 'ajax'}">	
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+<isdecorate template="${DecoratorTemplate}">
+
+	<script type="text/javascript">
+
+		function subMoniker(mon)
+		{
+			document.getElementById("moniker").value = mon;
+			document.getElementById("monikerSubmit").click();
+		}
+		
+		$(document).ready(function(){
+			$(".newAddressText").click(function(){
+				$(".newAddress").slideToggle("slow");
+				$(".oldAddress").slideToggle("slow");
+			});
+			
+			$(".showHide").click(function(){
+				$(".picklist").slideToggle("slow");
+			});
+			
+		});
+		
+	</script>
+	<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />			
+	
+	<div class="header_prompt">
+		<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+			<b>${Resource.msg('none.header1','spanishmessage',null)}</b>
+			<br />
+			${Resource.msg('none.header2','spanishmessage',null)}		
+		<iselse>
+			<b>${Resource.msg('none.header1','message',null)}</b>
+			<br />
+			${Resource.msg('none.header2','message',null)}		
+		</isif>	
+	</div>
+
+	<isinclude template="rightSide.isml" />
+
+</isdecorate>

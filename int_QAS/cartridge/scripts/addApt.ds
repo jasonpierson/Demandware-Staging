@@ -1,0 +1,45 @@
+/**
+*This script is run after user interaction with an address recieving a premises partial match type
+* from the QAS OnDemand web service. The word apt is appended to Address line 2 along with the 
+* apt/ste number entered by the user. After this script the address is re-submitted to cleanAdd.ds
+*
+*
+* @input add1 : String
+* @input add2 : String
+* @input city : String
+* @input state : String
+* @input zip : String
+*
+* @output origAdd1 : String
+* @output origAdd2 : String
+* @output origCity : String
+* @output origState : String
+* @output origZip : String
+*/
+importPackage( dw.system );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+
+	var aptString : String;
+	var aptNum = pdict.CurrentForms.addForm.apt.value;
+		
+	if(pdict.add2==null)
+	{
+		aptString = "apt " + aptNum;
+	}
+	else
+	{
+		aptString = pdict.add2 + " apt " + aptNum;
+	}
+	
+	
+	pdict.origAdd1 = pdict.add1;
+	pdict.origAdd2 = aptString;
+	pdict.origCity = pdict.city;
+	pdict.origState = pdict.state;
+	pdict.origZip = pdict.zip;
+	
+	
+    return PIPELET_NEXT;
+}

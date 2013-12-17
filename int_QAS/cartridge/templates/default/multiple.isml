@@ -1,0 +1,71 @@
+<!--- TEMPLATENAME: multiple.isml --->
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+<isif condition="${!empty(pdict.format) && pdict.format == 'ajax'}">	
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+<isdecorate template="${DecoratorTemplate}">
+
+	<script type="text/javascript">
+
+		function subMoniker(mon)
+		{
+			document.getElementById("moniker").value = mon;
+			document.getElementById("monikerSubmit").click();
+		}
+		
+		$(document).ready(function(){
+			$(".newAddressText").click(function(){
+				$(".newAddress").slideToggle("slow");
+				$(".oldAddress").slideToggle("slow");
+			});
+			
+			$(".showHide").click(function(){
+				$(".picklist").slideToggle("slow");
+			});
+			
+		});
+		
+	</script>
+	
+	<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />		
+
+	<div class="header_prompt">
+		<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+			<b>${Resource.msg('mult.header1','spanishmessage',null)}</b>
+			<br />
+			${Resource.msg('mult.header2','spanishmessage',null)}		
+		<iselse>
+			<b>${Resource.msg('mult.header1','message',null)}</b>
+			<br />
+			${Resource.msg('mult.header2','message',null)}		
+		</isif>	
+	</div>
+	
+	<table>
+		<tr>
+			<td>
+				<div class="enter_partial">
+					<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<div class="prompt">${Resource.msg('mult.prompt','spanishmessage',null)}</div>
+						<iselse>
+							<div class="prompt">${Resource.msg('mult.prompt','message',null)}</div>
+						</isif>					
+						<fieldset>
+							<isprint value="${pdict.pickListDisplay}" encoding="off" />
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<button type="submit" name="${pdict.CurrentForms.addForm.selMult.htmlName}"><span>${Resource.msg('mult.button','spanishmessage',null)}</span></button>							
+							<iselse>
+								<button type="submit" name="${pdict.CurrentForms.addForm.selMult.htmlName}"><span>${Resource.msg('mult.button','message',null)}</span></button>
+							</isif>							
+						</fieldset>
+					</form>
+				</div>
+			</td>
+			<td>
+				<isinclude template="rightSide.isml" />
+			</td>
+		</tr>
+	</table>
+
+</isdecorate>

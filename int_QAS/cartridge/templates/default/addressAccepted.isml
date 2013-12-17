@@ -1,0 +1,30 @@
+<!--- TEMPLATENAME: addressAccepted.isml --->
+<html>
+<body>
+<h1>Address Accepted</h1>
+<br />
+
+<br />
+<isif condition="${pdict.interAdd1 == null}">
+<iselse>
+${pdict.interAdd1}<br />
+</isif>
+<isif condition="${pdict.interAdd2 == null}">
+<iselse>
+${pdict.interAdd2}<br />
+</isif>
+<isif condition="${pdict.interCity == null}">
+<iselse>
+${pdict.interCity}<br />
+</isif>
+<isif condition="${pdict.interState == null}">
+<iselse>
+${pdict.interState}<br />
+</isif>
+<isif condition="${pdict.interZip == null}">
+<iselse>
+${pdict.interZip}<br />
+</isif>
+
+</body>
+</html>

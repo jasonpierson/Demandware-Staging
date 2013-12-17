@@ -1,0 +1,84 @@
+<!--- TEMPLATENAME: canAddApt.isml --->
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+<isif condition="${!empty(pdict.format) && pdict.format == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+<isdecorate template="${DecoratorTemplate}">
+
+	<script type="text/javascript">
+
+		function subMoniker(mon)
+		{
+			document.getElementById("moniker").value = mon;
+			document.getElementById("monikerSubmit").click();
+		}
+		
+		$(document).ready(function(){
+			$(".newAddressText").click(function(){
+				$(".newAddress").slideToggle("slow");
+				$(".oldAddress").slideToggle("slow");
+			});
+			
+			$(".showHide").click(function(){
+				$(".picklist").slideToggle("slow");
+			});
+			
+		});
+		
+	</script>
+	
+	<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />	
+		
+	<div class="header_prompt">
+		<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+			<b>${Resource.msg('canapt.header1','spanishmessage',null)}</b>
+			<br />
+			${Resource.msg('canapt.header2','spanishmessage',null)}			
+		<iselse>
+			<b>${Resource.msg('canapt.header1','message',null)}</b>
+			<br />
+			${Resource.msg('canapt.header2','message',null)}			
+		</isif>
+	</div>
+	
+	<table>
+		<tr>
+			<td>
+				<div class="enter_partial">
+					<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<div class="prompt">${Resource.msg('canapt.prompt','spanishmessage',null)}</div>
+						<iselse>
+							<div class="prompt">${Resource.msg('canapt.prompt','message',null)}</div>
+						</isif>
+						<fieldset>
+							<table>
+								<tr>
+									<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+										<td>${Resource.msg('canapt.field','spanishmessage',null)}</td>
+									<iselse>
+										<td>${Resource.msg('canapt.field','message',null)}</td>
+									</isif>
+									<td><input type="text" name="${pdict.CurrentForms.addForm.apt.htmlName}" /></td>
+								</tr>
+								<tr>
+									<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+										<td><button type="submit" name="${pdict.CurrentForms.addForm.newApt.htmlName}"><span>${Resource.msg('canapt.button','spanishmessage',null)}</span></button></td>
+										<td><button type="submit" name="${pdict.CurrentForms.addForm.noApt.htmlName}"><span>${Resource.msg('canapt.buttonNoApt','spanishmessage',null)}</span></button></td>									
+									<iselse>
+										<td><button type="submit" name="${pdict.CurrentForms.addForm.newApt.htmlName}"><span>${Resource.msg('canapt.button','message',null)}</span></button></td>
+										<td><button type="submit" name="${pdict.CurrentForms.addForm.noApt.htmlName}"><span>${Resource.msg('canapt.buttonNoApt','message',null)}</span></button></td>									
+									</isif>								
+								</tr>
+							</table>
+						</fieldset>
+					</form>
+				</div>
+			</td>
+			<td>
+				<isinclude template="rightSide.isml" />
+			</td>
+		</tr>
+	</table>
+
+</isdecorate>

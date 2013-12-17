@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+
+<field formid="add1" label="Address1" type="string" mandatory="false" />
+<field formid="add2" label="Address2" type="string" mandatory="false" />
+<field formid="city" label="City" type="string" mandatory="false" />
+<field formid="state" label="State" type="string" mandatory="false" />
+<field formid="zip" label="ZipCode" type="string" mandatory="false" />
+<field formid="country" label="Country_ISO3" type="string" mandatory="false" />
+<field formid="apt" label="Apartment" type="string" mandatory="false" />
+<field formid="street" label="Street" type="string" mandatory="false" />
+<field formid="moniker" label="Moniker" type="string" mandatory="false" />
+<action formid="success" valid-form="false" />
+
+<action formid="acceptInter" valid-from="false" />
+<action formid="reSubmit" valid-from="false" />
+<action formid="useOrig" valid-from="false" />
+<action formid="newApt" valid-from="false" />
+<action formid="noApt" valid-from="false" />
+<action formid="newStreet" valid-from="false" />
+<action formid="selMult" valid-from="false" />
+<action formid="refine" valid-from="false" />
+
+</form>

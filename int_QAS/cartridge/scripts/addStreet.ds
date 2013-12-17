@@ -1,0 +1,37 @@
+/**
+*This script is run after user interaction with an address recieving a street partial match type
+* from the QAS OnDemand web service. The old building number (should it exist) is replaced with 
+* the new number entered by the user. After this script the address is re-submitted to 
+* cleanAdd.ds
+*
+*
+* @input add1 : String
+* @input add2 : String
+* @input city : String
+* @input state : String
+* @input zip : String
+*
+* @output origAdd1 : String
+* @output origAdd2 : String
+* @output origCity : String
+* @output origState : String
+* @output origZip : String
+*/
+importPackage( dw.system );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	var oldLine1 : String = pdict.add1;
+	var newLine1 : String = pdict.CurrentForms.addForm.street.value;
+	
+	newLine1 = newLine1 + " " + oldLine1.replace(/^[0-9]+/,"");
+	
+	pdict.origAdd1 = newLine1;
+	pdict.origAdd2 = pdict.add2;
+	pdict.origCity = pdict.city;
+	pdict.origState = pdict.state;
+	pdict.origZip = pdict.zip;
+	
+	
+    return PIPELET_NEXT;
+}

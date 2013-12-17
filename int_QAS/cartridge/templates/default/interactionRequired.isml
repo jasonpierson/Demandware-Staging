@@ -1,0 +1,79 @@
+<!--- TEMPLATENAME: interactionRequired.isml --->
+<isset name="DecoratorTemplate" value="account/pt_account" scope="page"/>
+<isif condition="${!empty(pdict.format) && pdict.format == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+<isdecorate template="${DecoratorTemplate}">
+	
+	<script type="text/javascript">
+
+		function subMoniker(mon)
+		{
+			document.getElementById("moniker").value = mon;
+			document.getElementById("monikerSubmit").click();
+		}
+		
+		$(document).ready(function(){
+			$(".newAddressText").click(function(){
+				$(".newAddress").slideToggle("slow");
+				$(".oldAddress").slideToggle("slow");
+			});
+			
+			$(".showHide").click(function(){
+				$(".picklist").slideToggle("slow");
+			});
+			
+		});
+		
+	</script>
+	
+	<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />	
+
+	<div class="header_prompt">
+		<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+			<b>${Resource.msg('interreq.header1','spanishmessage',null)}</b>
+			<br />
+			${Resource.msg('interreq.header2','spanishmessage',null)}		
+		<iselse>
+			<b>${Resource.msg('interreq.header1','message',null)}</b>
+			<br />
+			${Resource.msg('interreq.header2','message',null)}		
+		</isif>	
+	</div>
+	
+	<table>
+		<tr>
+			<td>
+				<div class="enter_partial">
+					<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<div class="prompt">${Resource.msg('interreq.prompt','spanishmessage',null)}</div>
+						<iselse>
+							<div class="prompt">${Resource.msg('interreq.prompt','message',null)}</div>
+						</isif>					
+						<br />
+						${pdict.interAdd1}
+						<br />
+						${pdict.interAdd2}
+						<br />
+						${pdict.interCity}
+						<br />
+						${pdict.interState}
+						<br />
+						${pdict.interZip}
+						<br />
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<button type="submit" name="${pdict.CurrentForms.addForm.acceptInter.htmlName}"><span>${Resource.msg('interreq.button','spanishmessage',null)}</span></button>
+						<iselse>
+							<button type="submit" name="${pdict.CurrentForms.addForm.acceptInter.htmlName}"><span>${Resource.msg('interreq.button','message',null)}</span></button>
+						</isif>						
+					</form>
+				</div>
+			</td>
+			<td>
+				<isinclude template="rightSide.isml" />
+			</td>
+		</tr>
+	</table>
+		
+</isdecorate>

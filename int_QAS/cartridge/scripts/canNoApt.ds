@@ -1,0 +1,58 @@
+/**
+*This script is run after user interaction with a Canadian address recieving a Verified match type
+* that is also found to be a Large Volume Receiver. As Canada doesn't keep track of apartments, this
+* is used as an indication that an address most likely has an apartment. This appends the apartment 
+* number correctly to the address and the address is then submitted as verified. This script is used
+* when the user says that they do not have an apt.
+*
+*
+* @input add1 : String
+* @input add2 : String
+*
+* @output interAdd1 : String
+* @output interAdd2 : String
+*
+*/
+importPackage( dw.system );
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	
+	if(checkForBldg(pdict.add1) && pdict.add2 != null)
+	{
+		pdict.interAdd1 = pdict.add2;
+		pdict.interAdd2 = "";	
+	}
+	else
+	{
+		pdict.interAdd1 = pdict.add1;
+		pdict.interAdd2 = pdict.add2;
+	}
+	
+    return PIPELET_NEXT;
+}
+
+function checkForBldg(address : String)
+{
+	 var bool : boolean = false;
+	
+	if (address == "Business") {bool = true;}
+	if (address == "Building") {bool = true;}
+	if (address == "Bldg") {bool = true;}
+	if (address == "Business Bldg") {bool = true;}
+	if (address == "Business Bldg.") {bool = true;}
+	if (address == "Business Building") {bool = true;}
+	if (address == "Business Complex") {bool = true;}
+	if (address == "Business Plaza") {bool = true;}
+	if (address == "Immeuble Commercial") {bool = true;}
+	if (address == "Apt") {bool = true;}
+	if (address == "Apartment") {bool = true;}
+	if (address == "Apartment Bldg") {bool = true;}
+	if (address == "Apartment Bldg.") {bool = true;}
+	if (address == "Apartment Building") {bool = true;}
+	if (address == "Immeuble a Appartements") {bool = true;}
+	if (address == "Townhomes") {bool = true;}
+	if (address == "Townhouses") {bool = true;}
+
+	return bool;
+}

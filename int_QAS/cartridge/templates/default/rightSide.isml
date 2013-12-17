@@ -1,0 +1,169 @@
+<!--- TEMPLATENAME: rightside.isml --->
+<div class="right_details">
+	<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+		${Resource.msg('resub.text','spanishmessage',null)}[<span class="newAddressText" onclick=>${Resource.msg('resub.edit','spanishmessage',null)}</span>]
+	<iselse>
+		${Resource.msg('resub.text','message',null)}[<span class="newAddressText" onclick=>${Resource.msg('resub.edit','message',null)}</span>]
+	</isif>
+	<br />
+	<div style="display:none" class="newAddress">
+		<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+			<br />
+			<fieldset>
+				<table>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td>${Resource.msg('fieldname.add1','spanishmessage',null)}</td>
+						<iselse>
+							<td>${Resource.msg('fieldname.add1','message',null)}</td>
+						</isif>					
+						<isif condition="${pdict.origAdd1 == null}">
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add1.htmlName}" /></input></td>
+						<iselse>
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add1.htmlName}" value="${pdict.origAdd1}" /></input></td>
+						</isif>
+					</tr>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td>${Resource.msg('fieldname.add2','spanishmessage',null)}</td>
+						<iselse>
+							<td>${Resource.msg('fieldname.add2','message',null)}</td>
+						</isif>					
+						<isif condition="${pdict.origAdd2 == null}">
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add2.htmlName}" /></td>
+						<iselse>
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add2.htmlName}" value="${pdict.origAdd2}" /></td>
+						</isif>
+					</tr>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td>${Resource.msg('fieldname.city','spanishmessage',null)}</td>
+						<iselse>
+							<td>${Resource.msg('fieldname.city','message',null)}</td>
+						</isif>
+						<isif condition="${pdict.origCity == null}">
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.city.htmlName}" /></td>
+						<iselse>
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.city.htmlName}" value="${pdict.origCity}" /></td>
+						</isif>
+					</tr>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td>${Resource.msg('fieldname.state','spanishmessage',null)}</td>
+						<iselse>
+							<td>${Resource.msg('fieldname.state','message',null)}</td>
+						</isif>
+						<isif condition="${pdict.origState == null}">
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.state.htmlName}" /></td>
+						<iselse>
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.state.htmlName}" value="${pdict.origState}" /></td>
+						</isif>
+					</tr>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td>${Resource.msg('fieldname.zip','spanishmessage',null)}</td>
+						<iselse>
+							<td>${Resource.msg('fieldname.zip','message',null)}</td>
+						</isif>					
+						<isif condition="${pdict.origZip == null}">
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.zip.htmlName}" /></td>
+						<iselse>
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.zip.htmlName}" value="${pdict.origZip}" /></td>
+						</isif>
+					</tr>
+					<tr>
+						<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+							<td><button type="submit" class="addField" name="${pdict.CurrentForms.addForm.reSubmit.htmlName}"><span>${Resource.msg('resub.button','spanishmessage',null)}</span></button></td>						
+						<iselse>
+							<td><button type="submit" class="addField" name="${pdict.CurrentForms.addForm.reSubmit.htmlName}"><span>${Resource.msg('resub.button','message',null)}</span></button></td>
+						</isif>					
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+
+	<br />
+
+	<div class="oldAddress">
+		<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+			<table>
+				<tr>
+					<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+						<td>${Resource.msg('fieldname.add1','spanishmessage',null)}</td>
+					<iselse>
+						<td>${Resource.msg('fieldname.add1','message',null)}</td>
+					</isif>				
+					<td>
+						<isif condition="${pdict.origAdd1 == null}">
+							&nbsp;
+						<iselse>
+							${pdict.origAdd1}<br />
+						</isif>
+					</td>
+				</tr>
+				<tr>
+					<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+						<td>${Resource.msg('fieldname.add2','spanishmessage',null)}</td>
+					<iselse>
+						<td>${Resource.msg('fieldname.add2','message',null)}</td>
+					</isif>
+					<td>
+						<isif condition="${pdict.origAdd2 == null}">
+							&nbsp;
+						<iselse>
+							${pdict.origAdd2}<br />
+						</isif>
+					</td>
+				</tr>
+				<tr>
+					<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+						<td>${Resource.msg('fieldname.city','spanishmessage',null)}</td>
+					<iselse>
+						<td>${Resource.msg('fieldname.city','message',null)}</td>
+					</isif>				
+					<td>
+						<isif condition="${pdict.origCity == null}">
+							&nbsp;
+						<iselse>
+							${pdict.origCity}<br />
+						</isif>
+					</td>
+				</tr>
+				<tr>
+					<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+						<td>${Resource.msg('fieldname.state','spanishmessage',null)}</td>
+					<iselse>
+						<td>${Resource.msg('fieldname.state','message',null)}</td>
+					</isif>
+					<td>
+						<isif condition="${pdict.origState == null}">
+							&nbsp;
+						<iselse>
+							${pdict.origState}<br />
+						</isif>
+					</td>
+				</tr>
+				<tr>
+					<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+						<td>${Resource.msg('fieldname.zip','spanishmessage',null)}</td>
+					<iselse>
+						<td>${Resource.msg('fieldname.zip','message',null)}</td>
+					</isif>				
+					<td>
+						<isif condition="${pdict.origZip == null}">
+							&nbsp;
+						<iselse>
+							${pdict.origZip}<br />
+						</isif>
+					</td>
+				</tr>
+			</table>
+			<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+				<button type="submit" name="${pdict.CurrentForms.addForm.useOrig.htmlName}"><span>${Resource.msg('orig.button','spanishmessage',null)}</span></button>
+			<iselse>
+				<button type="submit" name="${pdict.CurrentForms.addForm.useOrig.htmlName}"><span>${Resource.msg('orig.button','message',null)}</span></button>
+			</isif>
+		</form>
+	</div>
+</div>

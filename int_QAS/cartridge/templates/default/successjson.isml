@@ -1,0 +1,12 @@
+<iscontent type="application/json" compact="true"/>
+<isscript>
+var response = { 
+	address1 : pdict.interAdd1, 
+	address2 : pdict.interAdd2, 
+	city : pdict.interCity, 
+	state : pdict.interState, 
+	zip : pdict.interZip,
+	county : pdict.interCounty
+}
+</isscript>
+<isprint value="${JSON.stringify(response)}" encoding="off"/>

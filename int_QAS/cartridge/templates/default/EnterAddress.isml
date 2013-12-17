@@ -1,0 +1,87 @@
+<!--- TEMPLATENAME: addressEntered.isml --->
+<html>
+	<head>
+		<link href="${URLUtils.staticURL('/css/qas.css')}" type="text/css" rel="stylesheet" />
+	</head>
+	
+	<body>
+		<div class="header_prompt">
+			<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+				<b>${Resource.msg('enteradd.header1','spanishmessage',null)}</b>
+			<iselse>
+				<b>${Resource.msg('enteradd.header1','message',null)}</b>
+			</isif>		
+		</div>
+		
+		<div class="enter_address">
+			<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.addForm.htmlName}">
+				<fieldset>
+					<table>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.add1','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.add1','message',null)}</td>
+							</isif>							
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add1.htmlName}" value="1889 Broadway" /></input></td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.add2','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.add2','message',null)}</td>
+							</isif>						
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.add2.htmlName}" /></td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.city','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.city','message',null)}</td>
+							</isif>						
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.city.htmlName}" value="san francisco" /></td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.state','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.state','message',null)}</td>
+							</isif>						
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.state.htmlName}" value="ca" /></td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.zip','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.zip','message',null)}</td>
+							</isif>						
+							<td><input type="text" class="addField" name="${pdict.CurrentForms.addForm.zip.htmlName}" value="94109" /></td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td>${Resource.msg('fieldname.country','spanishmessage',null)}</td>
+							<iselse>
+								<td>${Resource.msg('fieldname.country','message',null)}</td>
+							</isif>						
+							<td>
+								<select name="${pdict.CurrentForms.addForm.country.htmlName}">
+									<option value="USA">United States</option>
+									<option value="CAN">Canada</option>
+								</select>	
+							</td>
+						</tr>
+						<tr>
+							<isif condition="${!empty(pdict.CurrentHttpParameterMap.language.value) && pdict.CurrentHttpParameterMap.language.value == 'Spanish'}">
+								<td><button type="submit" name="${pdict.CurrentForms.addForm.success.htmlName}"><span bgcolor="#FF0000">${Resource.msg('enteradd.button','spanishmessage',null)}</span></button></td>
+							<iselse>
+								<td><button type="submit" name="${pdict.CurrentForms.addForm.success.htmlName}"><span bgcolor="#FF0000">${Resource.msg('enteradd.button','message',null)}</span></button></td>
+							</isif>						
+						</tr>
+					</table>
+				</fieldset>
+			</form>
+		</div>
+	</body>
+</html>
+
+

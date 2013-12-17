@@ -1,0 +1,166 @@
+/**
+*This script is used when refining on picklists. If a multiple matchtype is encountered then this script is
+* used to get the full address from the item displayed in the picklist. It calls the webservice and passes
+* an associated moniker to get the formatted address. It is also used when a full address is selected
+* from a picklist in either of the partial matchtypes.
+*
+*
+* @input mon : String
+* @input origCountry : String
+*
+* @output interAdd1 : String
+* @output interAdd2 : String
+* @output interCity : String
+* @output interState : String
+* @output interZip : String
+* @output verificationLevel : String
+* @output pickListDisplay : String
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.rpc );
+importPackage( dw.customer );
+
+importScript("int_QAS:credentials.ds");
+
+var webref : WebReference;
+var stub : Stub;
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+	
+	//assign appropriate country ISO code, a non USA, CAN address should never get here
+	var countrySet : String = "";
+	if(pdict.origCountry == "US" || pdict.origCountry == "USA")
+	{
+		countrySet = "USA"; 
+	}
+	else if(pdict.origCountry == "CA" || pdict.origCountry == "CAN")
+	{
+		countrySet = "CAN";
+	}
+	else
+	{
+		Logger.error("Invalid Country");
+		return PIPELET_ERROR;
+	}
+
+	pdict.pickListDisplay = "";
+
+	//assign wsdl info
+	webref = webreferences.QASOnDemand_v21;
+	stub = webref.getDefaultService();
+
+	//set soap header
+	SetCredentials( stub );
+
+	var request = new webref.QARefine();
+	var moniker = pdict.mon;
+
+	request.setMoniker(moniker);
+	request.setRefinement("");
+	
+	try
+	{
+		//refine on picklist moniker to get a single address
+		var result = stub.doRefine(request);
+	
+		var temp = result.getQAPicklist();
+		var pList = temp.getPicklistEntry();
+		
+	}catch(e){
+		Logger.error("8: Unable to refine on Multiple Picklist");
+		Logger.error(e);
+		return PIPELET_ERROR;
+	}
+
+	//if a single address is returned get the formatted address and mark adddress as verified
+	if(pList.length == 1 && pList[0].fullAddress == true)
+	{
+		var getAdd = new webref.QAGetAddress();
+		if(countrySet=="USA")
+		{
+			getAdd.setLayout("USA2 TitleCase Retention DPV");
+			getAdd.setMoniker(moniker);
+			
+			try
+			{
+				var tempAdd = stub.doGetAddress(getAdd);
+			}catch(e){
+				Logger.error("9: doGetAddress failed");
+				Logger.error(e);
+				return PIPELET_ERROR;
+			}
+			
+			try
+			{
+				var address = tempAdd.getQAAddress();
+				pdict.interAdd1 = address[0].line;
+				pdict.interAdd2 = address[1].line;
+				pdict.interCity = address[2].line;
+				pdict.interState = address[3].line;
+				pdict.interZip = address[4].line;
+			}catch(e){
+				Logger.error("10: Unable to retrieve address lines");
+				Logger.error(e);
+				return PIPELET_ERROR;
+			}
+			pdict.verificationLevel = "Verified";
+		}
+		if(countrySet=="CAN")
+		{
+			getAdd.setLayout("Database layout");
+			getAdd.setMoniker(moniker);
+			
+			try
+			{
+				var tempAdd = stub.doGetAddress(getAdd);
+			}catch(e){
+				Logger.error("11: doGetAddress failed");
+				Logger.error(e);
+				return PIPELET_ERROR;
+			}
+			
+			try
+			{
+				var address = tempAdd.getQAAddress();
+				pdict.interAdd1 = address[0].line;
+				pdict.interAdd2 = address[1].line;
+				pdict.interCity = address[3].line;
+				pdict.interState = address[4].line;
+				pdict.interZip = address[5].line;
+			}catch(e){
+				Logger.error("12: Unable to retrieve address lines");
+				Logger.error(e);
+				return PIPELET_ERROR;
+			}
+			pdict.verificationLevel = "Verified";
+		}
+
+	}
+	else //if no single address can be found, then address is a PremisesPartial, send address back to user for more info
+	{
+		pdict.verificationLevel = "PremisesPartial";
+		var listDisplay : String;
+		var index = 0;
+
+		listDisplay = "<table>";
+
+		for(index = 0; index < pList.length; index++)
+		{
+			try
+			{
+				listDisplay = listDisplay + "<tr><td>" + pList[index].picklist + "</td><td>" + pList[index].postcode + "</td></tr>";
+			}catch(e){
+				Logger.error("13: Unable to generate PremisesPartial Picklist");
+				Logger.error(e);
+				return PIPELET_ERROR;
+			}	
+		}
+		listDisplay = listDisplay + "</table>";
+		pdict.pickListDisplay = listDisplay;
+	}
+		
+    return PIPELET_NEXT;
+}
