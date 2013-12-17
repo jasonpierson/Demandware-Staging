@@ -1,0 +1,168 @@
+<iscomment>
+	Desc:
+		Creates the variation section if product is a variation or a master		
+
+	Parameter:
+		Product - the product to use
+
+	Options:
+		none
+</iscomment>
+
+<isif condition="${pdict.Product.isVariant() || pdict.Product.isMaster()}">
+
+	<isif condition="${pdict.CurrentVariationModel != null}">
+		<isset name="PVM" value="${pdict.CurrentVariationModel}" scope="page">
+	<iselse>
+		<isset name="PVM" value="${pdict.Product.variationModel}" scope="page">
+	</isif>
+		
+	<div class="variationattributes">
+		<isscript>
+			var sizeChartID = null;
+		</isscript>
+		<iscomment>
+			Filter out variation attribute values with no orderable variants.
+			The "clean" ProductVariationModel of the master without any selected attribute values is used to filter the variants.
+			Otherwise hasOrderableVariants() would use currently selected values resulting in a too narrow selection of variants.
+		</iscomment>
+		<isset name="cleanPVM" value="${(pdict.Product.variant ? pdict.Product.masterProduct.variationModel : pdict.Product.variationModel)}" scope="page"/>
+
+		<isloop items="${PVM.productVariationAttributes}" var="VA">
+			<isset name="VAVALS" value="${PVM.getAllValues(VA)}" scope="page">
+			<isset name="Valength" value="${VAVALS.length}" scope="page">
+			<isset name="vaId" value="${VA.getAttributeID()}" scope="page">		
+
+			<isif condition="${vaId == 'color' || vaId == 'size' || vaId == 'width' || vaId == 'waist' || vaId == 'length'}">
+
+				<iscomment>custom ui i.e. divs controlled via css</iscomment>
+				<div class="swatches ${VA.getID()}">
+				<iscomment>Size Chart link and is shown only once on the product detail page</iscomment>
+				<isif condition="${(vaId == 'size' || vaId == 'width' || vaId == 'waist' || vaId == 'length') && sizeChartID == null}">
+					<isscript>
+						if (sizeChartID == null) {
+							var category : dw.catalog.Category = null;
+							
+							// get category from products primary category
+							category = pdict.Product.primaryCategory;
+				
+							// get category from product master if not set at variant
+							if( category == null && pdict.Product.variant )	{
+								category = pdict.Product.masterProduct.primaryCategory;
+							}
+							
+							while (category != null && sizeChartID == null) {
+								if (('sizeChartID' in category.custom) && !empty(category.custom.sizeChartID)) {
+									sizeChartID = category.custom.sizeChartID;
+								}
+								else {
+									category = category.parent;
+								}
+							}							
+						}
+					</isscript>
+					
+					<isif condition="${!isQuickView}">
+						<isif condition="${!empty(sizeChartID)}">
+							<a class="sizechart attributecontentlink" href="${URLUtils.url('Page-Include','cid', sizeChartID)}" title="${Resource.msg('variations.sizechart','product',null)}">
+								${Resource.msg('variations.sizechart','product',null)}
+							</a>
+						</isif>
+					</isif>
+				
+				</isif>
+				
+				<iscomment>Select a default variant color if none selected.</iscomment>
+				<isscript>
+					var colorSelected = false;
+					var variantColor = null; 
+					
+					// first determine if there is a selected color
+					for each( var varValue in VAVALS ) { 
+						if (cleanPVM.hasOrderableVariants(VA, varValue) && PVM.isSelectedAttributeValue(VA, varValue)) { 
+							colorSelected = true;
+							break;
+						}
+					}
+
+					// if no color is selected, then select color
+					if (!colorSelected) {
+						if (PVM.getSelectedVariant() == null) {
+							var variant = null;
+							 if(pdict.Product.master) {
+							 	if(!empty(PVM.defaultVariant)) {
+							 		variant = PVM.defaultVariant;
+							  	} else if(PVM.variants.length > 0) {
+							  		variant = PVM.variants[0];
+							  	}
+							 }
+							 
+							 if (variant != null) {
+							 	var varModel : dw.catalog.ProductVariationModel = variant.variationModel;
+								if (varModel.getProductVariationAttribute("color") != null) {
+									variantColor = (varModel.getSelectedValue(varModel.getProductVariationAttribute("color"))).value;
+								}
+							 }
+						}
+					}
+				</isscript>
+				
+				<span class="label"><isprint value="${VA.displayName}">: </span>
+				<span class="value selectedvarval"></span> 
+				<ul class="swatchesdisplay">				
+					<isloop items="${VAVALS}" var="VV">
+						<iscomment>filter out unorderable variation attribute values</iscomment>						
+						<isif condition="${cleanPVM.hasOrderableVariants(VA, VV)}">
+							<isif condition="${PVM.isSelectedAttributeValue(VA, VV) || Valength == 1 || (!empty(variantColor) && VV.value.equals(variantColor))}">
+								<li class="selected">
+							<iselse>
+								<li class="emptyswatch">
+							</isif>
+							<isif condition="${VV.displayValue != null}">
+								<a title="${VV.displayValue + ' - ' + VV.description}" class="swatchanchor"><isprint value="${VV.displayValue}"></a>
+							<iselse>
+								<a title="${VV.value + ' - ' + VV.description}">"><isprint value="${VV.value}"></a>
+							</isif>
+							</li>
+						</isif>
+					</isloop>
+				</ul>
+			<iselse>
+
+				<iscomment>default ui i.e. dropdown</iscomment>
+				<div class="variantdropdown">
+				<span class="label"><isprint value="${VA.displayName}">: </span>
+				<span class="value selectedvarval"></span>
+				<div>
+					<select>
+						<isif condition="${Valength > 1}"><option value="">${Resource.msg('global.select','locale',null)} <isprint value="${VA.displayName}"></option></isif>
+						<isloop items="${VAVALS}" var="VV">
+							<iscomment>filter out unorderable variation attribute values</iscomment>						
+							<isif condition="${cleanPVM.hasOrderableVariants(VA, VV)}">
+								<isif condition="${PVM.isSelectedAttributeValue(VA,VV) || Valength == 1}">
+									<isset name="selected" value="${'selected=\'selected\''}" scope="page">
+								<iselse>
+									<isset name="selected" value="${''}" scope="page">
+								</isif>
+								<isif condition="${VV.displayValue != null}">
+									<option value="${VV.displayValue}" ${selected}>
+										<isprint value="${VV.displayValue}">
+									</option>
+								<iselse>
+									<option value="${VV.value}" ${selected}>
+										<isprint value="${VV.value}">
+									</option>
+								</isif>
+							</isif>
+						</isloop>
+					</select>
+					<span class="hidden">${vaId}</span>
+				</div>
+			</isif>
+			<div class="clear"></div>
+			</div>
+			<span class="hidden">${vaId}</span>
+			<div class="clear"></div>
+		</isloop>
+	</div>
+</isif>

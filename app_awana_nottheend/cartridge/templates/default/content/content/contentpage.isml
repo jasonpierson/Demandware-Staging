@@ -1,0 +1,65 @@
+<isset name="DecoratorTemplate" value="content/pt_customerservice" scope="page"/>
+
+<iscomment>Use another decorator if the context is the content search</iscomment>
+<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0}">
+	<isset name="DecoratorTemplate" value="search/pt_contentsearchresult" scope="page"/>
+</isif>
+
+<isif condition="${pdict.CurrentHttpParameterMap.format.stringValue == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+
+<isdecorate template="${DecoratorTemplate}">
+<iscomment>
+	Use the decorator template based on the page context. If
+	the content page was requested from a search result the
+	decorator search/pt_contentsearchresult is used. The default 
+	decorator for the content page is content/content/pt_content.
+</iscomment>
+
+<div id="getsat-widget-52"></div>
+<script type="text/javascript" src="https://loader.engage.gsfn.us/loader.js"></script>
+<script type="text/javascript">
+if (typeof GSFN !== "undefined") { GSFN.loadWidget(52,{"containerId":"getsat-widget-52"}); }
+</script>
+<style type="text/css">
+.gsfn-left {
+	left:inherit !important;
+	right:-80px !important;
+}
+</style>
+
+<iscache type="relative" hour="24"/>
+
+<isscript>
+	var folder : dw.content.Folder = null;
+	var folderCustomCSS : dw.util.Collection = new dw.util.ArrayList();
+	
+	// get folder from search context
+	if( !empty(pdict.ContentSearchResult) )
+	{
+		folder = pdict.ContentSearchResult.folder;
+		
+		if (folder != null)
+		{
+			while( folder.parent != null )
+			{
+				if( folder.online && ('customCSSFile' in folder.custom) && !empty(folder.custom.customCSSFile)) 
+				{
+					folderCustomCSS.addAt( 0, folder );
+				}
+				folder = folder.parent;
+			}
+		}
+	}
+</isscript>
+
+<iscomment>Render a "back" link and the article title based on the page context.</iscomment>
+<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0}">
+	<div class="back"><a href="${pdict.ContentSearchResult.url('Search-ShowContent')}">${Resource.msg('foldercontenthits.backtoresults','rendering',null)}</a></div>
+	<h1><isprint value="${pdict.Content.name}"/></h1>
+</isif>
+
+<iscomment>This content piece must deliver a valid wrapping div!</iscomment>
+<isinclude template="content/content/htmlcontentasset"/>
+</isdecorate>

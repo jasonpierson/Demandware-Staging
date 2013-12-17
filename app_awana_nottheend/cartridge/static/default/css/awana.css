@@ -1,0 +1,1377 @@
+/*
+	* Gridless version 2.0
+
+	* Credit is left inline and big thanks to Nicolas Gallagher and Jonathan Neal
+
+	* Across this document we use safe CSS hacks: http://mathiasbynens.be/notes/safe-css-hacks
+	* Selectors beggining with an underscore (_selector: property) target only IE6
+	* Selectors beggining with an asterisk (*selector: property) target only IE6 and IE7
+*/
+
+
+/* HTML5 display definitions
+---------------------------------------- */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, dialog {
+	display: block;
+}
+
+/* Corrects inline-block not defined in IE6/7/8 and FF3 */
+audio, canvas, video {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+audio:not([controls]) {
+	display: none;
+}
+
+/* Ensures content is hidden from all presentations, including screenreaders */
+[hidden] {
+	display: none;
+	visibility: hidden;
+}
+
+/* Base structure
+---------------------------------------- */
+
+/*
+	* The body will work like a 'div#wrapper' (for this to work, the 'body' needs to have a set width)
+
+	* To add a background to the PAGE, set it in the 'html' element
+	* To add a background to the WRAPPER, set it in the 'body' element
+*/
+html {
+	background: #f1f1f1;
+	height: 100%;
+	font-size: 100%;
+	overflow-y: scroll; /* Force a scrollbar in non-IE */
+	-webkit-text-size-adjust: 100%; /* Prevent iOS text size adjust on orientation change without disabling user zoom */
+	-ms-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0 auto;
+	min-height: 100%;
+}
+
+/* Fonts settings based on the 100E2R standard: http://www.informationarchitects.jp/en/100e2r/ */
+body, button, input, select, textarea {
+	font: 1em/1.625 'Roboto Condensed', "Helvetica Nueue", Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	color: #3E3E3E;
+}
+
+/* Add and/or remove tags as your baseline grid needs */
+p, blockquote, q, pre, address, hr, code, samp, dl, ol, ul, form, table, fieldset, menu, h4, h5, h6, img, figure, figcaption, hr {
+	margin: 0 0 1.625em;
+}
+
+/* Headings/small
+---------------------------------------- */
+
+/*
+	* Font sizes are based on the golden ratio of 16
+	* See this for the modular scale: ow.ly/5jGl6
+	* Line-heights and margins are adjusted to keep a 26px (1.625em) vertical rhythm across elements 
+*/
+
+h1, h2, h3, h4, h5, h6, .label, label, .variationattributes .swatches li a {
+	font-family: 'Roboto Slab', Georgia, serif;
+	font-size: 1em;
+	font-weight: 700;
+	color: #f1f1f1;
+}
+
+h1 {
+	font-size: 2.313em; /* 37px */
+	line-height: 1.1471em;
+	margin: 0 0 0.3824em;
+}
+
+h2 {
+	font-size: 2.125em;
+	line-height: 1.2381em;
+	margin: 0 0 0.619em;
+}
+
+h3, .price {
+	font-size: 1.500em;
+	line-height: 1em;
+	margin: 0 0 1.1em 0;
+}
+	.label, label.normal {
+		color: #2ebcb0;
+		margin-right: .75em;
+	}
+
+h4 {
+	font-size: 1.15em;
+	margin: 0 0 10px;
+}
+
+small {
+	font-size: 0.625em; /* 10px */
+	margin: 0 0 2.6em;
+}
+
+/* Preformatted text and code
+---------------------------------------- */
+
+/* Allows line wrapping of 'pre' */
+pre {
+	white-space: pre;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+pre, code, kbd, samp {
+	font: 1em/1.625em Menlo, Consolas, 'DejaVu Sans Mono', Monaco, 'Courier New', Courier, monospace;
+}
+
+/* Tables
+---------------------------------------- */
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+th {
+	text-align: left;
+}
+
+tr, th, td {
+	padding-right: 1.625em;
+}
+
+/* Forms
+---------------------------------------- */
+
+form {
+	margin: 0;
+}
+
+fieldset {
+	border: 0;
+	padding: 0;
+}
+
+textarea {
+	overflow: auto;
+	vertical-align: top;
+}
+
+legend {
+	border: 0;
+	*margin-left: -7px;
+}
+
+button, input, select, textarea {
+	vertical-align: baseline;
+	*vertical-align: middle;
+}
+
+button, input {
+	line-height: normal;
+	*overflow: visible;
+}
+
+button, input[type="button"], input[type="reset"], input[type="submit"] {
+	cursor: pointer;
+	-webkit-appearance: button;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	box-sizing: border-box;
+}
+
+input[type="search"] {
+	-webkit-appearance: textfield;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+/* Reintroduce inner spacing in 'table' to avoid overlap and whitespace issues in IE6/7 */
+table button, table input {
+	*overflow: auto;
+}
+
+/* Quotes
+---------------------------------------- */
+
+blockquote, q {
+	quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+
+blockquote, q, cite {
+	font-style: italic;
+}
+
+blockquote {
+	padding-left: 1.625em;
+	border-left: 1px solid #ddd;
+}
+
+blockquote > p {
+	padding: 0;
+}
+
+/* Lists
+---------------------------------------- */
+
+ul, ol {
+	list-style-position: inside;
+	padding: 0;
+}
+
+li ul, li ol {
+	margin: 0 1.625em;
+}
+
+dl dd {
+	margin-left: 1.625em;
+}
+
+/* Links
+---------------------------------------- */
+
+a, a:visited {
+	text-decoration: none;
+	color: #2ebcb0;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+}
+
+a:focus {
+	outline: thin dotted;
+}
+
+/* Better CSS outline suppression: people.opera.com/patrickl/experiments/keyboard/test */
+a:hover, a:active {
+	outline: none;
+}
+
+/* Figures
+---------------------------------------- */
+
+figure {
+	margin: 0;
+}
+
+/* Embedded content
+---------------------------------------- */
+
+img, object, video {
+	max-width: 100%; /* Automatically scales images larger than the container. Consider this first: http://unstoppablerobotninja.com/entry/fluid-images/ */
+	/* _width: 100%; /* IE6 doesn't support max-width, so we just use width. If the image is larger than the container, just uncomment this. If it is smaller than the container, uncomment and change the 100% value to an absolute one */
+}
+
+img {
+	border: 0;
+	-ms-interpolation-mode: bicubic; /* Improve IE's resizing of images: css-tricks.com/ie-fix-bicubic-scaling-for-images */
+}
+
+/* Corrects overflow displayed oddly in IE9 */
+svg:not(:root) {
+	overflow: hidden;
+}
+
+/* Abbreviations
+---------------------------------------- */
+
+abbr[title], dfn[title] {
+	border-bottom: 1px dotted;
+	cursor: help;
+}
+
+/* Marked/inserted/deleted text
+---------------------------------------- */
+
+mark {
+	background: #ff0;
+}
+
+ins {
+	text-decoration: none;
+	background: #ff9;
+}
+
+del {
+	text-decoration: line-through;
+}
+
+/* Others
+---------------------------------------- */
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-bottom: 1px solid #ddd;
+}
+
+strong, b, dt {
+	font-weight: 700;
+}
+
+dfn {
+	font-style: italic;
+}
+
+var, address {
+	font-style: normal;
+}
+
+/* Position 'sub' and 'sup' without affecting line-height: gist.github.com/413930 */
+sub, sup {
+	font-size: 0.625em;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sup {
+	top: -0.5em;
+}
+
+sub {
+	bottom: -0.25em;
+}
+
+/* Helper classes
+---------------------------------------- */
+
+/*
+	* Micro clearfix hack, more semantically titled with 'group'
+	* Source: nicolasgallagher.com/micro-clearfix-hack/
+*/
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.group:before, .group:after {
+	content: "";
+	display: table;
+}
+
+.group:after {
+	clear: both;
+}
+
+.group {
+	*zoom: 1;
+}
+
+/* Primary styles
+---------------------------------------- */
+header.primary {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1;
+	background-color: #000;
+	background-color: rgba(0, 0, 0, 0.8);
+	margin-bottom: 3em;
+}
+	header.primary a {
+		color: #c3c3c3;
+	}
+		header.primary a:hover {
+			color: #2ebcb0;
+		}
+	header.primary .global-header {
+		background: #1f1f1f;
+		position: relative;
+		width: 100%;
+		padding: 0 1.5%;
+	}
+#site-tools {
+	position: relative;
+	float: left;
+	width: 35%;
+	margin-top: 10px;
+}
+
+	#site-tools ul {
+		margin: 0 0 0 0;
+	}
+		#site-tools li {
+			display: inline;
+			margin-right: 3.24%;
+			font-family: 'Roboto Slab';
+		}
+		
+/* Responsive Nav
+-------------------------- */
+	#menu-toggle {
+		float: right;
+		font-size: 1.6em;
+	}
+
+#site-menu {
+	background: #1f1f1f;
+	border-top: 3px solid #2ebcb0;
+	width: 100%;
+	text-align: center;
+	font-size: 1.75em;
+	text-transform: uppercase;
+}
+	#site-menu li {
+		display: block;
+		width: 100%;
+	}
+		#site-menu a {
+			display: block;
+			border-bottom: 1px solid #3a3a3a;
+			padding: .14em 0;
+		}
+	.js #site-menu {
+	  clip: rect(0 0 0 0);
+	  //max-height: 0;
+	  position: absolute;
+	  display: block;
+	  overflow: hidden;
+	  zoom: 1;
+	}
+	#site-menu.opened {
+	  max-height: 9999px;
+	}
+
+/* -------------------------- */
+
+/*
+	Basic Grid
+*/
+.row {
+  padding: 0 3%;
+  width: 100%;
+}
+
+/* Buttons */
+.button, .btn, button, .variationattributes .swatches li a {
+  background-color: #525252;
+  border: 1px solid #525252;
+  color: #c3c3c3;
+  padding: 3px 10px;
+  text-decoration: none;
+  
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.button:hover, .btn:hover, button:hover, .btn-primary, .variationattributes .swatches li a:hover, .swatches .swatchesdisplay .selected a {
+  background-color: #2ebcb0;
+  border: 1px solid #2ebcb0;
+  color: #ffffff;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.button i, .btn i, button i {
+  margin-right: 5px;
+}
+.button.button-highlight, .btn.active, button.active, .button.active, label.active {
+  background-color: #2ebcb0;
+  border: 1px solid #2ebcb0;
+  color: #ffffff;
+}
+.button.button-highlight:hover, .btn.active:hover, button.active:hover, .button.active:hover, .btn-primary:hover {
+  background-color: #218179;
+  border: 1px solid #218179;
+  color: #c3c3c3;
+}
+
+button.textbutton {
+	background: none;
+	border: none;
+	color: #2ebcb0;
+	padding: 0;
+}
+
+/* Radio Button Selects */
+input[type="radio"].js, .radio-select input[type="radio"] {
+    display: none;
+}
+/* Slider / Background
+---------------------------------------- */
+#cycle {
+  position: fixed;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+#cycle > .img {
+  background: no-repeat center center;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -99;
+  width: 100%;
+  height: 100%;
+}
+#cycle .left {
+  float: left;
+}
+#cycle .right {
+  float: right;
+}
+#cycle .caption {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  float: left;
+  margin-left: 10%;
+  width: 400px;
+}
+#cycle .caption div {
+  padding: 1rem;
+}
+#cycle .caption div p {
+  line-height: 1.8em;
+  font-size: 14px;
+  font-size: 1.4rem;
+}
+#cycle .caption footer {
+  background-color: #2ebcb0;
+  float: left;
+  line-height: 1.6;
+  padding-bottom: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* Product Order Form
+---------------------------------------- */
+.formfield {
+	margin-bottom: 35px;
+}
+	.order-option-control.quantity input[type="number"], input[type='text'], input[type='password'], .addtocart .quantityinput {
+		border: 1px solid #dfdfdf; /* stroke */
+		-moz-border-radius: 4px;
+		-webkit-border-radius: 4px;
+		border-radius: 4px; /* border radius */
+		-moz-background-clip: padding;
+		-webkit-background-clip: padding-box;
+		background-clip: padding-box; /* prevents bg color from leaking outside the border */
+		background-color: #fff; /* layer fill content */
+		-moz-box-shadow: inset 0 3px 7px rgba(0,0,0,.5); /* inner shadow */
+		-webkit-box-shadow: inset 0 3px 7px rgba(0,0,0,.5); /* inner shadow */
+		box-shadow: inset 0 3px 7px rgba(0,0,0,.5); /* inner shadow */
+		color: #3e3e3e;
+		outline: none;
+		padding: 5px;
+	}
+	.order-option-control.quantity input[type="number"] {
+		text-align: center;
+		width: 55px;
+	}
+	
+	.quantity.col {
+		float: left;
+	}
+	.cart-confirm.col {
+		float: right;
+	}
+		.cart-confirm button {
+			font-size: 1em;
+			color: ;
+		}
+	
+
+
+/* Content Blocks 
+---------------------------------------- */
+.content-block {
+	background: #000;
+	background: rgba(0,0,0,.8);
+	border-top: 20px solid #2dbbaf;
+	color: #dcdcdc;
+	max-width: 95%;
+	margin: 1.5em auto 0;
+	padding: 1.5em 3.24% 3em;
+}
+footer.primary {
+  background: #f1f1f1;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+  padding: 1em 3.24%;
+}
+
+.site-title, h1.site-title {
+	font-size: 1em !important;
+	margin: 0 0 .34em 0;
+	line-height: 1;
+	float: left;
+}
+.site-title a, h1.site-title a /*.home .vert-title*/ {
+	background: url(../images/logo.png) no-repeat;
+	display: block;
+	height: 35px;
+	width: 184px;
+	background-size: 100%;
+	text-indent: -32000px;
+	margin-top: .72em;
+	line-height: 1;
+	font-size: 1em;
+}
+
+
+footer.primary aside {
+	width: 100%;
+	padding: 0 3.24%;
+}
+	footer.primary aside.legal {
+		font-weight: normal;
+		color: #3e3e3e;
+		padding-top: 20px;
+	}
+		footer.primary aside.legal li {
+			display: inline;
+			margin: 0 1.5px;
+			font-size: .75em;
+		}
+			.legal a:hover {
+				color: #3c3c3c;
+			}
+		footer.primary aside.legal ul {
+			margin-bottom: 0;
+		}
+		.copyright p {
+			color: #5c5c5c;
+			font-size: .75em;
+			width: 91%;
+		}
+	footer.primary aside.legal img {
+		max-width: 50%;
+		height: auto;
+	}
+	aside.legal a {
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 10px;
+	}
+	.legal a.nte-logo {
+		background: url(../images/nte_logo_black.png) no-repeat;
+		background-size: 100%;
+		height: 28px;
+		width: 119px;
+	}
+	.legal a.awana-logo {
+		background: url(../images/awana-logo.png) no-repeat;
+		background-size: 100%;
+		height: 28px;
+		width: 107px;
+		
+	}
+	.legal a.ecfa-logo {
+		background: url(../images/ecfa-logo.png) no-repeat;
+		background-size: 100%;
+		height: 45px;
+		width: 45px;
+		position: relative;
+		top: -3px;
+	}
+	.social-links {
+		text-align: center;
+		font-size: 2.5em;
+	}
+		.social-links {
+			margin: 0 auto;
+			list-style: none;
+		}
+		.social-links li {
+			margin: 0 .1em;
+			display: inline;
+		}
+		.social-links a {
+			color: #3e3e3e;
+		}
+			.social-links a:hover {
+				color: #2ebcb0;
+			}
+.maintenance {
+	min-height: 450px;
+}
+.awana-logo {
+	text-align: center;
+	margin: 15px auto;
+}
+
+.announcement {
+	border: 3px solid #2ebcb0;
+	padding: 25px 30px;
+	font-size: 1.54em;
+}
+
+/* Make Site Tools icons until we get up to Desktop sizes */
+#site-tools {
+	text-align: right;
+}
+#site-tools a span,
+#site-tools .cartlabel {
+	display: none;
+}
+	#site-tools a {
+		padding: .15em .25em;
+	}
+
+/* Media queries
+---------------------------------------- */
+@media only screen and (max-width: 599px) {
+	.hide-small {
+		display: none !important;
+	}
+	footer.primary aside.legal a {
+		display:inline-block;
+	}
+	footer.primary aside.legal a.awana-logo {
+		margin:0 15px;
+	}
+}
+/* The media queries included in here are only placeholder. Modify them as your content requires */
+
+@media only screen and (min-width: 600px) {
+	.row .col {
+	  float: left;
+	}
+	.row.two-col .col {
+	  width: 50%;
+	}
+	.row.three-col .col {
+	  width: 33%;
+	}
+	.row.four-col .col {
+	  width: 25%;
+	}
+
+.content-block {
+	background: #000;
+	background: rgba(0,0,0,.8);
+	border-top: 20px solid #2dbbaf;
+	color: #dcdcdc;
+	max-width: 95%;
+	margin: 1.5em auto 0;
+	padding: 2em 5% 3em;
+}
+
+/* Start at the top
+------------------------- */
+.email-subscribe {
+	background: #000;
+	float: right;
+	padding: .15em .35em;
+}
+	.email-subscribe input {
+		background: transparent;
+		outline: none;
+		border: 0;
+	}
+		.email-subscribe button {
+			background: transparent;
+			color: #2ebcb0;
+			padding: 0 0 0 0;
+		}
+
+button.cart {
+	font-size: 1.2em;
+}
+figure img.product-image {
+	width: 100%;
+	max-width: 100%;
+}
+footer.primary {
+	margin: 0 auto;
+}
+footer.primary aside {
+	padding: 0 0 0 0;
+}
+	footer.primary aside.social {
+		text-align: left;
+		font-size: 3em;
+	}
+	footer.primary aside.legal {
+		width: auto;
+		text-align: center;
+		float: right;
+	}
+	footer.primary aside.legal p {
+		margin-bottom: 0;
+	}
+	footer.primary aside.legal a {
+		display:inline-block;
+	}
+	footer.primary aside.legal img {
+		max-width: 24.5%;
+		display: inline;
+		margin-left: 2em;
+	}
+	footer.primary aside.legal .awana-logo {
+		position: relative;
+		bottom: -2.5px;
+		margin:0 15px;
+	}
+
+}
+@media only screen and (max-width: 720px) {
+	.site-title a, h1.site-title a {
+		background-size: 100%;
+		height: 28px;
+		width: 147px;
+		margin-right: 15px;
+	}
+}
+@media only screen and (min-width: 720px) {
+	body {
+		margin: 2em auto 2em;
+	}
+	.site-title a, h1.site-title a {
+		height: 23px;
+		width: 125px;
+		background-size: 100%;
+		line-height: 1;
+		font-size: 1em;
+		margin-right: 10px;
+		position: relative;
+		z-index: 5;
+	}
+	.hide-large {
+		display: none;
+	}
+	.js nav#site-menu  {
+	  position: relative;
+	}
+	.js nav#site-menu.closed {
+	  max-height: none;
+	}
+	#menu-toggle {
+	  display: none;
+	}
+	#site-tools {
+		margin-top: 10px;
+		float: right;
+		font-size: 1em;
+		width: auto;
+		position: relative;
+		z-index: 5;
+		text-align: left;
+	}
+	#site-menu {
+		background: transparent;
+		border-top: 0;
+		width: auto;
+		font-size: 1em;
+		overflow: visible !important;
+		margin-top: 11px;
+	}
+		#site-menu ul {
+			position: relative;
+			margin: 0 0 0 0;	
+		}
+		#site-menu li {
+			display: inline;
+		}
+			#site-menu a {
+				display: inline;
+				border-bottom: none;
+				padding: .15em .45em;
+			}
+	#site-menu a:hover, #site-menu a:active, #site-menu .current-menu-item a, #site-menu li.current_page_parent a {
+		border-bottom: 5px solid #2ebcb0;
+		color: #fff;
+	} 
+}
+
+@media only screen and (min-width: 800px) { 
+	.site-title a, h1.site-title a {
+		margin-top: .52em;
+	}
+	#site-menu {
+		margin-top: 7px;
+	}
+	#site-tools {
+		margin-top: 6px;
+	}
+	#site-tools li {
+		margin: 0 0 0 0;
+	}
+	#site-tools a span,
+	#site-tools .cartlabel {
+		display: inline;
+		font-size: .8em;
+	}
+	
+	/* Product formatting */
+	
+	.content-block figure {
+		float: left;
+		margin-right: 2em;
+		min-height: 100%;
+		height: auto;
+		height: 100%;
+		display: block;
+		max-width: 405px;
+	}
+	
+		.product-info {
+			margin-left: 460px;
+			margin-bottom: 100px;
+		}
+	
+	/* Footer formatting */
+	
+	footer.primary .copyright {
+		width: auto;
+		float: left;
+		text-align: left;
+		max-width: 40%;
+	}
+		footer.primary .copyright nav {
+			float: left;
+		}
+		footer .copyright p {
+			clear: left;
+		}
+		.social-links ul {
+			margin: 0 0 0 0;
+		}
+	footer.primary .legal {
+		float: right;
+		text-align: right;
+	}
+	footer.primary .legal a {
+		display: inline-block;
+		margin: 0 10px;
+		text-align: center;
+	}
+}
+
+@media only screen and (min-width: 900px) {
+	body {
+		margin: 2.5em auto 2em;
+	}
+	.site-title a, h1.site-title a {
+		height: 31px;
+		width: 165px;
+		background-size: 100%;
+		line-height: 1;
+		font-size: 1em;
+		margin-right: 10px;
+		position: relative;
+		z-index: 5;
+	}	
+		#site-menu {
+			font-size: 1.1em;
+			margin-top: 10px;
+		}
+		#site-tools {
+			font-size: 1.1em;
+			margin-top: 9px;
+		}
+}
+
+@media only screen and (min-width: 1000px) { 
+	.site-title a, h1.site-title a  {
+		height: 38px;
+		width: 200px;
+		margin-top: .32;
+	}
+	#site-menu {
+		font-size: 1.22em;
+		margin-top: 15px;
+	}
+	#site-tools {
+		font-size: 1.2em;
+		margin-top: 15px;
+	}
+}
+
+@media only screen and (min-width: 1060px) { 
+	#site-menu a {
+		padding: .15em .6 t5em;
+	}
+}
+
+@media only screen and (min-width: 1180px) { 
+	.site-title {
+		top: auto;
+		position: relative;
+		margin-top: -0.45em;
+	}
+
+}
+
+/* Print styles
+---------------------------------------- */
+
+/* Print styles inlined to avoid extra HTTP connection */
+
+@media print {
+	* {
+		background: transparent !important;
+		color: black !important; /* Black prints faster: sanbeiji.com/archives/953 */
+		text-shadow: none !important;
+		filter: none !important;
+		-ms-filter: none !important;
+	}
+
+	a, a:visited {
+		text-decoration: underline;
+	}
+
+	abbr[title]:after {
+		content: " (" attr(title) ")";
+	}
+
+	/* Do not show javascript and internal links */
+	a[href^="javascript:"]:after, a[href^="#"]:after {
+		content: ""; 
+	}
+
+	/* Printing Tables: css-discuss.incutio.com/wiki/Printing_Tables */
+	thead {
+		display: table-header-group;
+	}
+
+	tr, img {
+		page-break-inside: avoid;
+	}
+
+	@page {
+		margin: 0.5cm;
+	}
+
+	p, h2, h3 {
+		orphans: 3;
+		widows: 3;
+	}
+
+	h2, h3 {
+		page-break-after: avoid;
+	}
+}
+
+/* Chris Beran's Stuff */
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+	text-decoration:none;
+}
+#site-menu a:hover,
+#site-tools a:hover {
+	text-decoration:none;
+}
+
+/*
+.variationattributes .swatches li {float: left;height: 25px;margin: 1px;padding: 0px;text-align: center;width: 32px;}
+.variationattributes .swatches li a {background: transparent url(../images/refinement_background_lg.gif) no-repeat 0 0;color:#000;display:block;font-size:.8em;line-height:2.8em;overflow: hidden;width: 32px;height: 25px;padding: 0px;}
+.variationattributes .swatches li a:hover {background-position: 0 -50px;}
+.variationattributes .swatches li.selected a {background: transparent url(../images/refinement_background_lg.gif) no-repeat 0 -25px;color: white;}
+.variationattributes .swatches li.selected a:hover {background-position: 0 -125px;}
+.variationattributes .swatches li.unselectable a {background-position: 0 -75px;color: #999;text-decoration:none;}
+.variationattributes .swatches li.unselectable a:hover {background-position: 0 -75px;cursor:default;}
+*/
+
+.variationattributes .swatches li {
+	float:left;
+	margin-left:2px;
+}
+.variationattributes .swatches li a {
+	cursor:default;
+}
+#leftcolumn,
+.breadcrumb,
+.pt_account #gallery,
+#enlargeBTN,
+.pt_account .itemNo,
+.productreview,
+.productactions,
+.product-tabs {
+	display:none;
+}
+.pt_account #main {
+	background:none;
+	width:auto;
+}
+.pt_account .productdetail,
+.pt_account #content {
+	width:100%;
+	margin:0;
+}
+.productdetail .productimage {
+	background:none !important;
+	width:405px;
+	height:405px;
+	padding:0;
+}
+	.productdetail .productimage img {
+		margin:0;
+		width:405px;
+		height:405px;
+	}
+.productdetail .addtocartbar {
+	border:0;
+}
+.productdetail .productinfo {
+	margin-left:31px;
+}
+.productdetail .addtocartbar .addtocart button.addtocartbutton-disabled,
+.productdetail .addtocartbar .addtocart button.addtocartbutton-disabled:hover {
+	background:#525252;
+	color:#C3C3C3;
+	border:0;
+}
+.price {
+	display:inline-block;
+}
+.price-label {
+	font-size:1.5em;
+}
+.addtocart .quantityinput {
+	width:55px;
+	text-align:center;
+}
+.gsfn-left {
+	background:#2DBBAF !important;
+	border:0 !important;
+}
+.registrationform {
+	border:0;
+}
+.registration {
+	width:100%;
+	margin:0;
+}
+	.registration h4,
+	.registration h5 {
+		background:#2EBCB0;
+		color:#fff;
+		line-height:28px;
+		padding:0 0 0 15px;
+	}
+	.registration h5 {
+		margin:15px 0;
+	}
+.registrationform {
+	float:none;
+	width:auto;
+}
+.reg-submit {
+	margin:15px 0;
+}
+.select-fit .btn a,
+.select-size .btn a {
+	color:#C3C3C3;
+} 
+.select-fit .btn a:hover,
+.select-fit .btn-primary a,
+.select-size .btn a:hover,
+.select-size .btn-primary a {
+	color:#fff;
+}
+.minicartcontent {
+	position:absolute;
+	background:#000;
+	z-index:1000;
+	padding:20px;
+	right:0;
+	border:0;
+	
+}
+.checkoutminicart .name,
+.checkoutminicart .attribute,
+.checkoutminicart .pricing,
+.minicartcontent .minicarttotals td {
+	color:#fff;
+}
+#site-tools li {
+	position:relative;
+}
+.minicartcontent .minicarttotals {
+	background:none;
+}
+.minicart-close:hover,
+.viewcart-btn:hover {
+	color:#fff !important;
+}
+.shippingmethod .input-radio {
+	float:left;
+	margin:5px 15px 0 0;
+}
+.shippingtotal {
+	color:#2EBCB0;
+}
+.addtocart .addtocartbutton,
+.addtocart .addtocartbutton-disabled {
+	float:right;
+	margin-top:15px;
+}
+header.primary li {
+	color:#C3C3C3;
+}
+.clear {
+	clear:both;
+}
+.productdetail .clear,
+#rightcolumn .clear {
+	clear:none;
+	padding-top:15px;
+	display:block;
+}
+#CreditCardDialog label.normal {
+	display:block;
+}
+#CreditCardDialog .fl {
+	float:left;
+}
+#CreditCardForm .expirationdate label.normal {
+	display:none;
+}
+.ordershipments .ordershipmenttable th {
+	background:#2DBBAF;
+}
+.accountaddress {
+	padding-bottom:20px;
+}
+	.accountaddress .defaultselection {
+		padding-bottom:5px;
+	}
+#rightcolumn p.productimage img {
+	height: auto !important;
+}
+.cart td.detailscolumn .attribute {
+	display:none;
+}
+.addresslist {
+	padding-bottom:15px;
+}
+.creditcardlist,
+#dwfrm_billing_paymentMethods_creditCard div {
+	margin-bottom:35px;
+}
+#dwfrm_billing_paymentMethods_creditCard div label.normal {
+	width:20%;
+	display:inline-block;
+}
+#dwfrm_billing_paymentMethods_creditCard div input,
+#dwfrm_billing_paymentMethods_creditCard div select {
+	width:40%;
+}
+#dwfrm_billing_paymentMethods_creditCard div .month,
+#dwfrm_billing_paymentMethods_creditCard div .year {
+	padding-left:22%;
+}
+#dwfrm_billing_paymentMethods_creditCard div .checkbox input {
+	width:auto;
+}
+.errorclient {
+	background:#fcc !important;
+	border:1px solid #f00 !important;
+}
+.checkorder .errorform {
+	color:#f00;
+}
+.pt_customerservice .contentasset {
+	max-width:910px;
+}
+.pt_customerservice .contentasset h2 span,
+.pt_customerservice .contentasset .Apple-style-span span {
+	color:#fff !important;
+}
+.pt_customerservice .login-form {
+    border: 2px solid #2DBBAF;
+    border-radius: 15px 15px 15px 15px;
+    float: left;
+    margin-right: 30px;
+    padding: 10px;
+    width: 230px;
+    display:block;
+}
+	.pt_customerservice .login-form #leftcolumn {
+		display:block;
+	}
+	.pt_customerservice .login-form h3 {
+		font-size:1em;
+	}
+footer.primary .footer-links {
+	margin:0;
+}
+	footer.primary .footer-links li {
+		display:inline-block;
+	}
+footer.primary aside.legal p {
+	max-width:500px;
+	text-align:left;
+}
+footer.primary aside.legal .legal-pages {
+	font-size:10px;
+}
+.giftcertcouponform {
+	display:none;
+}
+.variationattributes li {
+	list-style:none;
+}
+.continue-shopping {
+	float:left;
+	font-size:13px;
+}
+.add-continue-shopping {
+	float:right;
+	clear:both;
+	margin-top:7px;
+	display:none;
+}
+header.primary .site-title {
+	padding:7px 0 0 1.5%;
+}
+header.primary #site-tools {
+	padding:0 1.5% 0 0;
+}
+header.primary #menu-toggle {
+	padding:0 1.5% 0 0;
+}
+
+
+
+
+
+
+

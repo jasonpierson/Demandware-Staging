@@ -1,0 +1,48 @@
+<iscomment>
+	This is the footer for all pages. Be careful caching it if it contains
+	user dependent information. Cache its elements instead if necessary (do not forget
+	to change the isinclude into a pipeline include for that).
+</iscomment>
+
+	<footer class="primary container group">
+		<aside class="copyright">
+			<nav class="social-links">
+				<ul id="menu-social-links" class="menu">
+					<li id="menu-item-89" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-89"><a href="https://www.facebook.com/wearenottheend"><i class="icon-circle-facebook"></i></a></li>
+					<li id="menu-item-75" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-75"><a href="http://twitter.com/wearenottheend"><i class="icon-circle-twitter"></i></a></li>
+					<li id="menu-item-93" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-93"><a href="http://vimeo.com/wearenottheend"><i class="icon-circle-vimeo"></i></a></li>
+					<li id="menu-item-94" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-94"><a href="http://www.youtube.com/user/wearenottheend/videos"><i class="icon-circle-youtube"></i></a></li>
+					<li id="menu-item-95" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-95"><a href="http://instagram.com/wearenottheend/"><i class="icon-circle-insta"></i></a></li>
+				</ul>
+			</nav>		
+			<p>&copy;1997-2013 by Awana&reg; Clubs International. All rights reserved. The text and images of this Web site may not be copied for distribution in any way, directly or indirectly, without express written permission from Awana&reg; Clubs International unless otherwise stated or granted.</p>
+		</aside>
+		<aside class="legal">	
+			<a href="http://nottheend.com" target="_blank" class="nte-logo"></a>
+			<a href="http://awana.org" target="_blank" class="awana-logo"></a>
+			<a href="http://www.ecfa.org/MemberProfile.aspx?ID=6649" target="_blank" class="ecfa-logo"></a>
+			
+			<ul id="menu-store-tools" class="menu">
+				<li><a href="${URLUtils.http('CustomerService-Show')}">Customer Service</a></li>
+				<li><a href="http://nottheend.com/end/">About Us</a></li>
+				<li><a href="http://nottheend.com/contact/">Contact</a></li>
+				<li><a href="${URLUtils.http('Page-Show', 'cid', 'returns')}">Return Policy</a></li>
+				<li><a href="${URLUtils.http('Page-Show', 'cid', 'shipping')}">Shipping Policy</a></li>
+			</ul>		
+			
+			<isinclude url="${URLUtils.url('Page-Include', 'cid', 'footer-copy')}" />
+			
+		</aside>
+	</footer>
+	<script  src="${URLUtils.staticURL('/js/responsive-nav.min.js')}" type="text/javascript"></script>
+	<script  src="${URLUtils.staticURL('/js/end-effects.js')}" type="text/javascript"></script>
+
+<iscomment>
+	Customer registration can happen everywhere in the page flow. As special tag in the pdict
+	is indicating it. So we have to check on every page, if we have to report this event for
+	the reporting engine.
+</iscomment>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-52337d1611ba893c"></script>
+<isinclude template="util/reporting/ReportUserRegistration.isml"/>
+<isinclude template="components/footer/googleAnalytics.isml"/>
+<isinclude url="${URLUtils.url('SeeWhy-Include')}"/>

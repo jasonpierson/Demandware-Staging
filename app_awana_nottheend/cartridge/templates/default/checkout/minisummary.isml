@@ -1,0 +1,97 @@
+<isinclude template="util/modules"/>
+<iscomment>
+	This template renders the summary of the current basket at the right hand side
+	of all checkout pages. It includes an order summary including order totals,
+	a list of all included shipments as well as the payment methods used to pay
+	the basket.
+</iscomment>
+
+<isif condition="${!empty(pdict.checkoutstep)}">
+	<isset name="checkoutstep" value="${pdict.checkoutstep}" scope="page"/>
+</isif>
+
+<isif condition="${!empty(checkoutstep) && (checkoutstep >= 2)}">
+
+	<div>
+		<iscontentasset aid="cs-contact-number">
+	</div>
+
+	<div class="checkoutminisummary">
+
+		<div class="checkoutsummaryheader" <isif condition="${!empty(checkoutstep) && checkoutstep >= 5}">style="border-bottom:1px solid #FEF0C8;"</isif>>
+			<iscomment>
+				The edit link depends on the basket content: if there is just one gift 
+				certificate in the basket the edit link leads to the gift certificate purchase page
+				offering to edit the gift certificate settings.
+			</iscomment>
+			ORDER SUMMARY
+			<isif condition="${!empty(checkoutstep) && checkoutstep < 5}">
+				<iscomment>
+					The edit link depends on the basket content: if there is just one gift 
+					certificate in the basket the edit link leads to the gift certificate purchase page
+					offering to edit the gift certificate settings.
+				</iscomment>			
+				<isset name="editUrl" value="${URLUtils.url('Cart-Show')}" scope="page"/>
+				<isif condition="${pdict.Basket.productLineItems.size() == 0 && pdict.Basket.giftCertificateLineItems.size() == 1}">
+					<isset name="editUrl" value="${URLUtils.url('GiftCert-Edit','GiftCertificateLineItemID', pdict.Basket.giftCertificateLineItems[0].UUID)}" scope="page"/>
+				</isif>
+				<a href="${editUrl}" class="orderedit">${Resource.msg('global.edit','locale',null)}</a>
+			<iselse>
+				<div style="height:10px;"></div>
+			</isif>
+		</div>
+			
+		<div style="height:10px;"></div>
+	
+		<isif condition="${!empty(checkoutstep) && checkoutstep < 5}">		
+			<div class="checkoutminicart" style="border-top:solid 1px #FFF0C7; border-bottom:solid 1px #FFF0C7;">
+				<isminilineitems p_lineitemctnr="${pdict.Basket}">
+			</div>
+		</isif>
+
+		<isset name="CallingTemplate" value="${'MiniSummary'}" scope="page"/>
+		<iscomment>render the order totals</iscomment>
+		<div class="checkoutordertotals">
+			<isset name="showTax" value="${false}" scope="page"/>
+			<isif condition="${!empty(checkoutstep) && checkoutstep > 4}">
+				<isif condition="${!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')) && dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')}">
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${true}" p_shipmenteditable="${true}" p_totallabel="Estimated Total" p_hidetax="${false}">
+				<iselse/>
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${true}" p_shipmenteditable="${true}" p_totallabel="Estimated Total" p_hidetax="${true}">
+				</isif>
+			<iselse>
+				<isif condition="${!empty(pdict.Basket.shipments)}">
+					<isloop items="${pdict.Basket.shipments}" var="shipment" status="loopstate">
+						<isif condition="${shipment.shippingAddress != null}">
+							<isset name="showTax" value="${true}" scope="page"/>
+							<isbreak/>
+						</isif>
+					</isloop>
+				</isif>
+				<isif condition="${!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')) && dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary') && showTax==true}">
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${false}" p_shipmenteditable="${false}" p_totallabel="Estimated Total" p_hidetax="${false}">
+				<iselse>
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${false}" p_shipmenteditable="${false}" p_totallabel="Estimated Total" p_hidetax="${true}">
+				</isif>
+			</isif>
+		</div>
+	</div>
+	
+	<iscomment>render single shipment boxes</iscomment>
+	<isif condition="${!empty(checkoutstep) && (checkoutstep > 3)}">
+		<div style="height:20px;"></div>
+		<div class="minishipments">
+			<isinclude template="checkout/shipping/minishipments"/>
+		</div>
+	</isif>
+
+	<iscomment>render billing information: billing address and payment instruments</iscomment>
+
+	<isif condition="${!empty(checkoutstep) && (checkoutstep > 4)}">
+		<div style="height:20px;"></div>
+		<div class="minibillinginfo">
+			<isinclude template="checkout/billing/minibillinginfo"/>
+		</div>
+	</isif>
+
+</isif>

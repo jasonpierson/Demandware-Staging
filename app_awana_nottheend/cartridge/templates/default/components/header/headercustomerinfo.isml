@@ -1,0 +1,18 @@
+<iscache status="off">
+
+
+
+    <isif condition="${pdict.CurrentCustomer.registered}">
+    	<li> 
+	        <a href="${URLUtils.https('Account-Show')}" title="${Resource.msg('global.accountlink','locale',null)} ${_FirstName} ${_LastName}" class="username">
+	        	Account
+	        </a>
+        </li>
+        <li>
+        	<a title="Logout" href="${URLUtils.url('Login-Logout')}" class="usernot">Logout</a>
+        </li>	
+    <iselse>
+        <li><i class="icon-user"></i> <a title="${Resource.msg('global.login','locale',null)}" href="${URLUtils.https('Account-Show')}" class="userlogin"><span>${Resource.msg('global.login','locale',null)}</span></a></li>
+        <li><a title="${Resource.msg('global.register','locale',null)}" href="${URLUtils.https('Account-StartRegister')}" class="userregister"><span>${Resource.msg('global.register','locale',null)}</span></a></li>
+    </isif>
+    

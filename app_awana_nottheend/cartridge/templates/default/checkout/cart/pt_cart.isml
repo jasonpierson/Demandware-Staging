@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<isinclude template="util/modules"/>
+	
+	<iscomment>This page must be cachable. It inherits the caching attributes by the decorated template.</iscomment>
+	
+	<head>
+		<isinclude template="components/header/htmlhead_test"/>
+		<link href="${URLUtils.staticURL('/css/cart.css')}" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+	
+		<div id="container" class="pt_cart">
+		
+			<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+			
+			<div id="main">
+			
+				<isbreadcrumbs bcurl1="${URLUtils.url('Cart-Show')}" bctext1="${Resource.msg('pt_cart.breadcrumb','checkout',null)}">
+			
+				<isslot id="cart-banner" description="Banner for Cart page" context="global" />
+			
+				<section class="main-content">
+					<article class="container content-block">
+			
+				<div id="content">
+					<isreplace/>
+				</div>
+					
+				
+				<aside class="login-form">
+					<div id="rightcolumn">
+						<isinclude template="checkout/cart/rightcolumn"/>
+					</div>	
+					<div class="clear"></div>	
+				</aside>
+				
+					</article>
+				</section>
+							
+			</div>
+			<isinclude template="components/footer/footer"/>
+			
+		</div>
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+    <isif condition="${dw.system.Site.getCurrent().ID != 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10437;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+    <isif condition="${dw.system.Site.getCurrent().ID == 'AwanaCA' && dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+            <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+            <script type="text/javascript">
+            	var __ALC_Deployment = 10976;
+            	document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <!-- END Salesforce Live Agent Deployment Code -->
+    </isif> 
+</body>
+</html>

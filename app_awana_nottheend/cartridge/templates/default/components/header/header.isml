@@ -1,0 +1,46 @@
+	<iscomment>
+		Stuff I might need...
+		<isinclude template="search/simplesearch" />
+    	<div id="livechat">
+    		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'live-chat-code')}" />
+    	</div>
+    	
+    	<a href="${URLUtils.http('CustomerService-Show')}" title="${Resource.msg('global.helplink','locale',null)}">${Resource.msg('global.helplink','locale',null)}</a>
+		
+		<span class="welcomemessage">${Resource.msg('headercustomerinfo.holidaymessage','components',null)}</span>
+     </iscomment>
+
+
+	<div id="cycle">
+		<div class="img" style="background-image: url('${URLUtils.staticURL('/images/kids.jpg')}');">
+			<!--<img src="/images/kids.jpg" alt="">-->
+		</div>
+	</div>
+	<header class="primary container group global-header">
+			<div class="site-title"><a href="http://nottheend.com/">Not the end...</a></div>
+			<nav id="site-tools" class="group">
+				<ul class="group">
+					<!-- 
+					<li class="hide-small"><a href="http://nottheend.com/contact/" class="active">Contact</a></li>
+					<li class="hide-small"><a href="${URLUtils.http('Product-Show', 'pid', 'MV-KenyaDonation')}">Donate</a></li>
+					<li><a href="" class="addthis_button_compact"><i class="icon-share-alt"></i> Share</a></li>
+					-->
+					<li id="minicart" class="minicart">
+						<i class="icon-shopping-cart"></i>
+						<isinclude url="${URLUtils.url('Cart-MiniCart')}" />
+					</li>
+					<isinclude url="${URLUtils.url('Home-IncludeHeaderCustomerInfo')}" />
+				</ul>
+			</nav>
+			<a href="" class="hide-large" id="menu-toggle"><i class="icon-reorder"></i></a>
+			<nav id="site-menu">
+				<ul class="group">
+					<li><a href="http://nottheend.com/" class="active">Home</a></li>
+					<li><a href="http://nottheend.com/end/">About</a></li>
+					<li><a href="http://nottheend.com/get-involved/">Get Involved</a></li>
+					<li><a href="http://nottheend.com/current-project/">Current Project</a></li>
+					<li><a href="${URLUtils.http('Search-Show', 'cgid', 'fit')}">Buy</a></li>
+					<li><a href="${URLUtils.http('Product-Show', 'pid', 'MV-KenyaDonation')}">Give</a></li>
+				</ul>
+			</nav>
+	</header>

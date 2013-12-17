@@ -1,0 +1,54 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('//awana.org/on/demandware.static/Sites-NotTheEnd-Site/-/default/v1379434995064/fonts/icomoon.eot');
+	src:url('//awana.org/on/demandware.static/Sites-NotTheEnd-Site/-/default/v1379434995064/fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('//awana.org/on/demandware.static/Sites-NotTheEnd-Site/-/default/v1379434995064/fonts/icomoon.woff') format('woff'),
+		url('//awana.org/on/demandware.static/Sites-NotTheEnd-Site/-/default/v1379434995064/fonts/fonts/icomoon.ttf') format('truetype'),
+		url('//awana.org/on/demandware.static/Sites-NotTheEnd-Site/-/default/v1379434995064/fonts/fonts/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'icomoon';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="icon-circle-"] {
+*/
+.icon-circle-youtube, .icon-circle-vimeo, .icon-circle-twitter, .icon-circle-insta, .icon-circle-facebook {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+.icon-circle-youtube:before {
+	content: "\e000";
+}
+.icon-circle-vimeo:before {
+	content: "\e001";
+}
+.icon-circle-twitter:before {
+	content: "\e002";
+}
+.icon-circle-insta:before {
+	content: "\e003";
+}
+.icon-circle-facebook:before {
+	content: "\e004";
+}
