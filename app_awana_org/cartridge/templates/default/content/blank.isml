@@ -1,0 +1,5 @@
+<isdecorate template="util/pt_empty.isml">
+
+	<isinclude template="content/content/htmlcontentasset"/>
+
+</isdecorate>

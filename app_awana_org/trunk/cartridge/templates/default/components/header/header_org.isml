@@ -1,0 +1,11 @@
+<div id="header">
+
+	<isinclude url="${URLUtils.url('Page-Include', 'cid', 'awana-org-header')}" />
+	<div id="headerSearch">
+		<form action="${URLUtils.http('Search-Show')}" method="get" id="SimpleSearchForm" class="simplesearch">
+			<p>Search <input type="text" maxlength="50" name="q" class="simplesearchinput" id="searchinput" /><button type="submit" value="${Resource.msg('global.go','locale',null)}" name="simplesearch"><span>Search</span></button></p>
+		</form>
+	</div>
+</div>
+
+<isinclude template="components/navbar.isml" />

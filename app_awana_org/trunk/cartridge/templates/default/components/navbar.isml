@@ -1,0 +1,82 @@
+<isscript>
+	importPackage( dw.content );
+	importPackage( dw.web );
+	var folder : Folder = dw.content.ContentMgr.getFolder("awana-org");
+</isscript>
+
+<div id="mainNavigation">
+	<ul id="dropdown">
+		<isloop iterator="${folder.getOnlineSubFolders()}" alias="subfolder" status="loopState">
+			
+			<li>
+				
+				<isif condition="${!empty(subfolder.pageURL) || subfolder.pageURL != null}">
+					<isset name="FolderContentPageURL" value="${subfolder.pageURL}" scope="PAGE" />
+				<iselseif condition="${subfolder.onlineContent.length == 1}">
+					<isset name="FolderContentPageURL" value="${URLUtils.url('Page-Show', 'cid', subfolder.onlineContent[0].ID)}" scope="PAGE" />
+				</isif>
+				
+				<a href="${FolderContentPageURL}" class="top-level">${subfolder.displayName}</a>
+			
+				<isscript>
+					var __menuHTML : String = "";
+					
+					function BuildMenuLevel(subfolders : Collection) {
+						var __FolderContentPageURL : String = "";
+						for each(var ___folder : Folder in subfolders)
+						{
+							if(___folder.onlineContent.length == 1)
+								__FolderContentPageURL = URLUtils.url('Page-Show', 'cid', ___folder.onlineContent[0].ID);
+							else if(___folder.pageURL!=null)
+								__FolderContentPageURL = ___folder.pageURL;
+							else
+								__FolderContentPageURL = '#';
+								
+							__menuHTML += "<li><a href='" + __FolderContentPageURL + "'>" + ___folder.displayName + "</a>";
+							var __subfolders = ___folder.getOnlineSubFolders();
+							if(__subfolders.length > 0)
+							{
+								__menuHTML += "<ul>";
+									BuildMenuLevel(__subfolders);
+								__menuHTML += "</ul>";
+							}
+							__menuHTML += "</li>";
+						}
+					}
+				
+					var __subfolders = subfolder.getOnlineSubFolders();
+					if(__subfolders.length > 0) {
+						__menuHTML += "<ul>";
+							BuildMenuLevel(__subfolders);
+						__menuHTML += "</ul>";
+					}
+				</isscript>
+				
+				<isprint value="${__menuHTML}" encoding="off">
+			
+			</li>
+			
+		</isloop>
+	</ul>
+
+</div>
+<script type="text/javascript">
+<!--
+$(function(){
+    $("ul#dropdown li ul li:has(ul)").find("a:first").append(" &raquo; &raquo; &raquo; ");
+});
+
+function mainmenu(){
+$(" #dropdown ul ").css({display: "none"}); // Opera Fix
+$(" #dropdown li").hover(function(){
+		$(this).find('ul:first').css({visibility: "visible",display: "none"}).show(400);
+		},function(){
+		$(this).find('ul:first').css({visibility: "hidden"});
+		});
+}
+
+ $(document).ready(function(){
+	mainmenu();
+});
+//-->
+</script>

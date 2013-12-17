@@ -1,0 +1,21 @@
+<div id="header">
+	<div id="siteSelector">
+		<img src="${URLUtils.staticURL('images/topnav_org/top-nav-left-slice.gif')}" width="22" height="52" class="mobile-hide" alt="" />
+		<img src="${URLUtils.staticURL('images/topnav_org/top-nav-org.gif')}" width="143" height="52" class="top-nav-org-link" alt="Awana" />
+		<a href="http://store.awana.org"><img src="${URLUtils.staticURL('images/topnav_org/top-nav-store.gif')}" width="212" height="52" class="top-nav-store-link" alt="Awana Store" /></a>
+		<a href="http://shopawana.org/essentials"><img src="${URLUtils.staticURL('images/topnav_org/top-nav-essentials.gif')}" width="242" height="52" class="top-nav-essentials-link" alt="Essentials Store" /></a>
+		<img src="${URLUtils.staticURL('images/topnav_org/top-nav-search.gif')}" width="6" height="52" class="mobile-hide" alt="" />
+   		<div id="headerSearch">
+			<form action="${URLUtils.http('Search-Show')}" method="get" id="SimpleSearchForm" class="simplesearch">
+				<label for="searchinput">Search</label> <input type="text" maxlength="50" name="q" class="simplesearchinput" id="searchinput" placeholder="Search" /><button type="submit" value="${Resource.msg('global.go','locale',null)}" name="simplesearch"></button>
+			</form>
+		</div> 
+    	<div id="livechat">
+    		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'live-chat-code')}" />
+    	</div>
+	</div>
+	<div class="clear"></div>
+	<isinclude url="${URLUtils.url('Page-Include', 'cid', 'awana-org-header')}" />
+</div>
+
+<isinclude template="components/navbar.isml" />

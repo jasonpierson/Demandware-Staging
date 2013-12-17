@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<isinclude template="components/header/htmlhead_org.isml" />
+	</head>
+	<body>
+	
+		<!-- Start Alexa Certify Javascript -->
+		<script type="text/javascript">
+		_atrk_opts = { atrk_acct:"wig7i1aoZM00GG", domain:"awana.org",dynamic: true};
+		(function() { var as = document.createElement('script'); as.type = 'text/javascript'; as.async = true; as.src = "https://d31qbv1cthcecs.cloudfront.net/atrk.js"; var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(as, s); })();
+		</script>
+		<noscript><img src="https://d5nxst8fruw4z.cloudfront.net/atrk.gif?account=wig7i1aoZM00GG" style="display:none" height="1" width="1" alt="" /></noscript>
+		<!-- End Alexa Certify Javascript -->
+		
+		<div id="wrapper">
+		
+			<isinclude template="components/header/header_org.isml" />
+
+			<isreplace/>
+
+			<isinclude template="components/footer/footer_org.isml" />
+			
+			<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+			<!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+			<script type="text/javascript">
+			var __ALC_Deployment = 10437;
+			document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+			</script>
+			<!-- END Salesforce Live Agent Deployment Code -->
+			
+		</div>
+	</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<isinclude template="components/header/htmlhead_org.isml" />
+	</head>
+	<body>
+		<div id="wrapper">
+
+			<isinclude template="components/header/header_org.isml" />
+
+			<div id="page">
+
+				<isinclude url="${URLUtils.url('Page-Include', 'cid', 'press-room-submenu')}" />
+
+				<isreplace/>
+
+				<isinclude url="${URLUtils.url('Page-Include', 'cid', 'press-room-sidebar')}" />
+
+			</div>
+
+			<isinclude template="components/footer/footer_org.isml" />
+
+		</div>
+	</body>
+</html>

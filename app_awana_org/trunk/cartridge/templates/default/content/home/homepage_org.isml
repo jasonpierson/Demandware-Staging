@@ -1,0 +1,7 @@
+<iscache type="relative" hour="24"/>
+
+<isdecorate template="content/home/pt_main.isml">
+
+	<isinclude url="${URLUtils.url('Page-Include', 'cid', 'awana-org-home-main')}" />
+	
+</isdecorate>

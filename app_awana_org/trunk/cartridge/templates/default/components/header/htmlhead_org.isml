@@ -1,0 +1,22 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta property="fb:page_id" content="62342221439" />
+
+<title>${pdict.CurrentPageMetaData.title}</title>
+
+<isif condition="${!empty(pdict.CurrentPageMetaData.description)}">
+    <meta name="description" content="${pdict.CurrentPageMetaData.description}" />
+</isif>
+<isif condition="${!empty(pdict.CurrentPageMetaData.keywords)}">
+    <meta name="keywords" content="${pdict.CurrentPageMetaData.keywords}" />
+</isif>
+
+<link href="${URLUtils.staticURL('/css/default_org.css')}" type="text/css" rel="stylesheet" />
+<link href="${URLUtils.staticURL('/lib/jquery/js/jcarousel/jquery.jcarousel.css')}" type="text/css" rel="stylesheet" />
+
+<!--[if lte IE 7]>
+    <link rel="stylesheet" type="text/css" href="${URLUtils.staticURL('/css/ie_org.css')}" media="screen" />
+<![endif]-->   
+
+<script type="text/javascript" src="${URLUtils.staticURL('/lib/jquery/js/jquery/jquery-1.3.2.min.js')}"></script>
+<script  type="text/javascript" src="${URLUtils.staticURL('/lib/jquery/js/jcarousel/jquery.jcarousel.pack.fixed.js')}"></script>
+<meta name="google-site-verification" content="tKhDJsstGYlLqeKKnU3kcsVst5qU4SU0FfV_RSslMV8" />

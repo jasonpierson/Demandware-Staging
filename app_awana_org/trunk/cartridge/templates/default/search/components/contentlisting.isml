@@ -1,0 +1,6 @@
+<!--- TEMPLATENAME: contentlisting.isml --->
+<iscomment>
+	This needs to return content search results in an appropriate format (xml, json??)
+	The resulting results will be processed on the calling site and rendered in a 
+	content Awana.org section.  This will be called from the shop and CA-shop sites
+</iscomment>

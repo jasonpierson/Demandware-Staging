@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<isinclude template="components/header/htmlhead_org.isml" />
+	</head>
+	<body>
+
+		<isreplace/>
+
+	</body>
+</html>

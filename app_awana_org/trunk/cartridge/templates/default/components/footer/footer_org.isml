@@ -1,0 +1,5 @@
+<div id="footer">
+	
+	<isinclude url="${URLUtils.url('Page-Include', 'cid', 'awana-org-footer')}" />
+	
+</div>
