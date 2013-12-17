@@ -1,0 +1,170 @@
+<iscomment>SeeWhy Embedded setcheckoutvariables Code</iscomment>
+
+
+<!-- Begin SeeWhy setcheckoutvariables Code Cartridge v2.03 -->
+
+<iscache status="off" />
+
+<script type="text/javascript">
+
+<iscomment>
+	see if there is a query parameter with name corresponding to name set in preference
+	if so, set a variable with the value and page scope
+</iscomment>
+
+<isset name="UrlEmail" value="" scope="page"> 
+	
+<isif condition=${!empty(dw.system.Site.current.preferences.custom.queryStringEmailParamName)}>
+  <isset name="UrlEmail" value="${dw.system.Site.current.preferences.custom.queryStringEmailParamName}" scope="page">                                                 
+</isif>
+
+<iscomment>
+only attempt to construct an event if the pipeline dictionary is available 
+</iscomment>
+<isif condition="${!empty(pdict) }">
+
+	<iscomment>some constants.  TODO: find out if there is better way to define constants</iscomment>
+	<isset name="FL3" value="3" scope="page">
+	<isset name="FL4" value="4" scope="page">
+	<isset name="FL6" value="6" scope="page">
+	<isset name="FL7" value="7" scope="page">
+
+	<iscomment>flags to test whether email and products are present</iscomment>
+	<isset name="hasProducts" value="0" scope="page">
+	<isset name="hasEmail" value="0" scope="page">
+
+	function   createCYEvent(ocy)
+	{
+	
+	<iscomment>priority for email capture is basket, then profile, then url</iscomment>
+	
+	<isif condition="${!empty(pdict.Basket) && !empty(pdict.Basket.customerEmail)}">
+		cy.UserId = "${pdict.Basket.customerEmail}"
+		<isset name="hasEmail" value="1" scope="page">	
+		<iselseif condition="${!empty(pdict.CurrentCustomer) && !empty(pdict.CurrentCustomer.profile) && !empty(pdict.CurrentCustomer.profile.email)}">
+       		cy.UserId = "${pdict.CurrentCustomer.profile.email}";
+    		<isset name="hasEmail" value="1" scope="page">	
+       	<iselseif condition="${!empty(UrlEmail)}">
+       		<isif condition="${!empty(pdict.CurrentHttpParameterMap[UrlEmail]) && pdict.CurrentHttpParameterMap[UrlEmail].value != null}">
+       			cy.UserId = "${pdict.CurrentHttpParameterMap[UrlEmail].value}";
+       			<isset name="hasEmail" value="1" scope="page">	
+       		</isif>
+	</isif>
+
+	
+
+	<iscomment>
+		if the customer profile is available, then set the custom1 to the firstname
+		otherwise set it to guest
+	</iscomment>
+	<isif condition="${empty(pdict.CurrentCustomer) || empty(pdict.CurrentCustomer.profile)}">
+		cy.Custom1="Guest";
+		<iselse>
+			cy.Custom1 = "${pdict.CurrentCustomer.profile.firstName}";	
+	</isif>
+
+ 	<iscomment>customer code defined as a site preference</iscomment>
+ 	cy.CUSTOMERCODE = "${dw.system.Site.current.preferences.custom.seeWhyCustomerCode}";
+ 	cy.ReturnToLink = "${URLUtils.https('Cart-Show').toString().split('//')[1]}";
+
+
+ 	
+	<iscomment>
+		check to see how email subscription is handled.  If it is onsite, the use
+ 		custom7 to control optin/optout
+	</iscomment>
+
+	<isif condition="${dw.system.Site.current.preferences.custom.onsiteEmailSubscription}">
+		<isif condition="${pdict.CurrentForms.profile.customer.addtoemaillist.checked}">
+			cy.Custom7="OPTIN";
+			<iselse>
+				cy.Custom7="OPTOUT";
+		</isif>
+ 	</isif>
+
+	
+
+ 	<iscomment>
+		item by item, load the basket contents into the event
+		but only if the basket is available and it contains at least one product line
+ 	</iscomment>
+	 	
+ 	<isif condition="${!empty(pdict.Basket) && !empty(pdict.Basket.productLineItems)}">
+ 		
+ 		<isloop iterator = "${pdict.Basket.productLineItems}" alias = "pp">
+				
+				cyNewBasketLine();
+				cyAddBasketLineDetail("ItemName", "${pp.product.name}"); 
+				cyAddBasketLineDetail("ItemDesc", "${pp.product.shortDescription.source}"); 
+				cyAddBasketLineDetail('ItemPageURL', '${URLUtils.http('Product-Show', 'pid' , pp.product.ID).toString().split("//")[1]}');
+				cyAddBasketLineDetail('ItemPrice','${pp.netPrice.value}');
+				cyAddBasketLineDetail('ItemQuantity','${pp.quantity.value}'); 
+				cyAddBasketLineDetail('ItemID','${pp.product.ID}'); 
+				cyAddBasketLineDetail('ItemImageURL','${pp.product.getImage('large',0).absURL.toString().split("//")[1]}');
+				<isset name="hasProducts" value="1" scope="page">
+		</isloop>	
+ 	</isif>
+
+ 	<iscomment>here we need the total basket value if the basket is defined</iscomment>
+    <isif condition="${!empty(pdict.Basket)}">
+          <isif condition="${!empty(pdict.Basket.merchandizeTotalNetPrice)}">
+                var totalStr = "${pdict.Basket.merchandizeTotalNetPrice}";
+                if(totalStr != "N/A")
+                {
+                 var   totalArray = totalStr.split(" ");
+                      cy.Custom5 = totalArray[0];
+                      cy.Value = totalArray[1];
+                }
+          </isif>
+
+ 		<iscomment>determin funnel level</iscomment>
+		<isif condition="${hasProducts == 1}">
+			<isif condition="${hasEmail == 1}">
+				cy.FunnelLevel="${FL4}";
+				<iselse>
+					cy.FunnelLevel = "${FL3}";
+			</isif>
+		</isif>
+		
+ 		<isif condition="${!empty(pdict.Basket.paymentInstrument)}"> 
+ 				cy.FunnelLevel="${FL6}";
+ 		</isif>
+
+ 		
+ 	</isif>
+
+ 	<iscomment>
+	if we can detect an orderNo, then the transaction is complete so define a fl 7
+	and set the ordernumber
+	</iscomment>
+	<isif condition="${!empty(pdict.OrderNo)}">
+			cy.FunnelLevel = "${FL7}";
+			cy.OrderNumber = "${pdict.OrderNo}";
+			<iscomment>
+			if it is guest checkout, then we need to grab the email and
+			name from the Order as the email address will be no longer available
+			on the forms
+			</iscomment>
+			<isif condition="${pdict.CurrentCustomer.registered==false}">
+				cy.UserId = "${pdict.Order.customerEmail}"
+	    		<isset name="hasEmail" value="1" scope="page">	
+	    	</isif>
+			
+	</isif>
+
+ 	<iscomment> set any overriding properties passed in from the site pages</iscomment>
+    _cySetCYProperties(ocy);
+
+ 	<iscomment>trigger the event</iscomment>
+	cy_getImageSrc();
+
+
+	}//end function createCYEvent
+	if(!cy.SUPPRESSDEFAULT && ${hasEmail == 1 || hasProducts == 1})
+	{
+		createCYEvent();
+	}
+</isif>
+</script>
+
+<!-- End SeeWhy setcheckoutvariables Code -->
