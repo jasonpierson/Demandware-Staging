@@ -1,0 +1,2283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline group="Feeds" type="job">
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Feed execution steps pipeline. Do not change in project.</description>
+        </text-node>
+        <node-display x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="UploadFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="UploadFeed" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="feeds/UploadFeed.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="Task['remote-folder-url']" key="RemoteFolderURL"/>
+          <key-binding alias="Task['remote-login']" key="RemoteLogin"/>
+          <key-binding alias="Task['remote-password']" key="RemotePassword"/>
+          <key-binding alias="File" key="File"/>
+          <key-binding alias="RemoteFile" key="RemoteFile"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+              <bend-point relative-to="target" x="2" y="-1"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="0" y="5"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/uploaderror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="Task['on-temporary-error']!='FAIL'" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <end-node name="ERROR"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="!empty(Task['success-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/feeds/uploadsuccess_email&quot;" key="MailTemplate"/>
+                <key-binding alias="Task['success-email']" key="MailTo"/>
+                <key-binding alias="null" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in1" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+          <bend-point relative-to="target" x="1" y="0"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="2"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="SUCCESS"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="DownloadFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="DownloadFeed" secure="false"/>
+        <node-display x="3" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="feeds/DownloadFeed.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="Task['remote-file-pattern']" key="RemoteFilePattern"/>
+          <key-binding alias="Task['remote-folder-url']" key="RemoteFolderURL"/>
+          <key-binding alias="Task['remote-login']" key="RemoteLogin"/>
+          <key-binding alias="Task['remote-password']" key="RemotePassword"/>
+          <key-binding alias="Task['temp-folder']" key="TempFolder"/>
+          <key-binding alias="File" key="File"/>
+          <key-binding alias="RemoteFile" key="RemoteFile"/>
+          <key-binding alias="TechnicalError" key="TechnicalError"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+              <bend-point relative-to="target" x="1" y="-1"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <decision-node condition-key="TechnicalError=='TRUE'" condition-operator="expr"/>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                            <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                            <key-binding alias="&quot;custom/feeds/downloaderror_email&quot;" key="MailTemplate"/>
+                            <key-binding alias="Task['error-email']" key="MailTo"/>
+                            <key-binding alias="null" key="MailSubject"/>
+                            <key-binding alias="null" key="LocaleID"/>
+                            <key-binding alias="null" key="MailCC"/>
+                            <key-binding alias="null" key="MailBCC"/>
+                          </pipelet-node>
+                          <node-display x="0" y="1"/>
+                        </node>
+                        <transition target-connector="in1" target-path="../+1"/>
+                      </segment>
+                    </branch>
+                  </node>
+                  <transition target-connector="in1" target-path="./+1">
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                      <bend-point relative-to="target" x="1" y="0"/>
+                    </transition-display>
+                  </transition>
+                </segment>
+                <segment>
+                  <node>
+                    <join-node/>
+                    <node-display x="0" y="2"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <decision-node condition-key="Task['on-temporary-error']!='FAIL'" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <end-node name="ERROR"/>
+                          <node-display x="0" y="1"/>
+                        </node>
+                      </segment>
+                    </branch>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <stop-node/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="NO_MORE_FILES"/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="SUCCESS"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="DeleteFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="DeleteFeed" secure="false"/>
+        <node-display x="5" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="feeds/DeleteFeed.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="RemoteFileURL" key="RemoteFileURL"/>
+          <key-binding alias="Task['remote-login']" key="RemoteLogin"/>
+          <key-binding alias="Task['remote-password']" key="RemotePassword"/>
+          <key-binding alias="RemoteFile" key="RemoteFile"/>
+          <key-binding alias="Task['remote-folder-url']" key="RemoteFolderURL"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+              <bend-point relative-to="target" x="1" y="-1"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/deletionerror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="Task['on-temporary-error']!='FAIL'" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <end-node name="ERROR"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <stop-node/>
+              <node-display orientation="horizontal" x="1" y="0"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="SUCCESS"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_5">
+    <segment>
+      <node>
+        <text-node>
+          <description>We cannot validate CSV files at this time (APP-12970). Skip validation for Active Data.</description>
+        </text-node>
+        <node-display x="7" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ValidateFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ValidateFeed" secure="false"/>
+        <node-display x="8" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <decision-node condition-key="Task.id!='DownloadAndImportActiveData'" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="feeds/GetSchemaByTaskID.ds"/>
+                <key-binding alias="null" key="ScriptLog"/>
+                <key-binding alias="Schema" key="Schema"/>
+                <key-binding alias="Task.id" key="TaskID"/>
+              </pipelet-node>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <stop-node/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node custom-name="reset ValidationStatus" pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="null" key="From_0"/>
+                <key-binding alias="ValidationStatus" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node pipelet-name="ValidateXMLFile" pipelet-set-identifier="bc_api">
+                <key-binding alias="File" key="File"/>
+                <key-binding alias="Schema" key="Schema"/>
+                <key-binding alias="null" key="LogFileName"/>
+                <key-binding alias="null" key="ErrorCount"/>
+                <key-binding alias="null" key="WarningCount"/>
+                <key-binding alias="ValidationStatus" key="Status"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b3" source-connector="error">
+                <transition target-connector="in1" target-path="./+1">
+                  <transition-display>
+                    <bend-point relative-to="source" x="2" y="0"/>
+                  </transition-display>
+                </transition>
+              </branch>
+            </node>
+            <simple-transition/>
+            <node>
+              <decision-node condition-key="ValidationStatus.code=='IMPEX-0'" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b4" source-connector="yes">
+                <transition target-connector="in"/>
+                <segment>
+                  <node>
+                    <end-node name="SUCCESS"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="1" y="0"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="target" x="2" y="-2"/>
+                <bend-point relative-to="target" x="0" y="-2"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="-1" y="3"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/validationerror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="ERROR"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="SUCCESS"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ImportFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ImportFeed" secure="false"/>
+        <node-display x="11" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node custom-name="reset ImportStatus" pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="null" key="From_0"/>
+          <key-binding alias="ImportStatus" key="To_0"/>
+          <key-binding alias="null" key="From_1"/>
+          <key-binding alias="null" key="To_1"/>
+          <key-binding alias="null" key="From_2"/>
+          <key-binding alias="null" key="To_2"/>
+          <key-binding alias="null" key="From_3"/>
+          <key-binding alias="null" key="To_3"/>
+          <key-binding alias="null" key="From_4"/>
+          <key-binding alias="null" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="Custom_FeedSteps-RunTypeSpecificImport"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="PROCESS_ERROR">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="2"/>
+              <bend-point relative-to="target" x="0" y="-2"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <decision-node condition-key="ImportStatus!=null &amp;&amp; ImportStatus.code=='IMPEX-120'" condition-operator="expr"/>
+              <node-display x="2" y="2"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                            <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                            <key-binding alias="&quot;custom/feeds/importlockingerror_email&quot;" key="MailTemplate"/>
+                            <key-binding alias="Task['error-email']" key="MailTo"/>
+                            <key-binding alias="null" key="MailSubject"/>
+                            <key-binding alias="null" key="LocaleID"/>
+                            <key-binding alias="null" key="MailCC"/>
+                            <key-binding alias="null" key="MailBCC"/>
+                          </pipelet-node>
+                          <node-display x="0" y="1"/>
+                        </node>
+                        <transition target-connector="in1" target-path="../+1"/>
+                      </segment>
+                    </branch>
+                  </node>
+                  <transition target-connector="in1" target-path="./+1">
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                      <bend-point relative-to="target" x="1" y="0"/>
+                    </transition-display>
+                  </transition>
+                </segment>
+                <segment>
+                  <node>
+                    <join-node/>
+                    <node-display x="0" y="2"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <decision-node condition-key="Task['on-temporary-error']!='FAIL'" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <end-node name="LOCKED"/>
+                          <node-display x="0" y="1"/>
+                        </node>
+                      </segment>
+                    </branch>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <stop-node/>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="target" x="0" y="-2"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="2" y="1"/>
+              <branch basename="b3" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/importprocesserror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="ERROR"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+        <branch basename="b3" source-connector="PROCESS_SUCCESS">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <decision-node condition-key="ImportStatus.details.DataErrorCount==0 || Task['ignore-data-errors']=='TRUE'" condition-operator="expr"/>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <decision-node condition-key="!empty(Task['success-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                            <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                            <key-binding alias="&quot;custom/feeds/importsuccess_email&quot;" key="MailTemplate"/>
+                            <key-binding alias="Task['success-email']" key="MailTo"/>
+                            <key-binding alias="null" key="MailSubject"/>
+                            <key-binding alias="null" key="LocaleID"/>
+                            <key-binding alias="null" key="MailCC"/>
+                            <key-binding alias="null" key="MailBCC"/>
+                          </pipelet-node>
+                          <node-display x="0" y="1"/>
+                        </node>
+                        <transition target-connector="in1" target-path="../+1"/>
+                      </segment>
+                    </branch>
+                  </node>
+                  <transition target-connector="in1" target-path="./+1">
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                      <bend-point relative-to="target" x="1" y="0"/>
+                    </transition-display>
+                  </transition>
+                </segment>
+                <segment>
+                  <node>
+                    <join-node/>
+                    <node-display x="0" y="2"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <end-node name="SUCCESS"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="2" y="0"/>
+                <bend-point relative-to="target" x="0" y="-1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="1" y="1"/>
+              <branch basename="b3" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/importdataerror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="ERROR"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_8">
+    <segment>
+      <node>
+        <text-node>
+          <description>The Stop node makes the job show as ERROR in BM. Standard job notification for ERRORs can be used.</description>
+        </text-node>
+        <node-display x="9" y="3"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportOrders">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportOrders" secure="false"/>
+        <node-display x="17" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="SearchSystemObject" pipelet-set-identifier="bc_api">
+          <config-property key="ObjectType" value="Order"/>
+          <config-property key="CaseSensitive" value="false"/>
+          <config-property key="SearchExpression" value="exportStatus={1} AND exportAfter&lt;{2}"/>
+          <key-binding alias="Orders" key="SearchResult"/>
+          <key-binding alias="OrderCount" key="SearchResultCount"/>
+          <key-binding alias="null" key="Search1Key"/>
+          <key-binding alias="dw.order.Order.EXPORT_STATUS_READY" key="Search1Value"/>
+          <key-binding alias="null" key="Search2Key"/>
+          <key-binding alias="new Date()" key="Search2Value"/>
+          <key-binding alias="null" key="Search3Key"/>
+          <key-binding alias="null" key="Search3Value"/>
+          <key-binding alias="null" key="Search4Key"/>
+          <key-binding alias="null" key="Search4Value"/>
+          <key-binding alias="null" key="Search5Key"/>
+          <key-binding alias="null" key="Search5Value"/>
+          <key-binding alias="&quot;orderNo&quot;" key="SortBy1"/>
+          <key-binding alias="1" key="SortBy1Direction"/>
+          <key-binding alias="null" key="SortBy2"/>
+          <key-binding alias="null" key="SortBy2Direction"/>
+          <key-binding alias="null" key="SortBy3"/>
+          <key-binding alias="null" key="SortBy3Direction"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <decision-node condition-key="OrderCount==0" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <end-node name="NO_DATA"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+          <bend-point relative-to="target" x="1" y="-1"/>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="feeds/GenerateFilenames.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="Task['file-prefix']" key="FilePrefix"/>
+          <key-binding alias="Task['temp-folder']" key="TempFolder"/>
+          <key-binding alias="File" key="File"/>
+          <key-binding alias="RemoteFile" key="RemoteFile"/>
+        </pipelet-node>
+        <node-display x="0" y="2"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node custom-name="reset ExportStatus" pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="null" key="From_0"/>
+          <key-binding alias="ExportStatus" key="To_0"/>
+          <key-binding alias="null" key="From_1"/>
+          <key-binding alias="null" key="To_1"/>
+          <key-binding alias="null" key="From_2"/>
+          <key-binding alias="null" key="To_2"/>
+          <key-binding alias="null" key="From_3"/>
+          <key-binding alias="null" key="To_3"/>
+          <key-binding alias="null" key="From_4"/>
+          <key-binding alias="null" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="Orders.asList()" key="From_0"/>
+          <key-binding alias="OrdersBak" key="To_0"/>
+          <key-binding alias="null" key="From_1"/>
+          <key-binding alias="null" key="To_1"/>
+          <key-binding alias="null" key="From_2"/>
+          <key-binding alias="null" key="To_2"/>
+          <key-binding alias="null" key="From_3"/>
+          <key-binding alias="null" key="To_3"/>
+          <key-binding alias="null" key="From_4"/>
+          <key-binding alias="null" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="ExportOrders" pipelet-set-identifier="bc_api">
+          <key-binding alias="File" key="ExportFile"/>
+          <key-binding alias="null" key="OverwriteExportFile"/>
+          <key-binding alias="Orders" key="Orders"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="Task['encryption-algorithm']" key="EncryptionAlgorithm"/>
+          <key-binding alias="Task['encryption-key']" key="EncryptionKey"/>
+          <key-binding alias="ExportStatus" key="Status"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="2" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <key-binding alias="OrdersBak" key="From_0"/>
+                <key-binding alias="Orders" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <call-node start-name-ref="Custom_FeedSteps-MarkOrdersReady"/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in2" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="OrdersBak" key="From_0"/>
+          <key-binding alias="Orders" key="To_0"/>
+          <key-binding alias="null" key="From_1"/>
+          <key-binding alias="null" key="To_1"/>
+          <key-binding alias="null" key="From_2"/>
+          <key-binding alias="null" key="To_2"/>
+          <key-binding alias="null" key="From_3"/>
+          <key-binding alias="null" key="To_3"/>
+          <key-binding alias="null" key="From_4"/>
+          <key-binding alias="null" key="To_4"/>
+          <key-binding alias="null" key="From_5"/>
+          <key-binding alias="null" key="To_5"/>
+          <key-binding alias="null" key="From_6"/>
+          <key-binding alias="null" key="To_6"/>
+          <key-binding alias="null" key="From_7"/>
+          <key-binding alias="null" key="To_7"/>
+          <key-binding alias="null" key="From_8"/>
+          <key-binding alias="null" key="To_8"/>
+          <key-binding alias="null" key="From_9"/>
+          <key-binding alias="null" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="Custom_FeedSteps-MarkOrdersReady"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <decision-node condition-key="ExportStatus.code=='IMPEX-0'" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b4" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <end-node name="SUCCESS"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="1" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="target" x="2" y="-1"/>
+          <bend-point relative-to="target" x="0" y="-1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+        <node-display x="-1" y="2"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                <key-binding alias="&quot;custom/feeds/exporterror_email&quot;" key="MailTemplate"/>
+                <key-binding alias="Task['error-email']" key="MailTo"/>
+                <key-binding alias="null" key="MailSubject"/>
+                <key-binding alias="null" key="LocaleID"/>
+                <key-binding alias="null" key="MailCC"/>
+                <key-binding alias="null" key="MailBCC"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in1" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+          <bend-point relative-to="target" x="1" y="0"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="2"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="ERROR"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="MarkOrdersExported">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="MarkOrdersExported" secure="false"/>
+        <node-display x="19" y="1"/>
+      </node>
+      <transition target-connector="in" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <loop-node element-key="Order" iterator-key="Orders"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="do">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node custom-name="Mark order as exported" pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="true"/>
+                <key-binding alias="dw.order.Order.EXPORT_STATUS_EXPORTED" key="From_0"/>
+                <key-binding alias="Order.exportStatus" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="loop" target-path="..">
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+                <bend-point relative-to="source" x="-1" y="1"/>
+                <bend-point relative-to="target" x="-1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_11">
+    <segment>
+      <node>
+        <text-node>
+          <description>Find orders that are EXPORT_STATUS_READY and exportAfter &lt; now.</description>
+        </text-node>
+        <node-display x="16" y="2"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ArchiveFeed">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ArchiveFeed" secure="false"/>
+        <node-display x="21" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="feeds/ArchiveFeed.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="Task['archive-folder'].toString()" key="LocalArchiveFolder"/>
+          <key-binding alias="LocalFile" key="LocalFile"/>
+          <key-binding alias="File" key="File"/>
+          <key-binding alias="Task['archive-folder']" key="ArchiveFolder"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+              <bend-point relative-to="target" x="1" y="-1"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <decision-node condition-key="!empty(Task['error-email']) &amp;&amp; !empty(Config.custom.fromEmail)" condition-operator="expr"/>
+              <node-display x="0" y="2"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="SendMail" pipelet-set-identifier="bc_api">
+                      <key-binding alias="Config.custom.fromEmail" key="MailFrom"/>
+                      <key-binding alias="&quot;custom/feeds/archiveerror_email&quot;" key="MailTemplate"/>
+                      <key-binding alias="Task['error-email']" key="MailTo"/>
+                      <key-binding alias="null" key="MailSubject"/>
+                      <key-binding alias="null" key="LocaleID"/>
+                      <key-binding alias="null" key="MailCC"/>
+                      <key-binding alias="null" key="MailBCC"/>
+                    </pipelet-node>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in1" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+                <bend-point relative-to="target" x="1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="2"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <end-node name="ERROR"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node name="SUCCESS"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_13">
+    <segment>
+      <node>
+        <text-node>
+          <description>workaround for APP-12961: convert iterator Orders to List and store in temporary variable</description>
+        </text-node>
+        <node-display x="16" y="7"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="RunTypeSpecificImport">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="RunTypeSpecificImport" secure="false"/>
+        <node-display x="11" y="11"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node custom-name="get ImportStartTime" pipelet-name="Eval" pipelet-set-identifier="bc_api">
+          <config-property key="OnError" value="null"/>
+          <config-property key="Transactional" value="false"/>
+          <config-property key="Expression" value="new Date().getTime()"/>
+          <key-binding alias="ImportStartTime" key="Result"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <decision-node condition-key="Task.id!='DownloadAndImportActiveData'" condition-operator="expr"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <decision-node condition-key="Task.id!='DownloadAndImportCatalog'" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in"/>
+                <segment>
+                  <node>
+                    <decision-node condition-key="Task.id!='DownloadAndImportContent'" condition-operator="expr"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="yes">
+                      <transition target-connector="in"/>
+                      <segment>
+                        <node>
+                          <decision-node condition-key="Task.id!='DownloadAndImportCoupons'" condition-operator="expr"/>
+                          <node-display x="0" y="1"/>
+                          <branch basename="b2" source-connector="yes">
+                            <transition target-connector="in"/>
+                            <segment>
+                              <node>
+                                <decision-node condition-key="Task.id!='DownloadAndImportCustomObjects'" condition-operator="expr"/>
+                                <node-display x="0" y="1"/>
+                                <branch basename="b2" source-connector="yes">
+                                  <transition target-connector="in"/>
+                                  <segment>
+                                    <node>
+                                      <decision-node condition-key="Task.id!='DownloadAndImportCustomers'" condition-operator="expr"/>
+                                      <node-display x="0" y="1"/>
+                                      <branch basename="b2" source-connector="yes">
+                                        <transition target-connector="in"/>
+                                        <segment>
+                                          <node>
+                                            <decision-node condition-key="Task.id!='DownloadAndImportGiftCertificates'" condition-operator="expr"/>
+                                            <node-display x="0" y="1"/>
+                                            <branch basename="b2" source-connector="yes">
+                                              <transition target-connector="in">
+                                                <transition-display>
+                                                  <bend-point relative-to="source" x="0" y="1"/>
+                                                </transition-display>
+                                              </transition>
+                                              <segment>
+                                                <node>
+                                                  <decision-node condition-key="Task.id!=&quot;DownloadAndImportInventoryLists&quot;" condition-operator="expr"/>
+                                                  <node-display x="0" y="1"/>
+                                                  <branch basename="b2" source-connector="yes">
+                                                    <transition target-connector="in">
+                                                      <transition-display>
+                                                        <bend-point relative-to="source" x="0" y="1"/>
+                                                      </transition-display>
+                                                    </transition>
+                                                    <segment>
+                                                      <node>
+                                                        <decision-node condition-key="Task.id!=&quot;DownloadAndImportPriceBooks&quot;" condition-operator="expr"/>
+                                                        <node-display x="0" y="1"/>
+                                                        <branch basename="b2" source-connector="yes">
+                                                          <transition target-connector="in"/>
+                                                          <segment>
+                                                            <node>
+                                                              <decision-node condition-key="Task.id!=&quot;DownloadAndImportPromotions&quot;" condition-operator="expr"/>
+                                                              <node-display x="0" y="1"/>
+                                                              <branch basename="b2" source-connector="yes">
+                                                                <transition target-connector="in"/>
+                                                                <segment>
+                                                                  <node>
+                                                                    <decision-node condition-key="Task.id!='DownloadAndImportShippingMethods'" condition-operator="expr"/>
+                                                                    <node-display x="0" y="1"/>
+                                                                    <branch basename="b2" source-connector="yes">
+                                                                      <transition target-connector="in"/>
+                                                                      <segment>
+                                                                        <node>
+                                                                          <decision-node condition-key="Task.id!='DownloadAndImportSlots'" condition-operator="expr"/>
+                                                                          <node-display x="0" y="1"/>
+                                                                          <branch basename="b2" source-connector="yes">
+                                                                            <transition target-connector="in"/>
+                                                                            <segment>
+                                                                              <node>
+                                                                                <decision-node condition-key="Task.id!='DownloadAndImportSourceCodes'" condition-operator="expr"/>
+                                                                                <node-display x="0" y="1"/>
+                                                                                <branch basename="b2" source-connector="yes">
+                                                                                  <transition target-connector="in">
+                                                                                    <transition-display>
+                                                                                      <bend-point relative-to="source" x="0" y="1"/>
+                                                                                    </transition-display>
+                                                                                  </transition>
+                                                                                  <segment>
+                                                                                    <node>
+                                                                                      <decision-node condition-key="Task.id!='DownloadAndImportStores'" condition-operator="expr"/>
+                                                                                      <node-display x="0" y="1"/>
+                                                                                      <branch basename="b2" source-connector="yes">
+                                                                                        <transition target-connector="in">
+                                                                                          <transition-display>
+                                                                                            <bend-point relative-to="source" x="0" y="1"/>
+                                                                                          </transition-display>
+                                                                                        </transition>
+                                                                                        <segment>
+                                                                                          <node>
+                                                                                            <decision-node condition-key="Task.id!='DownloadAndImportTaxTable'" condition-operator="expr"/>
+                                                                                            <node-display x="0" y="1"/>
+                                                                                            <branch basename="b2" source-connector="yes">
+                                                                                              <transition target-connector="in">
+                                                                                                <transition-display>
+                                                                                                  <bend-point relative-to="source" x="0" y="1"/>
+                                                                                                </transition-display>
+                                                                                              </transition>
+                                                                                              <segment>
+                                                                                                <node>
+                                                                                                  <stop-node/>
+                                                                                                  <node-display x="0" y="1"/>
+                                                                                                </node>
+                                                                                              </segment>
+                                                                                            </branch>
+                                                                                          </node>
+                                                                                          <simple-transition>
+                                                                                            <transition-display>
+                                                                                              <bend-point relative-to="source" x="1" y="0"/>
+                                                                                            </transition-display>
+                                                                                          </simple-transition>
+                                                                                          <node>
+                                                                                            <pipelet-node pipelet-name="ImportTaxTable" pipelet-set-identifier="bc_api">
+                                                                                              <key-binding alias="File" key="ImportFile"/>
+                                                                                              <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                                              <key-binding alias="null" key="ErrorCode"/>
+                                                                                              <key-binding alias="null" key="ErrorMsg"/>
+                                                                                              <key-binding alias="null" key="LogFileName"/>
+                                                                                              <key-binding alias="ImportStatus" key="Status"/>
+                                                                                            </pipelet-node>
+                                                                                            <node-display orientation="horizontal" x="1" y="0"/>
+                                                                                            <branch basename="b3" source-connector="error">
+                                                                                              <transition target-connector="in2" target-path="../../../../../../../../../../../../../../b3.14">
+                                                                                                <transition-display>
+                                                                                                  <bend-point relative-to="source" x="0" y="1"/>
+                                                                                                  <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                                                </transition-display>
+                                                                                              </transition>
+                                                                                            </branch>
+                                                                                          </node>
+                                                                                          <transition target-connector="in2" target-path="../../../../../../../../../../../../../../+14"/>
+                                                                                        </segment>
+                                                                                      </branch>
+                                                                                    </node>
+                                                                                    <simple-transition>
+                                                                                      <transition-display>
+                                                                                        <bend-point relative-to="source" x="1" y="0"/>
+                                                                                      </transition-display>
+                                                                                    </simple-transition>
+                                                                                    <node>
+                                                                                      <pipelet-node pipelet-name="ImportStores" pipelet-set-identifier="bc_api">
+                                                                                        <key-binding alias="File" key="ImportFile"/>
+                                                                                        <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                                        <key-binding alias="null" key="ErrorCode"/>
+                                                                                        <key-binding alias="null" key="ErrorMsg"/>
+                                                                                        <key-binding alias="null" key="LogFileName"/>
+                                                                                        <key-binding alias="ImportStatus" key="Status"/>
+                                                                                      </pipelet-node>
+                                                                                      <node-display orientation="horizontal" x="1" y="0"/>
+                                                                                      <branch basename="b3" source-connector="error">
+                                                                                        <transition target-connector="in2" target-path="../../../../../../../../../../../../../b3.13">
+                                                                                          <transition-display>
+                                                                                            <bend-point relative-to="source" x="0" y="1"/>
+                                                                                            <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                                          </transition-display>
+                                                                                        </transition>
+                                                                                      </branch>
+                                                                                    </node>
+                                                                                    <transition target-connector="in2" target-path="../../../../../../../../../../../../../+13"/>
+                                                                                  </segment>
+                                                                                </branch>
+                                                                              </node>
+                                                                              <simple-transition>
+                                                                                <transition-display>
+                                                                                  <bend-point relative-to="source" x="1" y="0"/>
+                                                                                </transition-display>
+                                                                              </simple-transition>
+                                                                              <node>
+                                                                                <pipelet-node pipelet-name="ImportSourceCodes" pipelet-set-identifier="bc_api">
+                                                                                  <key-binding alias="File" key="ImportFile"/>
+                                                                                  <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                                  <key-binding alias="null" key="ErrorCode"/>
+                                                                                  <key-binding alias="null" key="ErrorMsg"/>
+                                                                                  <key-binding alias="null" key="LogFileName"/>
+                                                                                  <key-binding alias="ImportStatus" key="Status"/>
+                                                                                </pipelet-node>
+                                                                                <node-display orientation="horizontal" x="1" y="0"/>
+                                                                                <branch basename="b3" source-connector="error">
+                                                                                  <transition target-connector="in2" target-path="../../../../../../../../../../../../b3.12">
+                                                                                    <transition-display>
+                                                                                      <bend-point relative-to="source" x="0" y="1"/>
+                                                                                      <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                                    </transition-display>
+                                                                                  </transition>
+                                                                                </branch>
+                                                                              </node>
+                                                                              <transition target-connector="in2" target-path="../../../../../../../../../../../../+12"/>
+                                                                            </segment>
+                                                                          </branch>
+                                                                        </node>
+                                                                        <simple-transition>
+                                                                          <transition-display>
+                                                                            <bend-point relative-to="source" x="1" y="0"/>
+                                                                          </transition-display>
+                                                                        </simple-transition>
+                                                                        <node>
+                                                                          <pipelet-node pipelet-name="ImportSlots" pipelet-set-identifier="bc_api">
+                                                                            <key-binding alias="File" key="ImportFile"/>
+                                                                            <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                            <key-binding alias="null" key="ErrorCode"/>
+                                                                            <key-binding alias="null" key="ErrorMsg"/>
+                                                                            <key-binding alias="null" key="LogFileName"/>
+                                                                            <key-binding alias="ImportStatus" key="Status"/>
+                                                                          </pipelet-node>
+                                                                          <node-display orientation="horizontal" x="1" y="0"/>
+                                                                          <branch basename="b3" source-connector="error">
+                                                                            <transition target-connector="in2" target-path="../../../../../../../../../../../b3.11">
+                                                                              <transition-display>
+                                                                                <bend-point relative-to="source" x="0" y="1"/>
+                                                                                <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                              </transition-display>
+                                                                            </transition>
+                                                                          </branch>
+                                                                        </node>
+                                                                        <transition target-connector="in2" target-path="../../../../../../../../../../../+11"/>
+                                                                      </segment>
+                                                                    </branch>
+                                                                  </node>
+                                                                  <simple-transition>
+                                                                    <transition-display>
+                                                                      <bend-point relative-to="source" x="1" y="0"/>
+                                                                    </transition-display>
+                                                                  </simple-transition>
+                                                                  <node>
+                                                                    <pipelet-node pipelet-name="ImportShippingMethods" pipelet-set-identifier="bc_api">
+                                                                      <key-binding alias="File" key="ImportFile"/>
+                                                                      <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                      <key-binding alias="null" key="ErrorCode"/>
+                                                                      <key-binding alias="null" key="ErrorMsg"/>
+                                                                      <key-binding alias="null" key="LogFileName"/>
+                                                                      <key-binding alias="ImportStatus" key="Status"/>
+                                                                    </pipelet-node>
+                                                                    <node-display orientation="horizontal" x="1" y="0"/>
+                                                                    <branch basename="b3" source-connector="error">
+                                                                      <transition target-connector="in2" target-path="../../../../../../../../../../b3.10">
+                                                                        <transition-display>
+                                                                          <bend-point relative-to="source" x="0" y="1"/>
+                                                                          <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                        </transition-display>
+                                                                      </transition>
+                                                                    </branch>
+                                                                  </node>
+                                                                  <transition target-connector="in2" target-path="../../../../../../../../../../+10"/>
+                                                                </segment>
+                                                              </branch>
+                                                            </node>
+                                                            <simple-transition>
+                                                              <transition-display>
+                                                                <bend-point relative-to="source" x="1" y="0"/>
+                                                              </transition-display>
+                                                            </simple-transition>
+                                                            <node>
+                                                              <pipelet-node pipelet-name="ImportPromotions" pipelet-set-identifier="bc_api">
+                                                                <key-binding alias="File" key="ImportFile"/>
+                                                                <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                                <key-binding alias="null" key="ErrorCode"/>
+                                                                <key-binding alias="null" key="ErrorMsg"/>
+                                                                <key-binding alias="null" key="LogFileName"/>
+                                                                <key-binding alias="ImportStatus" key="Status"/>
+                                                              </pipelet-node>
+                                                              <node-display orientation="horizontal" x="1" y="0"/>
+                                                              <branch basename="b3" source-connector="error">
+                                                                <transition target-connector="in2" target-path="../../../../../../../../../b3.9">
+                                                                  <transition-display>
+                                                                    <bend-point relative-to="source" x="0" y="1"/>
+                                                                    <bend-point relative-to="target" x="-1" y="-1"/>
+                                                                  </transition-display>
+                                                                </transition>
+                                                              </branch>
+                                                            </node>
+                                                            <transition target-connector="in2" target-path="../../../../../../../../../+9"/>
+                                                          </segment>
+                                                        </branch>
+                                                      </node>
+                                                      <simple-transition>
+                                                        <transition-display>
+                                                          <bend-point relative-to="source" x="1" y="0"/>
+                                                        </transition-display>
+                                                      </simple-transition>
+                                                      <node>
+                                                        <pipelet-node pipelet-name="ImportPriceBooks" pipelet-set-identifier="bc_api">
+                                                          <key-binding alias="File" key="ImportFile"/>
+                                                          <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                          <key-binding alias="null" key="ErrorCode"/>
+                                                          <key-binding alias="null" key="ErrorMsg"/>
+                                                          <key-binding alias="null" key="LogFileName"/>
+                                                          <key-binding alias="ImportStatus" key="Status"/>
+                                                        </pipelet-node>
+                                                        <node-display orientation="horizontal" x="1" y="0"/>
+                                                        <branch basename="b3" source-connector="error">
+                                                          <transition target-connector="in1" target-path="../../../../../../../../b3.8">
+                                                            <transition-display>
+                                                              <bend-point relative-to="source" x="0" y="1"/>
+                                                              <bend-point relative-to="target" x="-1" y="-1"/>
+                                                            </transition-display>
+                                                          </transition>
+                                                        </branch>
+                                                      </node>
+                                                      <transition target-connector="in1" target-path="../../../../../../../../+8"/>
+                                                    </segment>
+                                                  </branch>
+                                                </node>
+                                                <simple-transition>
+                                                  <transition-display>
+                                                    <bend-point relative-to="source" x="1" y="0"/>
+                                                  </transition-display>
+                                                </simple-transition>
+                                                <node>
+                                                  <pipelet-node pipelet-name="ImportInventoryLists" pipelet-set-identifier="bc_api">
+                                                    <key-binding alias="File" key="ImportFile"/>
+                                                    <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                                    <key-binding alias="null" key="ErrorCode"/>
+                                                    <key-binding alias="null" key="ErrorMsg"/>
+                                                    <key-binding alias="null" key="LogFileName"/>
+                                                    <key-binding alias="ImportStatus" key="Status"/>
+                                                  </pipelet-node>
+                                                  <node-display orientation="horizontal" x="1" y="0"/>
+                                                  <branch basename="b3" source-connector="error">
+                                                    <transition target-connector="in1" target-path="../../../../../../../b3.7">
+                                                      <transition-display>
+                                                        <bend-point relative-to="source" x="0" y="1"/>
+                                                        <bend-point relative-to="target" x="-1" y="-1"/>
+                                                      </transition-display>
+                                                    </transition>
+                                                  </branch>
+                                                </node>
+                                                <transition target-connector="in1" target-path="../../../../../../../+7"/>
+                                              </segment>
+                                            </branch>
+                                          </node>
+                                          <simple-transition>
+                                            <transition-display>
+                                              <bend-point relative-to="source" x="1" y="0"/>
+                                            </transition-display>
+                                          </simple-transition>
+                                          <node>
+                                            <pipelet-node pipelet-name="ImportGiftCertificates" pipelet-set-identifier="bc_api">
+                                              <key-binding alias="File" key="ImportFile"/>
+                                              <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                              <key-binding alias="null" key="ErrorCode"/>
+                                              <key-binding alias="null" key="ErrorMsg"/>
+                                              <key-binding alias="null" key="LogFileName"/>
+                                              <key-binding alias="ImportStatus" key="Status"/>
+                                            </pipelet-node>
+                                            <node-display orientation="horizontal" x="1" y="0"/>
+                                            <branch basename="b3" source-connector="error">
+                                              <transition target-connector="in2" target-path="../../../../../../b3.6">
+                                                <transition-display>
+                                                  <bend-point relative-to="source" x="0" y="1"/>
+                                                  <bend-point relative-to="target" x="-1" y="-1"/>
+                                                </transition-display>
+                                              </transition>
+                                            </branch>
+                                          </node>
+                                          <transition target-connector="in2" target-path="../../../../../../+6"/>
+                                        </segment>
+                                      </branch>
+                                    </node>
+                                    <simple-transition>
+                                      <transition-display>
+                                        <bend-point relative-to="source" x="1" y="0"/>
+                                      </transition-display>
+                                    </simple-transition>
+                                    <node>
+                                      <pipelet-node pipelet-name="ImportCustomers" pipelet-set-identifier="bc_api">
+                                        <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                        <key-binding alias="File" key="ImportFile"/>
+                                        <key-binding alias="null" key="ErrorCode"/>
+                                        <key-binding alias="null" key="ErrorMsg"/>
+                                        <key-binding alias="null" key="LogFileName"/>
+                                        <key-binding alias="ImportStatus" key="Status"/>
+                                      </pipelet-node>
+                                      <node-display orientation="horizontal" x="1" y="0"/>
+                                      <branch basename="b3" source-connector="error">
+                                        <transition target-connector="in2" target-path="../../../../../b3.5">
+                                          <transition-display>
+                                            <bend-point relative-to="source" x="0" y="1"/>
+                                            <bend-point relative-to="target" x="-1" y="-1"/>
+                                          </transition-display>
+                                        </transition>
+                                      </branch>
+                                    </node>
+                                    <transition target-connector="in2" target-path="../../../../../+5"/>
+                                  </segment>
+                                </branch>
+                              </node>
+                              <simple-transition>
+                                <transition-display>
+                                  <bend-point relative-to="source" x="1" y="0"/>
+                                </transition-display>
+                              </simple-transition>
+                              <node>
+                                <pipelet-node pipelet-name="ImportCustomObjects" pipelet-set-identifier="bc_api">
+                                  <key-binding alias="File" key="ImportFile"/>
+                                  <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                                  <key-binding alias="null" key="ErrorCode"/>
+                                  <key-binding alias="null" key="ErrorMsg"/>
+                                  <key-binding alias="null" key="LogFileName"/>
+                                  <key-binding alias="ImportStatus" key="Status"/>
+                                </pipelet-node>
+                                <node-display orientation="horizontal" x="1" y="0"/>
+                                <branch basename="b3" source-connector="error">
+                                  <transition target-connector="in2" target-path="../../../../b3.4">
+                                    <transition-display>
+                                      <bend-point relative-to="source" x="0" y="1"/>
+                                      <bend-point relative-to="target" x="-1" y="-1"/>
+                                    </transition-display>
+                                  </transition>
+                                </branch>
+                              </node>
+                              <transition target-connector="in2" target-path="../../../../+4"/>
+                            </segment>
+                          </branch>
+                        </node>
+                        <simple-transition>
+                          <transition-display>
+                            <bend-point relative-to="source" x="1" y="0"/>
+                          </transition-display>
+                        </simple-transition>
+                        <node>
+                          <pipelet-node pipelet-name="ImportCoupons" pipelet-set-identifier="bc_api">
+                            <key-binding alias="File" key="ImportFile"/>
+                            <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                            <key-binding alias="null" key="ErrorCode"/>
+                            <key-binding alias="null" key="ErrorMsg"/>
+                            <key-binding alias="null" key="LogFileName"/>
+                            <key-binding alias="ImportStatus" key="Status"/>
+                          </pipelet-node>
+                          <node-display orientation="horizontal" x="1" y="0"/>
+                          <branch basename="b3" source-connector="error">
+                            <transition target-connector="in2" target-path="../../../b3.3">
+                              <transition-display>
+                                <bend-point relative-to="source" x="0" y="1"/>
+                                <bend-point relative-to="target" x="-1" y="-1"/>
+                              </transition-display>
+                            </transition>
+                          </branch>
+                        </node>
+                        <transition target-connector="in2" target-path="../../../+3"/>
+                      </segment>
+                    </branch>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="1" y="0"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <pipelet-node pipelet-name="ImportContent" pipelet-set-identifier="bc_api">
+                      <key-binding alias="File" key="ImportFile"/>
+                      <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                      <key-binding alias="dw.content.ContentMgr.getSiteLibrary()" key="Library"/>
+                      <key-binding alias="null" key="ErrorCode"/>
+                      <key-binding alias="null" key="ErrorMsg"/>
+                      <key-binding alias="null" key="LogFileName"/>
+                      <key-binding alias="ImportStatus" key="Status"/>
+                    </pipelet-node>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                    <branch basename="b3" source-connector="error">
+                      <transition target-connector="in2" target-path="../../b3.2">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                          <bend-point relative-to="target" x="-1" y="-1"/>
+                        </transition-display>
+                      </transition>
+                    </branch>
+                  </node>
+                  <transition target-connector="in2" target-path="../../+2"/>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="1" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <pipelet-node pipelet-name="ImportCatalog" pipelet-set-identifier="bc_api">
+                <key-binding alias="File" key="ImportFile"/>
+                <key-binding alias="Task['import-mode']" key="ImportMode"/>
+                <key-binding alias="null" key="ErrorCode"/>
+                <key-binding alias="null" key="ErrorMsg"/>
+                <key-binding alias="null" key="LogFileName"/>
+                <key-binding alias="ImportStatus" key="Status"/>
+                <key-binding alias="null" key="ImportConfiguration"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+              <branch basename="b3" source-connector="error">
+                <transition target-connector="in1" target-path="../b3.1">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                    <bend-point relative-to="target" x="-1" y="-1"/>
+                  </transition-display>
+                </transition>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="../+1"/>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="ImportActiveData" pipelet-set-identifier="bc_api">
+          <key-binding alias="File" key="ImportFile"/>
+          <key-binding alias="null" key="ErrorCode"/>
+          <key-binding alias="null" key="ErrorMsg"/>
+          <key-binding alias="null" key="LogFileName"/>
+          <key-binding alias="ImportStatus" key="Status"/>
+        </pipelet-node>
+        <node-display orientation="horizontal" x="1" y="0"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in2">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+              <bend-point relative-to="source" x="3" y="1"/>
+              <bend-point relative-to="target" x="0" y="-2"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="2" y="2"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node custom-name="calculate ImportRuntime" pipelet-name="Eval" pipelet-set-identifier="bc_api">
+                <config-property key="OnError" value="null"/>
+                <config-property key="Transactional" value="false"/>
+                <config-property key="Expression" value="new Date().getTime()-ImportStartTime"/>
+                <key-binding alias="ImportRuntime" key="Result"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <end-node name="PROCESS_ERROR"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <transition target-connector="in2" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="2" y="0"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="1" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node custom-name="calculate ImportRuntime" pipelet-name="Eval" pipelet-set-identifier="bc_api">
+          <config-property key="OnError" value="null"/>
+          <config-property key="Transactional" value="false"/>
+          <config-property key="Expression" value="new Date().getTime()-ImportStartTime"/>
+          <key-binding alias="ImportRuntime" key="Result"/>
+        </pipelet-node>
+        <node-display x="0" y="2"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node name="PROCESS_SUCCESS"/>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_15">
+    <segment>
+      <node>
+        <text-node>
+          <description>workaround for APP-12961: restore Orders</description>
+        </text-node>
+        <node-display x="16" y="9"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_16">
+    <segment>
+      <node>
+        <text-node>
+          <description>workaround for APP-11786: mark orders as EXPORT_STATUS_READY again (orders will remain in that state if upload fails)</description>
+        </text-node>
+        <node-display x="16" y="10"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="MarkOrdersReady">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="MarkOrdersReady" secure="false"/>
+        <node-display x="19" y="10"/>
+      </node>
+      <transition target-connector="in" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <loop-node element-key="Order" iterator-key="Orders"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="do">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <pipelet-node custom-name="Mark order EXPORT_STATUS_READY" pipelet-name="Assign" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="true"/>
+                <key-binding alias="dw.order.Order.EXPORT_STATUS_READY" key="From_0"/>
+                <key-binding alias="Order.exportStatus" key="To_0"/>
+                <key-binding alias="null" key="From_1"/>
+                <key-binding alias="null" key="To_1"/>
+                <key-binding alias="null" key="From_2"/>
+                <key-binding alias="null" key="To_2"/>
+                <key-binding alias="null" key="From_3"/>
+                <key-binding alias="null" key="To_3"/>
+                <key-binding alias="null" key="From_4"/>
+                <key-binding alias="null" key="To_4"/>
+                <key-binding alias="null" key="From_5"/>
+                <key-binding alias="null" key="To_5"/>
+                <key-binding alias="null" key="From_6"/>
+                <key-binding alias="null" key="To_6"/>
+                <key-binding alias="null" key="From_7"/>
+                <key-binding alias="null" key="To_7"/>
+                <key-binding alias="null" key="From_8"/>
+                <key-binding alias="null" key="To_8"/>
+                <key-binding alias="null" key="From_9"/>
+                <key-binding alias="null" key="To_9"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+            </node>
+            <transition target-connector="loop" target-path="..">
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+                <bend-point relative-to="source" x="-1" y="1"/>
+                <bend-point relative-to="target" x="-1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_18">
+    <segment>
+      <node>
+        <text-node>
+          <description>The Stop node makes the job show as ERROR in BM. Standard job notification for ERRORs can be used.</description>
+        </text-node>
+        <node-display x="12" y="28"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

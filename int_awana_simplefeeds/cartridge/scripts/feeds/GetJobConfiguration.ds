@@ -1,0 +1,70 @@
+/**
+ * Get Feed Job Configuration that is stored as CustomObject in
+ * database and transform tasksXML into transient DS objects.
+ *
+ * @input  JobConfigurationID : String  mandatory, FeedJobConfiguration ID
+ * @output Config : dw.object.CustomObject  job configuration object
+ * @output Tasks : dw.util.Collection  Collection of DS Objects
+ */
+
+importPackage( dw.object );
+importPackage( dw.system );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var configID : String = args.JobConfigurationID;	
+	if ( empty( configID ) )
+	{
+		Logger.getLogger("simplefeeds").error( "GetJobConfiguration: JobConfigurationID is empty" );
+		return PIPELET_ERROR;
+	}		
+		
+	Logger.getLogger("simplefeeds").debug( "GetJobConfiguration: Site: " + Site.getCurrent().ID + " ID: " + configID );
+
+	// retrieve CustomObject from database	
+	var config : CustomObject = CustomObjectMgr.getCustomObject( "FeedJobConfiguration", configID );	
+	if ( config == null )
+	{
+		Logger.getLogger("simplefeeds").error( "GetJobConfiguration: Couldn't find JobConfiguration for Site: " + Site.getCurrent().ID + " ID: " + configID );
+		return PIPELET_ERROR;
+	}
+
+	// instantiate tasks as XML object
+	var tasksXML : XML = new XML( config.custom.tasksXML );
+	
+	// create Collection of tasks
+	var tasks : ArrayList = new ArrayList();
+		
+	for each ( var taskXML : XML in tasksXML.task )
+	{
+		Logger.getLogger("simplefeeds").debug( "GetJobConfiguration: task id: " + taskXML.@id );
+		
+		var task : Object = new Object();
+		task.id = taskXML.@id.toString();
+		
+		// iterator over XML elements inside task		
+		for each ( var element : XML in taskXML.* )
+		{
+			// copy XML elements to DS Object, use element name as attribute name
+			if ( element.nodeKind() == "element" )
+			{
+				// do not log passwords
+				Logger.getLogger("simplefeeds").debug( "GetJobConfiguration: task id: " + taskXML.@id + ", " + 
+					element.localName() + ": " +
+					( ( element.localName().toLowerCase().indexOf( "password" ) == -1 ) ? 
+						element.toString() : 
+						( !empty( element.toString() ) ? "(provided)" : "(empty)" ) ) );
+				task[ element.localName() ] = element.toString();
+			}			
+		}		
+	
+		tasks.add( task );
+	}
+
+	// put objects into dictionary	
+	args.Config = config;
+	args.Tasks = tasks;	
+	
+    return PIPELET_NEXT;
+}

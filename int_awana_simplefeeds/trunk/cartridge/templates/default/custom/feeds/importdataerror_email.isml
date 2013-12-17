@@ -1,0 +1,46 @@
+<iscontent type="text/html"/>
+<isscript>
+importPackage( dw.system );
+importPackage( dw.util );
+
+var instanceName : String = !empty( System.getInstanceHostname() ) ? System.getInstanceHostname() : "(unknown)";
+
+var instanceType : Number = System.getInstanceType();
+var instanceTypeString : String = "(unknown)";
+if      ( instanceType == System.DEVELOPMENT_SYSTEM ) { instanceTypeString = 'DEVELOPMENT'; }
+else if ( instanceType == System.STAGING_SYSTEM )     { instanceTypeString = 'STAGING'; }
+else if ( instanceType == System.PRODUCTION_SYSTEM )  { instanceTypeString = 'PRODUCTION'; }
+
+var calendar : Calendar = new Calendar();
+calendar.timeZone = "GMT";
+var gmtDateString : String = StringUtils.formatCalendar( calendar, "yyyy-MM-dd HH:mm:ss" ) + " GMT";
+</isscript>
+<subject>${instanceName}: Feed Import Data Error</subject>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<body>
+<div style="font-family: verdana, sans-serif; font-size: x-small;">
+Instance Name: ${instanceName}<br/>
+Instance Type: ${instanceTypeString}<br/>
+Site: ${Site.getCurrent().ID}<br/>
+<br/>
+Feed Job Configuration: ${pdict.Config.custom.id}<br/>
+Feed Job Description: ${!empty( pdict.Config.custom.description ) ? pdict.Config.custom.description : ""}<br/>
+<br/>
+Task: ${pdict.Task.id}<br/>
+Import File: <a href="https://${instanceName}/on/demandware.servlet/webdav/Sites/Impex/src/${pdict.File}">${pdict.File}</a><br/>
+Import Mode: ${pdict.Task['import-mode']}<br/>
+<br/>
+Import Status Code: ${pdict.ImportStatus.code}<br/>
+Import Status Message: ${pdict.ImportStatus.message}<br/>
+Import Data Error Count: ${(pdict.ImportStatus.details.DataErrorCount!=null) ? pdict.ImportStatus.details.DataErrorCount : "N/A"}<br/>
+Import Log File: <isif condition="${!empty(pdict.ImportStatus.details.LogFileName)}"><a href="https://${instanceName}/on/demandware.servlet/webdav/Sites/Impex/log/${pdict.ImportStatus.details.LogFileName}">${pdict.ImportStatus.details.LogFileName}</a><iselse>N/A</isif><br/>
+Import Runtime: ${pdict.ImportRuntime/1000} s<br/>
+<br/>
+Log Files: <a href="https://${instanceName}/on/demandware.servlet/webdav/Sites/Logs/">https://${instanceName}/on/demandware.servlet/webdav/Sites/Logs/</a><br/>
+Current Date: ${gmtDateString}<br/>
+<br/>
+This is an automatically generated email, please do not reply.<br/>
+</div>
+</body>
+</html>

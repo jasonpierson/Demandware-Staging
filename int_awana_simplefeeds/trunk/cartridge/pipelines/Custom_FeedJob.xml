@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline group="Feeds" type="job">
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Feed job execution pipeline. Do not change in project.</description>
+        </text-node>
+        <node-display x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_2">
+    <segment>
+      <node>
+        <text-node>
+          <description>In:
+- JobConfiguration
+- Tasks</description>
+        </text-node>
+        <node-display x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="Start">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="Start" secure="false"/>
+        <node-display x="1" y="1"/>
+      </node>
+      <transition target-connector="in" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <loop-node element-key="Task" iterator-key="Tasks"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="do">
+          <transition target-connector="in"/>
+          <segment>
+            <node>
+              <decision-node condition-key="Task.id=='ExportAndUploadOrders'" condition-operator="expr"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="yes">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <call-node start-name-ref="Custom_FeedJob-ExportAndUploadOrders"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <transition target-connector="in3" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="2" y="0"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <call-node start-name-ref="Custom_FeedJob-DownloadAndImport"/>
+              <node-display x="1" y="1"/>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="2"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="-1" y="1"/>
+            </node>
+            <transition target-connector="loop" target-path="..">
+              <transition-display>
+                <bend-point relative-to="source" x="-1" y="0"/>
+                <bend-point relative-to="target" x="-1" y="0"/>
+              </transition-display>
+            </transition>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="1" y="0"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_4">
+    <segment>
+      <node>
+        <text-node>
+          <description>In:
+- Task</description>
+        </text-node>
+        <node-display x="5" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="DownloadAndImport">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="DownloadAndImport" secure="false"/>
+        <node-display x="5" y="1"/>
+      </node>
+      <transition target-connector="in1" target-path="./+1"/>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <call-node start-name-ref="Custom_FeedSteps-DownloadFeed"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="SUCCESS">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <call-node start-name-ref="Custom_FeedSteps-ValidateFeed"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="SUCCESS">
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="1"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <call-node start-name-ref="Custom_FeedSteps-ImportFeed"/>
+                    <node-display x="0" y="1"/>
+                    <branch basename="b2" source-connector="LOCKED">
+                      <transition target-connector="in"/>
+                      <segment>
+                        <node>
+                          <end-node/>
+                          <node-display orientation="horizontal" x="1" y="1"/>
+                        </node>
+                      </segment>
+                    </branch>
+                    <branch basename="b3" source-connector="SUCCESS">
+                      <transition target-connector="in">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                      <segment>
+                        <node>
+                          <call-node start-name-ref="Custom_FeedSteps-ArchiveFeed"/>
+                          <node-display x="0" y="1"/>
+                        </node>
+                        <transition target-connector="in1" target-path="../../+2"/>
+                      </segment>
+                    </branch>
+                  </node>
+                  <transition target-connector="in2" target-path="../+1"/>
+                </segment>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="target" x="0" y="-2"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="-1" y="2"/>
+            </node>
+            <transition target-connector="in2" target-path="./+1">
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="2"/>
+              </transition-display>
+            </transition>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="1" y="1"/>
+            </node>
+            <simple-transition>
+              <transition-display>
+                <bend-point relative-to="source" x="0" y="1"/>
+              </transition-display>
+            </simple-transition>
+            <node>
+              <call-node start-name-ref="Custom_FeedSteps-DeleteFeed"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="SUCCESS">
+                <transition target-connector="in1" target-path="..">
+                  <transition-display>
+                    <bend-point relative-to="source" x="0" y="2"/>
+                    <bend-point relative-to="source" x="-3" y="2"/>
+                    <bend-point relative-to="target" x="-3" y="0"/>
+                  </transition-display>
+                </transition>
+              </branch>
+            </node>
+            <simple-transition/>
+            <node>
+              <end-node/>
+              <node-display orientation="horizontal" x="1" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_6">
+    <segment>
+      <node>
+        <text-node>
+          <description>In:
+- Task</description>
+        </text-node>
+        <node-display x="9" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="ExportAndUploadOrders">
+    <segment>
+      <node>
+        <start-node call-mode="private" name="ExportAndUploadOrders" secure="false"/>
+        <node-display x="9" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <call-node start-name-ref="Custom_FeedSteps-ExportOrders"/>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="SUCCESS">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="0" y="1"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <call-node start-name-ref="Custom_FeedSteps-UploadFeed"/>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="SUCCESS">
+                <transition target-connector="in"/>
+                <segment>
+                  <node>
+                    <call-node start-name-ref="Custom_FeedSteps-MarkOrdersExported"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <simple-transition/>
+                  <node>
+                    <call-node start-name-ref="Custom_FeedSteps-ArchiveFeed"/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                  <simple-transition>
+                    <transition-display>
+                      <bend-point relative-to="source" x="0" y="1"/>
+                    </transition-display>
+                  </simple-transition>
+                  <node>
+                    <end-node/>
+                    <node-display x="0" y="1"/>
+                  </node>
+                </segment>
+              </branch>
+            </node>
+            <simple-transition/>
+            <node>
+              <end-node/>
+              <node-display orientation="horizontal" x="1" y="1"/>
+            </node>
+          </segment>
+        </branch>
+      </node>
+      <simple-transition/>
+      <node>
+        <end-node/>
+        <node-display orientation="horizontal" x="1" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_8">
+    <segment>
+      <node>
+        <text-node>
+          <description>This end node is reached if there was nothing to export.</description>
+        </text-node>
+        <node-display x="11" y="3"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_9">
+    <segment>
+      <node>
+        <text-node>
+          <description>This end node is reached if there are no more files to download or if there was a download error (and on-temporary-error is CONTINUE).</description>
+        </text-node>
+        <node-display x="7" y="4"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_10">
+    <segment>
+      <node>
+        <text-node>
+          <description>This end node is reached if import failed due to a locking error (and on-temporary-error is CONTINUE). We won't attempt to download the same file again and import as it is very likely that the same locking error shows again. Instead we go to the next task and repeat later.</description>
+        </text-node>
+        <node-display x="7" y="6"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_11">
+    <segment>
+      <node>
+        <text-node>
+          <description>This end node is reached if there was an upload error (and on-temporary-error is CONTINUE).</description>
+        </text-node>
+        <node-display x="11" y="4"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_12">
+    <segment>
+      <node>
+        <text-node>
+          <description>This end node is reached if the deletion of the remote file failed (and on-temporary-error is CONTINUE). We won't attempt to download the same file again as this is likely to fail as well and might create a fast running endless loop. Instead we go to the next task and repeat later.</description>
+        </text-node>
+        <node-display x="7" y="9"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

@@ -1,0 +1,51 @@
+/**
+ * Get schema filename to validate feed for given feed task ID.
+ *
+ * @input TaskID : String  mandatory, ID of a task, e.g. "DownloadAndImportCatalog"
+ * @output Schema : String  XSD file to validate the feed against, e.g. "catalog.xsd"
+ */
+
+importPackage( dw.system );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	// read parameter
+	var taskID : String = args.TaskID;
+
+    // check parameter
+    if ( empty( taskID ) )
+    {
+    	Logger.getLogger("simplefeeds").error( "GetSchemaByTaskID: Parameter TaskID empty" );
+    	return PIPELET_ERROR;
+    }
+	
+    Logger.getLogger("simplefeeds").debug( "GetSchemaByTaskID: TaskID: " + taskID );
+
+	var schema : String;
+	
+	if      ( taskID == "DownloadAndImportCatalog" ) { schema = "catalog.xsd"; }
+	else if ( taskID == "DownloadAndImportContent" ) { schema = "library.xsd"; }
+	else if ( taskID == "DownloadAndImportCoupons" ) { schema = "coupon.xsd"; }
+	else if ( taskID == "DownloadAndImportCustomObjects" ) { schema = "customobject.xsd"; }
+	else if ( taskID == "DownloadAndImportCustomers" ) { schema = "customer.xsd"; }
+	else if ( taskID == "DownloadAndImportGiftCertificates" ) { schema = "giftcertificate.xsd"; }
+	else if ( taskID == "DownloadAndImportInventoryLists" ) { schema = "inventory.xsd"; }
+	else if ( taskID == "DownloadAndImportPriceBooks" ) { schema = "pricebook.xsd"; }
+	else if ( taskID == "DownloadAndImportPromotions" ) { schema = "promotion.xsd"; }
+	else if ( taskID == "DownloadAndImportShippingMethods" ) { schema = "shipping.xsd"; }
+	else if ( taskID == "DownloadAndImportSlots" ) { schema = "slot.xsd"; }
+	else if ( taskID == "DownloadAndImportSourceCodes" ) { schema = "sourcecode.xsd"; }
+	else if ( taskID == "DownloadAndImportStores" ) { schema = "store.xsd"; }
+	else if ( taskID == "DownloadAndImportTaxTable" ) { schema = "tax.xsd"; }
+	else
+	{
+		Logger.getLogger("simplefeeds").error( "GetSchemaByTaskID: unknown TaskID " + taskID );
+		return PIPELET_ERROR;
+	}	
+
+	Logger.getLogger("simplefeeds").debug( "GetSchemaByTaskID: Schema: " + schema );
+
+	args.Schema = schema;
+
+    return PIPELET_NEXT;
+}
