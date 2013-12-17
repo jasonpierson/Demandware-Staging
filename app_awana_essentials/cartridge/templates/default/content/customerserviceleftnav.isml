@@ -1,0 +1,16 @@
+<iscache type="relative" hour="24"/>
+
+<isif condition="${!empty(pdict.CustomerServiceLinks)}">
+	<isloop items="${pdict.CustomerServiceLinks.keySet()}" var="links">
+	
+		<div class="navgroup">
+			<h3><isprint value="${links}"/></h3>
+			<ul>
+			<!-- Loop Through Customer Service Libraries -->
+			<isloop items="${pdict.CustomerServiceLinks.get(links)}" var="ContentAsset" status="loopcounter">	
+					<li><a href="${URLUtils.url('Page-Show','cid', ContentAsset.ID)}" title="${ContentAsset.ID}"><isprint value="${ContentAsset.name}"/></a></li>
+			</isloop>
+			</ul>
+		</div>		
+	</isloop><!-- END: navgroup --> 
+</isif>

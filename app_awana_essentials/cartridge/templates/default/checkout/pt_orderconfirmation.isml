@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<isinclude template="util/modules"/>
+<head>
+<iscomment>
+	Include all important information globally , e.g. meta-data, link information, and
+	javascript.
+</iscomment>
+<isinclude template="components/header/htmlhead"/>
+
+<iscomment>Add page type specific header information here.</iscomment>
+<link href="${URLUtils.staticURL('/css/print.css')}" type="text/css" rel="stylesheet" media="print" />
+	
+</head>
+<body>
+<div id="container" class="pt_orderconfirmation">
+	<isinclude template="components/header/header"/>
+	<isslot id="essentials-home-top" description="Info Graphic/Content Slot for the homepage" context="global" />
+	<isif condition="${!pdict.CurrentCustomer.authenticated}">
+			<div id="rightcolumn" style="margin-top:30px;">
+				<h3>${Resource.msg('pt_orderconfirmation.createheader','checkout',null)}</h3>
+				<div class="createaccount">
+					<form action="${URLUtils.httpsContinue()}" method="post" id="OC_createaccount">
+						<fieldset>
+							<p>${Resource.msg('pt_orderconfirmation.accountmessage','checkout',null)}</p>
+							<isif condition="${pdict.errorMessage!=null}">
+								<p><div style="color:red;">${pdict.errorMessage}</div></p>
+							</isif>
+							<div class="formfields">
+								<!---  
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.customer.firstname}" type="input">
+									<div class="clear"></div>
+								</div>
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.customer.lastname}" type="input">
+									<div class="clear"></div>
+								</div>
+								--->
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.customer.email}" type="input">
+									<div class="clear"></div>
+								</div>
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.customer.emailconfirm}" type="input">
+									<div class="clear"></div>
+								</div>
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.login.password}" type="password">
+									<div class="clear"></div>
+								</div>
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.login.passwordconfirm}" type="password">
+									<div class="clear"></div>
+								</div>
+								<!--- Not needed for integrated login for awana  
+								<div class="formfield question">
+									<isinputfield formfield="${pdict.CurrentForms.profile.login.question}" type="select">
+									<div class="clear"></div>
+								</div>
+								<div class="formfield">
+									<isinputfield formfield="${pdict.CurrentForms.profile.login.answer}" type="input">
+									<div class="clear"></div>
+								</div>
+								--->
+								<input type="hidden" name="${pdict.CurrentForms.profile.secureKeyHtmlName}" value="${pdict.CurrentForms.profile.secureKeyValue}"/>
+								<div class="actions">
+									<button type="submit" value="${Resource.msg('global.createbutton','locale',null)}" name="${pdict.CurrentForms.profile.confirm.htmlName}" onclick="javascript:document.forms['OC_createaccount'].submit();"><span>${Resource.msg('global.createbutton','locale',null)}</span></button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				<div id="rightLeftColumn">
+					<isinclude url="${URLUtils.url('Account-IncludeNavigation')}"/>
+	                <div class="accountnavtext">
+	                        <iscontentasset aid="account-nav-text">
+	                </div>
+                </div>
+			</div>
+		</isif>
+	<isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+	<div id="main">
+		<div id="content">
+			<isreplace/>
+		</div>
+	
+		<isif condition="${!empty(pdict.CurrentCustomer.profile) && pdict.CurrentCustomer.profile.custom.IsChurchRewardsSponsor}">
+			<isscript>
+				// calculate the total number of reward points in the cart, based on price
+				// do not count bonus line items
+				var pointTotal : Number = 0;
+				for each (var shipment in pdict.Order.shipments) {
+					var pliIt : dw.util.Iterator = shipment.productLineItems.iterator();			
+					while (pliIt.hasNext()) {
+						var pli : dw.order.ProductLineItem = pliIt.next();
+						if (!empty(pli.product.custom.ProductType) && pli.product.custom.ProductType=="RewardsQualifying") {
+							pointTotal += Math.ceil(pli.adjustedPrice);
+						}
+					}
+				}		
+			</isscript>
+			<isif condition="${pointTotal>0 || pointsgained>0}">
+				<ischurchrewards pointsgained="${pointTotal}" />	
+			</isif>
+		</isif>
+		
+		<iscomment>Provide a create account form for unregistered customers</iscomment>
+		
+	</div>
+	<isinclude template="components/footer/footer"/>
+</div>
+
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+	<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+		<!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+		<script type="text/javascript">
+		var __ALC_Deployment = 10437;
+		document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<!-- END Salesforce Live Agent Deployment Code -->
+	</isif>	
+</body>
+</html>

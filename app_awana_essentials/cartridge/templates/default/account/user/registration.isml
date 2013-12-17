@@ -1,0 +1,200 @@
+<isdecorate template="account/pt_account">
+<isinclude template="util/modules"/>
+
+<iscomment>
+	Check to see if this is a b2b user or a b2c, only b2c can edit these values here.  
+	Read only for b2b with a content asset that instructs them where they can edit info.
+</iscomment>
+<isif condition="${!empty(pdict.CurrentCustomer) && pdict.CurrentCustomer.authenticated && pdict.CurrentCustomer.profile.custom.CustomerType == 'Individual'}">
+	<isset name="allowEdit" value="${false}" scope="page"/>
+<iselse>
+	<isset name="allowEdit" value="${true}" scope="page"/>
+</isif>
+
+<iscomment>Builds a registration page for the user. It provides all input fields for names and address</iscomment>
+<div class="registration">
+	<div class="registrationheader">
+		<iscontentasset aid="registration-header">
+		<div class="clear"></div>
+	</div>
+	<div class="registrationcontent">
+		<h4>${Resource.msg('registration.church','account',null)}</h4>
+		<iscontentasset aid="registration-church">
+		<div class="clear"></div>
+	</div>
+	
+	<div class="registrationform">
+	<form action="${URLUtils.httpsContinue()}" method="post" id="RegistrationForm">
+		<fieldset>
+			<h4>${Resource.msg('registration.name','account',null)}</h4>
+			<div class="formfields">
+				<div class="formfield">
+					<div class="value"><span class="requiredmessage">${Resource.msg('global.requiredfield','locale',null)}</span></div>
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isif condition="${allowEdit}"> 
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.firstname}" type="input">
+					<iselse>
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.firstname}" attribute1="disabled" value1="true" type="input">
+					</isif>
+					<div class="clear"></div>
+				</div><!-- END: firstname -->
+				<div class="formfield">
+					<isif condition="${allowEdit}"> 
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.lastname}" type="input">
+					<iselse>
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.lastname}" attribute1="disabled" value1="true" type="input">
+					</isif>
+					<div class="clear"></div>
+				</div>
+			</div><!-- END: formfields -->
+			<h5>${Resource.msg('registration.logininfo','account',null)}</h5>
+			<isif condition="${pdict.errorMessage!=null}">
+				<div class="errorform">${pdict.errorMessage}</div>
+			</isif>
+			<div class="formfields">
+				<div class="formfield">
+					<isif condition="${allowEdit}"> 
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.email}" type="input">
+					<iselse>
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.email}" attribute1="disabled" value1="true" type="input">
+					</isif>
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isif condition="${allowEdit}"> 
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.emailconfirm}" type="input">
+					</isif>
+					<div class="clear"></div>
+				</div>
+				<isif condition="${allowEdit}">
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.profile.login.password}" type="password">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.profile.login.passwordconfirm}" type="password">
+						<div class="clear"></div>
+					</div>
+				</isif>
+				
+				<iscomment>
+				Since we are using openid for authentication, we do not need these fields
+				</iscomment>
+				<!---    
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.profile.login.question}" type="select">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.profile.login.answer}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<div class="emailsignupcheckbox">
+						<isinputfield formfield="${pdict.CurrentForms.profile.customer.addtoemaillist}" type="checkbox" label="false" class="checkinput">
+					</div>	
+					<div class="emailsignup">
+						<span>${Resource.msg('global.email.policy','locale',null)}</span>
+						<a title="Privacy Policy" id="privacyPolicy">${Resource.msg('global.privacypolicy','locale',null)}</a>
+					</div>
+					<div class="clear"></div>
+				</div>
+				--->
+				<isif condition="${allowEdit}">
+					<div class="formactions">
+						<button type="button" onclick="submitForm();" value="${Resource.msg('global.apply','locale',null)}" name="${pdict.CurrentForms.profile.confirm.htmlName}"><span>${Resource.msg('global.apply','locale',null)}</span></button>
+					</div>
+				<iselse>
+					<iscomment>Put content asset here that contains information on how users can edit this info as a b2b customer.</iscomment>
+				</isif>
+				<div id="registrationformaction"></div>	
+			</div><!-- END: formfields -->
+		</fieldset>
+	</form>
+	</div><!-- END: registrationform -->
+	<div class="clear"></div>
+</div><!-- END: registration -->
+
+<div class="privacypolicy" id="privacypolicy" style="display:none;overflow:auto;">
+	<iscontentasset aid="privacy-policy">
+</div>
+	
+<script type="text/javascript"><!--
+	var loginChanged = false;
+	var nameChanged = false;
+	app.URLs.submitFormURL = "${URLUtils.url('Account-UpdateName')}"
+	
+	function submitForm() {
+		// if firstname/lastname change and no other field update the data via AJAX
+		// otherwise do normal submit				
+		if (nameChanged && !loginChanged) {
+
+			if (jQuery("#RegistrationForm").validate().element( "[name=${pdict.CurrentForms.profile.customer.firstname.htmlName}]" ) && 
+					jQuery("#RegistrationForm").validate().element( "[name=${pdict.CurrentForms.profile.customer.lastname.htmlName}]" )) {
+				
+				var post = jQuery('#RegistrationForm').serialize();
+				
+		  		jQuery.ajax({
+				   type: "POST",
+				   url: app.URLs.submitFormURL,
+				   data: post,
+				   dataType: 'html',
+				   success: function(data){
+						var showurl = "${URLUtils.https('Account-Show')}";
+						window.location.href = showurl;
+				   },
+				   failure: function(data) {
+				   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+				   }
+				});
+			}
+		} else {
+			jQuery('#registrationformaction').append("<input name='${pdict.CurrentForms.profile.confirm.htmlName}' type='hidden' />");
+			jQuery("#RegistrationForm").submit();
+		}
+	}
+
+	jQuery(document).ready(function() {	
+		
+	 	jQuery('#privacypolicy').dialog({
+	 			bgiframe: true,
+				autoOpen: false,
+				modal: true,
+		    	height: 480,
+		    	width: 600,
+		    	title: '${Resource.msg('global.privacypolicy','locale',null)}',
+		    	resizable: false
+		});
+						
+		jQuery('#privacyPolicy').click( function() {
+			jQuery('#privacypolicy').show();
+			jQuery('#privacypolicy').dialog('open');
+		});
+
+		// keep track of which fields are changed, firstname/lastname are nameChanged, all others are loginChanged
+		jQuery('input').change(function(formField) {			
+	        if (formField.currentTarget.id.indexOf("${pdict.CurrentForms.profile.login.htmlName}") >= 0) {  
+	        	loginChanged = true;
+	        } else if (formField.currentTarget.id.indexOf("${pdict.CurrentForms.profile.customer.email.htmlName}") >= 0) {
+	        	loginChanged = true;
+	        } else if ((formField.currentTarget.id.indexOf("${pdict.CurrentForms.profile.customer.firstname.htmlName}") >= 0) || 
+	    	        (formField.currentTarget.id.indexOf("${pdict.CurrentForms.profile.customer.lastname.htmlName}") >= 0)) {  
+	        	nameChanged = true;    
+	        }   
+		});
+
+		// if the select box has a change set the flag
+		jQuery('select').change(function(e) {
+			loginChanged = true;
+		});
+
+		// clear out formfields that could be part of autocomplete
+	    jQuery("[name=${pdict.CurrentForms.profile.customer.emailconfirm.htmlName}]").val("");
+	    jQuery("[name=${pdict.CurrentForms.profile.login.password.htmlName}]").val("");	 
+	    jQuery("[name=${pdict.CurrentForms.profile.login.passwordconfirm.htmlName}]").val("");	       
+	});
+//--></script>
+	
+</isdecorate>

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
+	<isinclude template="components/header/htmlhead"/>
+
+	<meta property="og:title" content="${pdict.Product.name}" />
+	<meta property="og:type" content="product" />
+	<meta property="og:image" content="${pdict.Product.getImage('large',0).url}" />
+	<meta property="og:url" content="${URLUtils.http('Product-Show', 'pid', pdict.Product.ID)}" />
+	<meta property="og:site_name" content="Awana" />
+	<meta property="fb:admins" content="60711375"/>
+	<meta property="og:description" content="${pdict.Product.shortDescription}" />
+
+	<iscomment>Add page type specific header information here.</iscomment>
+	<link href="${URLUtils.staticURL('/css/print.css')}" type="text/css" rel="stylesheet" media="print" />
+	<link rel="canonical" href="${URLUtils.url('Product-Show','pid',pdict.Product.ID)}">
+
+	<iscomment>search specific javascript</iscomment>
+	<script src="${URLUtils.staticURL('/js/searchresults.js')}" type="text/javascript"></script>
+	<!---<script src="${URLUtils.staticURL('/js/compare.js')}" type="text/javascript"></script>--->
+	
+	<style type="text/css">
+		/* GALLERY STYLE */
+		${'#'}gallery {}
+		${'#'}gallery ul { list-style: none; }
+		${'#'}gallery ul li { display: inline; }
+		${'#'}gallery ul img {
+			border: 2px solid #c68ffb;
+			-moz-border-radius: 5px; -webkit-border-radius: 5px;
+		}
+		${'#'}gallery ul a:hover img {
+			border: 2px solid #fff;
+		}
+		${'#'}gallery ul a:hover { color: #fff; }
+	</style>
+</head>
+<body>
+	<div id="container" class="pt_account">
+		<isinclude template="components/header/header"/>
+		
+		<isif condition="${!isQuickView && !empty(pdict.Product) && !empty(pdict.Product.ID)}">
+			<isinclude url="${URLUtils.url('Product-Recommendations', 'pid', pdict.Product.ID, 'size', '4', 'rectype', '1')}"/>
+		</isif>
+		<isif condition="${!empty(pdict.ProductSearchResult.category)}">
+			<isset name="TheCategory" value="${pdict.ProductSearchResult.category}" scope="page"></isset>
+		<iselse/>
+			<isset name="TheCategory" value="${pdict.Product.primaryCategory}" scope="page"></isset>
+		</isif>
+		<isslot id="cat-banner" context="category" description="Category Banner" context-object="${TheCategory}"/>
+		
+		<isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+		
+		<isscript>
+			importPackage( dw.catalog );
+			
+			// get root category of current site's navigation catalog
+			var siteCatalog : Catalog = CatalogMgr.getSiteCatalog();
+			var root : Catalog = null;
+			
+			if(siteCatalog != null) {
+				root = siteCatalog.getRoot();
+			}
+			
+			// get the "sale" category
+			//var saleCategory : Catalog = CatalogMgr.getCategory('sale');
+		</isscript>
+		
+		<div id="main">
+			<ul class="subcatNavStatic" style="display:none;">
+		        <li class="subcatHome"><a href="${URLUtils.url('Home-Shop')}#Home">Home</a></li>
+		        <li><a href="${URLUtils.url('Home-Shop')}#Gospel">Gospel Message</a></li>
+		        <li><a href="${URLUtils.url('Home-Shop')}#Spiritual" class="spiritualDev">Spiritual Development</a></li>
+		        <li><a href="${URLUtils.url('Home-Shop')}#Belonging">Belonging</a></li>
+		        <li><a href="${URLUtils.url('Home-Shop')}#Recognition">Recognition</a></li>
+		        <li><a href="${URLUtils.url('Home-Shop')}#Leaders">Leaders</a></li>
+				<li><a href="${URLUtils.url('Home-Shop')}#Fun">Fun &amp; Promotion</a></li>
+		    </ul>
+			<isif condition="${root != null}">
+				<isloop items="${root.getOnlineSubCategories()}" var="topCat">
+					<isif condition="${('showInMenu' in topCat.custom) && topCat.custom.showInMenu.valueOf()}">
+						<isif condition="${topCat.getOnlineSubCategories().length > 0}">
+							<!--[if lte IE 6]><table><tr><td><![endif]-->
+							<ul class="subcatNav" id="${topCat.getID()}">
+								<li class="subcatHome"><a href="${URLUtils.url('Home-Shop')}">Home</a>
+								<isloop items="${topCat.getOnlineSubCategories()}" var="subCat">
+									<isset name="thisSubCatProductList" value="${subCat.getOnlineProducts()}" scope="page" />
+									<isset name="thisSubCatProduct" value="${subCat.getOnlineProducts()[0]}" scope="page" />
+									
+									<isif condition="${('showInMenu' in subCat.custom) && subCat.custom.showInMenu.valueOf()}">
+										<li id="${subCat.getID()}">
+											<isif condition="${thisSubCatProductList.size() != 1}">
+												<a href="${URLUtils.http('Search-Show', 'cgid', subCat.getID())}"><isprint value="${subCat.getDisplayName()}"/></a>
+											<iselse>
+												<a href="${URLUtils.http('Product-Show', 'pid', thisSubCatProduct.getID(), 'cgid', subCat.getID())}"><isprint value="${subCat.getDisplayName()}"/></a>
+											</isif>
+					                    </li>
+					                </isif>
+								</isloop>
+		                   	</ul>
+			            	<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+		            	</isif>
+			    	</isif>
+				</isloop>
+			    <div class="clear"></div>
+			</isif>
+			
+			<isif condition="${pdict.Product.primaryCategory.getID()}">
+			
+				<div id="catName">${pdict.Product.primaryCategory.getID()}</div>
+				
+				<script type="text/javascript">
+					var subcatName = $("#catName").html();
+					var subcatDash = subcatName.indexOf("-");
+					if(subcatDash > 0) {
+						var catName = subcatName.substring(0,subcatDash);
+					} else {
+						var catName = subcatName;
+					}
+					$("#"+catName).css("display","block");
+					$("#"+catName+"Nav a").addClass("primaryNavActive");
+					if(catName != subcatName) {
+						$("#"+subcatName+" a").addClass("subcatActive");
+					}
+					if(!$("#"+catName).html()) {
+						$(".subcatNavStatic").show();
+					}
+				</script>
+			<iselse>
+				<link rel="stylesheet" href="${URLUtils.staticURL('/css/no-border.css')}" type="text/css" />
+			</isif>
+			<div id="content">
+				
+				<isreplace/>
+				
+				<iscomment>include the JS refinements update script</iscomment>
+				<isinclude template="search/components/jsrefinementsupdate" />
+			
+			</div>
+			<div class="clear"></div>
+		</div>
+		</div>
+		<isinclude template="components/footer/footer"/>
+	</div>
+	
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+	<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+		<!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+		<script type="text/javascript">
+		var __ALC_Deployment = 10437;
+		document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<!-- END Salesforce Live Agent Deployment Code -->
+	</isif>	
+</body>
+</html>

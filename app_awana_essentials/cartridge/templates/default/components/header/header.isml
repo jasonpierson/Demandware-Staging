@@ -1,0 +1,70 @@
+<div id="wrapper">
+	<div id="header">
+		<div id="siteSelector">
+			<a href="${Resource.msg('url.awana','common',null)}"><img src="${URLUtils.staticURL('images/topnav/top-nav-org.gif')}" width="153" height="52" alt="Awana" /></a>
+			<a href="http://store.awana.org"><img src="${URLUtils.staticURL('images/topnav/top-nav-store.gif')}" width="212" height="52" alt="Awana Store" /></a>
+			<img src="${URLUtils.staticURL('images/topnav/top-nav-essentials.gif')}" width="242" height="52" alt="Essentials Store" />
+			<img src="${URLUtils.staticURL('images/topnav/top-nav-search.gif')}" width="10" height="52" alt="" />
+			<div class="fl">
+	    		<isinclude template="search/simplesearch" />
+		    	<div id="livechat">
+		    		<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+		    			<iscontentasset aid="live-chat-code">
+		    		<iselse>
+		    			<iscomment>Just put a placeholder here for dev and sandboxes</iscomment>
+		    			<a href="${'#'}">Live Chat <img src="${URLUtils.staticURL('images/topnav/top-nav-chat-bubble.png')}" alt="Live Chat - Chat Now" title="Chat Now" /></a>
+		    		</isif>
+		    	</div>
+	    	</div>
+		</div>
+		<div class="clear"></div>
+		<div style="height:25px;"></div>
+		
+		<div class="logo">
+			<a href="${Resource.msg('url.awana','common',null)}" title="${Resource.msg('global.storename','locale',null)}"></a>
+		</div>
+		 
+		<div class="fr">
+		    <ul class="generalnav">
+		        <li class="fl">
+					<isinclude url="${URLUtils.url('Home-IncludeHeaderCustomerInfo')}" />
+					<span class="divider">|</span>
+				</li>
+				
+				<isif condition="${pdict.CurrentCustomer.authenticated}">
+					<isif condition="${!empty(pdict.CurrentCustomer.profile) && pdict.CurrentCustomer.profile.custom.CustomerType == 'Commander' && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+						<li class="fl">
+							${pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchPointsAvailable} redeemable pts
+							<span class="divider">|</span>
+						</li>	
+					</isif>
+				</isif>		
+				
+				<li class="fl">
+					<a href="${URLUtils.http('CustomerService-Show')}" title="${Resource.msg('global.helplink','locale',null)}">
+						${Resource.msg('global.helplink','locale',null)}
+					</a>
+					<span class="divider">|</span>
+				</li>
+				<li class="fl">
+		   			<div id="minicart" class="minicart">
+		   				<isinclude url="${URLUtils.url('Cart-MiniCart')}" />
+		   			</div>
+				</li>
+		        <div class="clear"></div>
+	
+		    </ul>
+	    </div>
+	    
+		<div class="clear"></div>
+	
+		<div style="height:10px;"></div>
+		
+		
+	
+	
+	    
+	</div>
+	
+	<iscomment>Cookies and Javascript enabled check</iscomment>
+	<isinclude template="components/browsertoolscheck"/>

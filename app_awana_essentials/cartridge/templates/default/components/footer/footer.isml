@@ -1,0 +1,51 @@
+<iscomment>
+	This is the footer for all pages. Be careful caching it if it contains
+	user dependent information. Cache its elements instead if necessary (do not forget
+	to change the isinclude into a pipeline include for that).
+</iscomment>
+<div style="height:15px; clear:both;"></div>
+<div id="footer">
+	<div id="footer_content">
+		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'footer-copy')}" />
+	
+		<img src="${URLUtils.staticURL('/images/footer-blue-bar.gif')}" width="1" height="107" id="footerBlueBar" alt="" />
+	
+		<div id="footer_media">
+			<div id="connect">
+				<h6>Stay Connected</h6>
+				<form>
+				<div id="email_signup">
+					Want to signup for Awana newsletter? <a href="http://www2.awana.org/subscriptions/" target="_blank">Click here</a>
+				</div>
+				</form>
+				
+				<div id="social_media">
+					<img src="${URLUtils.staticURL('/images/social-media-arrow.png')}" width="45" height="30" id="SoMeArrow" alt="Arrow" />
+					<ul>
+						<li id="facebook">
+							<a href="http://www.facebook.com/pages/Streamwood-IL/AWANA/62342221439?ref=ts" target="_blank"><img src="${URLUtils.staticURL('/images/facebook-icon.png')}" alt="facebook" width="31" height="30" /></a>
+						</li>
+						<li id="twitter">
+							<a href="http://www.twitter.com/awana" target="_blank"><img src="${URLUtils.staticURL('/images/twitter-icon.png')}" alt="twitter" width="31" height="30" /></a>
+						</li>
+						<li id="pinterest">
+							<a href="http://pinterest.com/awana/" target="_blank"><img src="${URLUtils.staticURL('/images/pinterest-icon.png')}" alt="pinterest" width="31" height="30" /></a>
+						</li>
+						<li id="youtube">
+							<a href="http://www.youtube.com/user/awana1950" target="_blank"><img src="${URLUtils.staticURL('/images/youtube-icon.png')}" alt="youtube" width="30" height="30" /></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<iscomment>
+	Customer registration can happen everywhere in the page flow. As special tag in the pdict
+	is indicating it. So we have to check on every page, if we have to report this event for
+	the reporting engine.
+</iscomment>
+<isinclude template="util/reporting/ReportUserRegistration.isml"/>
+<isinclude url="${URLUtils.url('SeeWhy-Include')}"/>
+</div>

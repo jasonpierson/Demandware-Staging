@@ -1,0 +1,46 @@
+<iscache type="relative" hour="24" varyby="price_promotion" />
+
+<iscomment>
+	This template displays a 3-level category tree as top navigation.
+	Only categories marked with showInMenu are shown.
+</iscomment>
+
+<isscript>
+	importPackage( dw.catalog );
+	
+	// get root category of current site's navigation catalog
+	var siteCatalog : Catalog = CatalogMgr.getSiteCatalog();
+	var root : Catalog = null;
+	
+	if(siteCatalog != null) {
+		root = siteCatalog.getRoot();
+	}
+	
+	// get the "sale" category
+	//var saleCategory : Catalog = CatalogMgr.getCategory('sale');
+</isscript>
+
+<isif condition="${root != null}">
+	<div class="categorymenu">
+		<ul>
+		<isloop items="${root.getOnlineSubCategories()}" var="topCat">
+			<isif condition="${('showInMenu' in topCat.custom) && topCat.custom.showInMenu.valueOf()}">
+				<li id="${topCat.getID()}Nav">
+					<isif condition="${topCat.getOnlineSubCategories().length > 0}">
+						<isset name="firstSubCat" value="${topCat.getOnlineSubCategories()[0]}" scope="page" />
+						<isset name="firstSubCatProductList" value="${firstSubCat.getOnlineProducts()}" scope="page" />
+						<isif condition="${firstSubCatProductList.size() != 1}">
+							<a href="${URLUtils.http('Search-Show', 'cgid', firstSubCat.getID())}"><isprint value="${topCat.getDisplayName()}"/></a>
+						<iselse>
+							<isset name="firstSubCatProduct" value="${firstSubCat.getOnlineProducts()[0]}" scope="page" />
+							<a href="${URLUtils.http('Product-Show', 'pid', firstSubCatProduct.getID(), 'cgid', firstSubCat.getID())}"><isprint value="${topCat.getDisplayName()}"/></a>
+						</isif>
+	            	</isif>
+	            </li>
+	    	</isif>
+		</isloop>
+		</ul>
+	    <div class="clear"></div>
+	</div>
+	
+</isif>

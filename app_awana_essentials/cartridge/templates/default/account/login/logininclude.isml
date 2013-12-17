@@ -1,0 +1,46 @@
+<iscomment>Login Unsuccessful Error Message</iscomment>
+<isif condition="${!pdict.CurrentForms.login.loginsucceeded.valid}">
+	<div class="errorform">${Resource.msg('logininclude.loginerror','account',null)}</div>
+</isif>
+
+<div class="logincustomers">
+	<div class="rightcolumn_top"></div>
+	<div class="rightcolumn_mid">
+		<h3>${Resource.msg('logininclude.customersheader','account',null)}</h3>
+		<div class="returningcustomers">
+			<p>${Resource.msg('logininclude.registered','account',null)}</p>
+			<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.login.htmlName}">
+				<fieldset>
+					<div class="formfield username">
+						<isinputfield formfield="${pdict.CurrentForms.login.username}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield password">
+						<isinputfield formfield="${pdict.CurrentForms.login.password}" type="password">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield rememberme">
+						<isinputfield formfield="${pdict.CurrentForms.login.rememberme}" type="checkbox">
+					</div>
+					<div class="formactions">
+						<button class="login" type="submit" value="${Resource.msg('global.login','locale',null)}" name="${pdict.CurrentForms.login.login.htmlName}"></button>
+					</div>
+					<div class="forgotpassword">
+						<iscontentasset aid="forgot-password">
+						<!---<a id="PasswordReset" title="${Resource.msg('logininclude.forgotpassword','account',null)}">${Resource.msg('logininclude.forgotpassword','account',null)}</a>--->
+					</div>
+				</fieldset>
+			</form>
+			<isif condition="${pdict.TargetPipeline != 'Account-Show'}">
+				<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.cart.dynamicHtmlName}" class="cartcontinue">
+					<fieldset>
+						<iscomment>cancel class is required by client side validation plugin to bypass validation for this action</iscomment>
+						<button id="rightColCreateAcct" type="submit" value="${Resource.msg('global.createbutton','locale',null)}" name="${pdict.CurrentForms.cart.register.htmlName}">Create Account</button>							
+					</fieldset>
+				</form>
+			</isif>
+		</div>
+		
+	</div>
+	<div class="rightcolumn_btm"></div>
+</div>

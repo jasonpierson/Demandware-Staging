@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<isinclude template="util/modules"/>
+<head>
+	<iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
+	<isinclude template="components/header/htmlhead"/>
+</head>
+<body>
+<div id="container" class="pt_account">
+	<isinclude template="components/header/header"/>
+	<isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+	<div id="main">
+		<div id="leftcolumn">
+			<isinclude url="${URLUtils.url('Account-IncludeNavigation')}"/>
+			<div class="accountnavtext"><iscontentasset aid="account-nav-text"></div><!-- END: accountnavtext -->
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div><!-- END: leftcolumn -->
+		<div id="content">
+			<isreplace/>
+		</div><!-- END: content -->
+		<div class="clear"><!-- FLOAT CLEAR --></div>
+	</div><!-- END: main -->
+	<isinclude template="components/footer/footer"/>
+</div><!-- END: container -->
+<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+	<script type="text/javascript">
+		var __ALC_Deployment = 7483;
+		document.write(unescape("%3Cscript src='"+document.location.protocol+"//www.activalive.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+</isif>
+</body>
+</html>

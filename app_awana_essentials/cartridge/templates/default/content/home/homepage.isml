@@ -1,0 +1,53 @@
+<iscache type="relative" hour="24"/>
+
+<isdecorate template="content/home/pt_storefront">
+	
+	<div class="homepage" style="position:relative;display:block;">
+		
+		<isslot id="home-main" description="Homepage Main" context="global" />
+		
+		<div style="height:10px;"></div>
+		
+		<div class="clear"></div>
+		
+		<isslot id="home-featured" description="Homepage Featured Products" context="global" />
+		<div class="clear"></div>
+		
+	</div>
+
+	<script type="text/javascript">
+	
+		function mycarousel_initCallback(carousel) {
+			jQuery("#mf_pagination a").bind("click", function() {
+				var num = jQuery(this).text();
+				carousel.scroll(jQuery.jcarousel.intval(num));
+				return false;
+			});
+		
+		};
+		
+		function makeActive( carousel, item, num, state ) {
+			var par = jQuery("#mf_pagination").eq(0);
+			
+			jQuery(".page-trigger", par).removeClass("active");
+			jQuery(".trigger-"+num, par).addClass("active");
+			
+			jQuery(par).attr("target", num );
+		}
+
+		jQuery("${'#'}shop_by_club").jcarousel();
+		
+		var target = jQuery("#mainfeatures");
+		target.jcarousel({
+			initCallback: mycarousel_initCallback,
+			itemVisibleInCallback: {
+				onBeforeAnimation: makeActive
+			},
+			wrap: "last",
+			scroll: 1,
+			auto: 12
+		});
+		
+	</script>
+	
+</isdecorate>

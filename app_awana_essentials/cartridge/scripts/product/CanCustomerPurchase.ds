@@ -1,0 +1,111 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*   @input CurrentCustomer : dw.customer.Customer
+*   @input Product : dw.catalog.Product
+*   @input calledFrom : String
+*   @output allowPurchase : Boolean
+*   @output reasonAllowPurchaseRejected : String
+*
+*/
+importPackage(dw.system);
+importPackage(dw.customer);
+
+function execute( args : PipelineDictionary ) : Number
+{
+	try {
+		args.allowPurchase = false;
+		var customerGroup : dw.customer.CustomerGroup;
+		/***********************************************************************************
+		 ITERATE THROUGH THE CUSTOMER GROUPS THAT ARE ALLOWED TO PURCHASE THIS PRODUCT
+		***********************************************************************************/ 
+		if (!empty(args.Product) && !empty(args.Product.custom) && !empty(args.Product.custom.RestrictedPurchaseCustomerGroupID)) {
+			for (var i = 0; i < args.Product.custom.RestrictedPurchaseCustomerGroupID.length; i++) 
+			{
+				/***********************************************************************************
+				 IF THE PRODUCT BELONGS TO THE EVERYONE CUSTOMER GROUP, ALLOW THE CUSTOMER TO 
+				 PURCHASE THE PRODUCT
+				***********************************************************************************/				
+				if(args.Product.custom.RestrictedPurchaseCustomerGroupID[i] == 'Everyone') {
+					args.allowPurchase = true;
+				/***********************************************************************************
+				 IF THIS IS A REDEEMABLE PRODUCT THROUGH THE REWARDS PROGRAM AND THE PROGRAM IS NOT
+				 RUNNING, DO NOT ALLOW THE CUSTOMER TO PURCHASE THE PRODUCT
+				***********************************************************************************/					
+				} else if (!empty(args.Product.custom.ProductType.value) && args.Product.custom.ProductType.value == 'RewardsRedeemable' && !dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')) {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.rewardsprogramnotactive','product',null);
+					break;
+				} else {
+					if (!empty(args.CurrentCustomer) && !empty(args.CurrentCustomer.customerGroups)) {
+						/***********************************************************************************
+						 ITERATE THROUGH THE CUSTOMER GROUPS THAT THIS CUSTOMER BELONGS TO
+						***********************************************************************************/					
+						for each (customerGroup in args.CurrentCustomer.customerGroups) {
+							/***********************************************************************************
+							 IF THE CUSTOMER AND THE PRODUCT BELONG TO THE SAME CUSTOMER GROUP, ALLOW THE
+							 CUSTOMER TO PURCHASE THE PRODUCT
+							***********************************************************************************/							
+							if (customerGroup.ID == args.Product.custom.RestrictedPurchaseCustomerGroupID[i]) {
+								args.allowPurchase = true;
+								break;
+							}
+						}
+					}
+				}
+				if (args.allowPurchase) {
+					break;
+				}				
+			}
+			/***********************************************************************************
+			 GIVE THE REASON THE PURCHASE WAS REJECTED
+			***********************************************************************************/			
+			if (!args.allowPurchase && empty(args.reasonAllowPurchaseRejected)) {
+				if (!empty(args.Product.custom.ProductType.value) && args.Product.custom.ProductType.value == 'Donation') {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.donatenow','product',null);
+				} else if (!empty(args.Product.custom.ProductType.value) && args.Product.custom.ProductType.value == 'RewardsRedeemable' && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')) {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.rewardsnotcommander','product',null);
+				} else if (!empty(args.Product.custom.ProductType.value) && args.Product.custom.ProductType.value == 'Registration') {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.noregistration','product',null);
+				} else if (!empty(args.Product.custom.ProductType.value) && args.Product.custom.ProductType.value == 'HomeSchool') {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.nothomeschool','product',null);										
+				} else if (empty(args.Product.custom.ProductType.value)) {
+					args.reasonAllowPurchaseRejected = dw.web.Resource.msg('product.notpublicmsg','product',null);
+				}
+			}
+		}
+	}
+	
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+	
+	if (args.calledFrom == 'Pipeline') {
+		return PIPELET_NEXT;
+	} else if (args.calledFrom == 'Template') {
+		var returnParameterArray : Array = new Array();
+		/****************************************************************************************************
+		 do NOT change the order the following parameters are added to the array.
+		 at present the array positions are hard coded in product/product.isml(addToCart section)
+		 until passing multiple parameters back to a template is supported
+		****************************************************************************************************/
+		returnParameterArray.push(args.allowPurchase);
+		returnParameterArray.push(args.reasonAllowPurchaseRejected);
+		return returnParameterArray;
+	}
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+        <isinclude template="util/modules"/>
+        <head>
+                <iscomment>Include all important information globally , e.g. meta-data, link information, javascript.</iscomment>
+                <isinclude template="components/header/htmlhead">
+        </head>
+        <body>
+                <div id="container" class="pt_account">
+                        <isinclude template="components/header/header"/>
+                        <isslot id="essentials-home-top" description="Info Graphic/Content Slot for the homepage" context="global" />
+                        <div id="leftcolumn">
+                            <div class="leftcolumn_mid">
+                                <isinclude url="${URLUtils.url('Account-IncludeNavigation')}"/>
+                                <div class="accountnavtext">
+                                        <iscontentasset aid="account-nav-text">
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                        <isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+                        <div id="main">
+                       		<ul class="subcatNavStatic">
+						        <li class="subcatHome"><a href="${URLUtils.url('Home-Shop')}#Home">Home</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Gospel">Gospel Message</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Spiritual" class="spiritualDev">Spiritual Development</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Belonging">Belonging</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Recognition">Recognition</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Leaders">Leaders</a></li>
+						        <li><a href="${URLUtils.url('Home-Shop')}#Fun">Fun &amp; Promotion</a></li>
+						    </ul>
+                               <div id="content">
+                                       <isreplace/>
+                               </div>
+                               <div class="clear"></div>
+                                
+                        </div>
+                        <isinclude template="components/footer/footer"/>
+                </div>
+                <iscomment>Live chat js include, only activate in production or staging??</iscomment>
+                <isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+                        <!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+                        <script type="text/javascript">
+                        var __ALC_Deployment = 10437;
+                        document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+                        </script>
+                        <!-- END Salesforce Live Agent Deployment Code -->
+                </isif> 
+</body>
+</html>

@@ -1,0 +1,110 @@
+<isif condition="${!pdict.ProductPagingModel.empty}">
+	<isscript>
+		// local function to create a product link along with any refinements and color variation value
+		var createLink = function(product, productHit, start) {
+			var varAttrColor = null;
+			var selectableColor = null;
+		
+			if ( product != null && product.master ) {
+				var varModel : dw.catalog.ProductVariationModel = product.variationModel;
+				varAttrColor = varModel.getProductVariationAttribute("color");
+				
+				if( varAttrColor != null )
+				{
+					// always take the first color value in the refinements!
+					var repVarVals = productHit.getRepresentedVariationValues( varAttrColor );
+					
+					if (repVarVals && repVarVals.size() > 0) {
+						selectableColor = repVarVals.get(0);
+					}
+				}
+			}
+			
+			var productUrl = "";
+			var imgUrl = "";
+			var imgFile;
+			if (!empty(product)) {
+				productUrl = pdict.ProductSearchResult.url(URLUtils.url('Product-Show', 'pid', product.ID, 'start', start));								
+				if (!empty(product) && !empty(selectableColor) && !empty(varAttrColor)) {					
+					// we have a variation product
+					// build variation selection url first and grab its query string
+					/* 
+						This is the right way but since ProductSearchResult.url takes either an action name or URL and urlSelectVariationValue return url in a String thus
+						have to append variation attr value manually.
+						  
+						var variationUrl = product.variationModel.urlSelectVariationValue('Product-Show', varAttrColor, selectableColor);
+					*/					
+					// append the variation url query string with the search url (search url could have refinements)
+					productUrl = pdict.ProductSearchResult.url(URLUtils.url('Product-Show', 'pid', product.ID, product.variationModel.getHtmlName(varAttrColor), selectableColor.value, 'start', start));
+					imgFile = selectableColor.getImage('small');
+				}
+				else {
+					imgFile = product.getImage('small');					
+				}
+			}
+			else {
+				return {pUrl: "", imgUrl: URLUtils.staticURL('/images/noimagesmall.png'), imgAlt: "", imgTitle: ""};
+			}
+			
+			return {pUrl: productUrl, imgUrl: (imgFile != null) ? imgFile.url: URLUtils.staticURL('/images/noimagesmall.png'), imgAlt: (imgFile != null) ? imgFile.alt: product.name, imgTitle: (imgFile != null) ? imgFile.title: product.name};
+		};
+		
+		var rList 		= pdict.ProductPagingModel.pageElements.asList();
+		var listSize 	= rList.size();
+		var start 		= pdict.CurrentHttpParameterMap.start.intValue;
+		
+		var totalCount = pdict.ProductPagingModel.count;
+		var prevProd = null, prevProdHit = null;
+		var nextProd = null, nextProdHit = null;
+		var currentProd = null, currentProdHit = null;
+		var currentProdInd = 0;
+		
+		if (listSize > 0 && (start > 1) && (totalCount > 1)) {
+			prevProdHit = rList.get(0);
+			prevProd = prevProdHit.product;			
+			currentProdInd = 1; // if we have prev then the current product is the prev+one
+		}
+		
+		if (listSize > 0 && start < totalCount) {
+			var i = 1;
+			if (start == 1 && listSize > 2) i = 2;
+			nextProdHit = rList.get(listSize-i);
+			nextProd = nextProdHit.product;
+			currentProdInd = listSize-i-1; // if we have next then the current product is the next-one
+		}
+		
+		start = parseInt(start);
+		
+		currentProdHit = rList.get(currentProdInd);
+		currentProd = currentProdHit.product;	
+		
+		var prevProdUrls 	= createLink(prevProd, prevProdHit, start-1);
+		currentProdUrl 		= createLink(currentProd, currentProdHit, start).pUrl;
+		var nextProdUrls 	= createLink(nextProd, nextProdHit, start+1);
+		
+	</isscript>
+	<isif condition="${!empty(pdict.ProductSearchResult) && pdict.ProductSearchResult.count > 0 && !isQuickView}">	
+	
+		<div id="pdpNav" class="productnav">
+			<!---<a id="pdpContShopLink" href="${pdict.ProductSearchResult.url('Search-Show')}" title="${Resource.msg('productnav.back','search',null)}">${Resource.msg('productnav.back','search',null)}</a>--->
+			<div class="productnavigation">
+				<isif condition="${prevProd != null && prevProdUrls.pUrl != null}">			
+					<a class="productprevious" href="${prevProdUrls.pUrl}" title="${prevProdUrls.imgTitle}"><span>${Resource.msg('global.previousitem','locale',null)} </span><!---<img alt="${prevProdUrls.imgAlt}" title="${prevProdUrls.imgTitle}" src="${prevProdUrls.imgUrl}"/>---></a>
+				</isif>
+				<isif condition="${nextProd != null && nextProdUrls.pUrl != null}">
+					<a class="productnext" href="${nextProdUrls.pUrl}" title="${nextProdUrls.imgTitle}"> <!---<img alt="${nextProdUrls.imgAlt}" title="${nextProdUrls.imgTitle}" src="${nextProdUrls.imgUrl}" />---> <span>${Resource.msg('global.nextitem','locale',null)}</span></a>
+				</isif>
+			</div>
+			<div class="clear"></div>	
+		</div>
+		
+	</isif>
+</isif>
+
+
+
+
+
+
+
+
