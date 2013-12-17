@@ -1,0 +1,9 @@
+<div class="breadcrumb">
+
+	<isif condition="${pdict.Content != null}">
+		<div class="divider"></div>
+		<div class="fl"><a href="${URLUtils.url('Page-Show','cid',pdict.Content.ID)}" title="${pdict.Content.name}">${pdict.Content.name}</a></div>
+	</isif>
+	<div class="clear"></div>
+	
+</div>

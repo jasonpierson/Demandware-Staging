@@ -1,0 +1,102 @@
+<div id="header">
+	<div class="clear"></div>
+	 
+	<div class="fr">
+	    <ul class="generalnav">
+	        <li class="fl">
+				<a href="http://awanacanada.ca">AwanaCanada.ca Home</a>
+				<span class="divider">|</span>
+			</li>
+			
+	        <li class="fl">
+				<isinclude url="${URLUtils.url('Home-IncludeHeaderCustomerInfo')}" />
+				<span class="divider">|</span>
+			</li>
+			
+			<isif condition="${pdict.CurrentCustomer.authenticated}">
+				<isif condition="${!empty(pdict.CurrentCustomer.profile) && pdict.CurrentCustomer.profile.custom.CustomerType == 'Commander' && dw.system.Site.getCurrent().getCustomPreferenceValue('ChurchRewardsProgramActive')}">
+					<li class="fl">
+						${pdict.CurrentCustomer.profile.custom.ChurchRewardsChurchPointsAvailable} redeemable pts
+						<span class="divider">|</span>
+					</li>	
+				</isif>
+			</isif>		
+			
+			<li class="fl">
+				<a href="${URLUtils.http('CustomerService-Show')}" title="${Resource.msg('global.helplink','locale',null)}">
+					${Resource.msg('global.helplink','locale',null)}
+				</a>
+				<span class="divider">|</span>
+			</li>
+			<li class="fl">
+	   			<div id="minicart" class="minicart">
+	   				<isinclude url="${URLUtils.url('Cart-MiniCart')}" />
+	   			</div>
+			</li>
+			
+	        <div class="clear"></div>
+
+	    </ul>
+    </div>
+
+	<div class="logo">
+		<a href="http://awanacanada.ca" title="${Resource.msg('global.storename','locale',null)}"></a>
+	</div>
+
+	<div class="clear"></div>
+	<div class="fr">
+		<ul class="generalnav">
+			<li class="fl">
+				<b><span class="welcomemessage">${Resource.msg('headercustomerinfo.holidaymessage','components',null)}</span></b>
+			</li>
+		</ul>
+	</div>
+	<div class="clear"></div>
+	<div class="clear"></div>
+	<div style="height:10px;"></div>
+
+    <isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+
+    <!---
+    <div class="headerbanner">
+    	<isslot id="header-banner" description="Header banner within the header, between the logo and search bar, width XXXpx by height XXpx." context="global" />
+    </div>
+    --->
+
+	<div style="height:10px;"></div>
+	<div class="fr">
+   		<isinclude template="search/simplesearch" />
+    	<div id="livechat">
+    		<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM}">
+    			<isinclude url="${URLUtils.url('Page-Include', 'cid', 'live-chat-code')}" />
+    		<iselse>
+    			<iscomment>Just put a placeholder here for dev and sandboxes</iscomment>
+    			<a href="${'#'}"><img src="${URLUtils.staticURL('images/topnav/chat-on.png')}" alt="Live Chat - Chat Now" title="Chat Now" /></a>
+    		</isif>
+    	</div>
+   	</div>
+
+	<div class="headerbar">
+		<div class="fl" style="width:648px; height:20px;">
+			<isslot id="header-bar" description="Header bar slot below the Category Navigation" context="global" />
+		</div>
+    	<div class="clear"></div>
+    	
+	</div>
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var hBar = $(".headerbar .fl").html();
+		if(hBar === null || hBar === "" || hBar === undefined) {
+			alert("true")
+			$(".headerbar .fl").hide();
+		}
+	});
+	</script>
+    
+</div>
+
+<iscomment>Cookies and Javascript enabled check</iscomment>
+<isinclude template="components/browsertoolscheck"/>
+
+<div style="height:10px;"></div>

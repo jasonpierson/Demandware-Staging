@@ -1,0 +1,257 @@
+/**
+ * This script provides utility functions shared across other account
+ * related scripts. Reused script components for account management 
+ * should be contained here, while this script is imported into the 
+ * requiring script.
+ */
+importPackage( dw.customer );
+importPackage( dw.order );
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.value );
+importPackage( dw.web );
+
+/**
+ * Determines a unique address ID for an address to be save the given
+ * address book. The function first checks the city as the candidate ID 
+ * or appends a counter to the city (if already used as address ID) and 
+ * checks the existence of the resulting ID candidate. If the resulting 
+ * ID is unique this ID is returned, if not the counter is incremented and
+ * checked again.
+ */
+function determineUniqueAddressID( city : String, addressBook : AddressBook )
+{
+	var counter : Number = 0;
+	var existingAddress : CustomerAddress = null;
+
+	// check, if attribute "city" is set and has a value
+	if( city == null || empty(city) )
+	{
+		Logger.debug("Cannot determine unique address ID from non existing or not set attribute \"city\".");
+		return null;
+	}
+
+	// initialize the candidate ID
+	var candidateID : String = city;
+
+	while( existingAddress == null )
+	{
+		existingAddress = addressBook.getAddress(candidateID);
+		if( existingAddress != null )
+		{
+			// this ID is already taken, increment the counter 
+			// and try the next one
+			counter++;
+			candidateID = city + "-" + counter;
+			existingAddress = null;
+		}
+		else
+		{
+			return candidateID;
+		}
+	}
+
+	// should never go here
+	return null;
+}
+
+/**
+ * Returns a possible equivalent address to the given order address from the 
+ * address book or null, if non equivalent address was found.
+ */
+function getEquivalentAddress(addressBook : AddressBook, orderAddress : OrderAddress) : CustomerAddress
+{
+	var address : CustomerAddress = null;
+	for each(address in addressBook.addresses)
+	{
+		if(address.isEquivalentAddress(orderAddress))
+		{
+			return address;
+		}
+	}
+	return null;
+}
+
+/**
+ * Returns ISO country code of specified country
+ */
+function getCountryCodeFromCountryName(countryName : String) : String
+{
+	var countryCode : String;
+	if (countryName.toLowerCase() == "united states") {
+		countryCode = "US";
+	} else if (countryName.toLowerCase() == "canada") {
+		countryCode = "CA";	
+	} else if (countryName.toLowerCase() == "germany") {
+		countryCode = "DE";
+	} else if (countryName.toLowerCase() == "anguilla") {
+		countryCode = "AI";
+	} else if (countryName.toLowerCase() == "antigua and barbuda") {
+		countryCode = "AG";
+	} else if (countryName.toLowerCase() == "aruba") {
+		countryCode = "AW";
+	} else if (countryName.toLowerCase() == "australia") {
+		countryCode = "AU";
+	} else if (countryName.toLowerCase() == "austria") {
+		countryCode = "AT";
+	} else if (countryName.toLowerCase() == "bahamas") {
+		countryCode = "BS";
+	} else if (countryName.toLowerCase() == "barbados") {
+		countryCode = "BB";
+	} else if (countryName.toLowerCase() == "belgium") {
+		countryCode = "BE";
+	} else if (countryName.toLowerCase() == "bermuda") {
+		countryCode = "BM";
+	} else if (countryName.toLowerCase() == "british virgin islands") {
+		countryCode = "VG";
+	} else if (countryName.toLowerCase() == "cayman islands") {
+		countryCode = "KY";
+	} else if (countryName.toLowerCase() == "denmark") {
+		countryCode = "DK";
+	} else if (countryName.toLowerCase() == "dominica") {
+		countryCode = "DM";
+	} else if (countryName.toLowerCase() == "dominican republic") {
+		countryCode = "DO";
+	} else if (countryName.toLowerCase() == "faroe islands") {
+		countryCode = "FO";
+	} else if (countryName.toLowerCase() == "finland") {
+		countryCode = "FI";
+	} else if (countryName.toLowerCase() == "france") {
+		countryCode = "FR";
+	} else if (countryName.toLowerCase() == "greece") {
+		countryCode = "GR";
+	} else if (countryName.toLowerCase() == "greenland") {
+		countryCode = "GL";
+	} else if (countryName.toLowerCase() == "grenada") {
+		countryCode = "GD";
+	} else if (countryName.toLowerCase() == "guadeloupe") {
+		countryCode = "GP";
+	} else if (countryName.toLowerCase() == "haiti") {
+		countryCode = "HT";
+	} else if (countryName.toLowerCase() == "hong kong") {
+		countryCode = "HK";
+	} else if (countryName.toLowerCase() == "iceland") {
+		countryCode = "IS";
+	} else if (countryName.toLowerCase() == "ireland") {
+		countryCode = "IE";
+	} else if (countryName.toLowerCase() == "italy") {
+		countryCode = "IT";
+	} else if (countryName.toLowerCase() == "jamaica") {
+		countryCode = "JM";
+	} else if (countryName.toLowerCase() == "japan") {
+		countryCode = "JP";
+	} else if (countryName.toLowerCase() == "liechtenstein") {
+		countryCode = "LI";
+	} else if (countryName.toLowerCase() == "luxembourg") {
+		countryCode = "LU";
+	} else if (countryName.toLowerCase() == "macau") {
+		countryCode = "MO";
+	} else if (countryName.toLowerCase() == "martinique") {
+		countryCode = "MQ";
+	} else if (countryName.toLowerCase() == "monaco") {
+		countryCode = "MC";
+	} else if (countryName.toLowerCase() == "montserrat") {
+		countryCode = "MS";
+	} else if (countryName.toLowerCase() == "netherlands") {
+		countryCode = "NL";
+	} else if (countryName.toLowerCase() == "netherland santilles") {
+		countryCode = "AN";
+	} else if (countryName.toLowerCase() == "norway") {
+		countryCode = "NO";
+	} else if (countryName.toLowerCase() == "portugal") {
+		countryCode = "PT";
+	} else if (countryName.toLowerCase() == "sanmarino") {
+		countryCode = "SM";
+	} else if (countryName.toLowerCase() == "singapore") {
+		countryCode = "SG";
+	} else if (countryName.toLowerCase() == "spain") {
+		countryCode = "ES";
+	} else if (countryName.toLowerCase() == "st lucia") {
+		countryCode = "LC";
+	} else if (countryName.toLowerCase() == "st barthelemy") {
+		countryCode = "BL";
+	} else if (countryName.toLowerCase() == "st kitts and nevis") {
+		countryCode = "KN";
+	} else if (countryName.toLowerCase() == "st martin") {
+		countryCode = "MF";
+	} else if (countryName.toLowerCase() == "st vincent and the grenadines") {
+		countryCode = "VC";
+	} else if (countryName.toLowerCase() == "sweden") {
+		countryCode = "SE";
+	} else if (countryName.toLowerCase() == "switzerland") {
+		countryCode = "CH";
+	} else if (countryName.toLowerCase() == "taiwan") {
+		countryCode = "TW";
+	} else if (countryName.toLowerCase() == "trinidad and tobego") {
+		countryCode = "TT";
+	} else if (countryName.toLowerCase() == "turks and caicos islands") {
+		countryCode = "TC";
+	} else if (countryName.toLowerCase() == "us virgin islands") {
+		countryCode = "VI";
+	} else if (countryName.toLowerCase() == "bahrain") {
+		countryCode = "BH";
+	} else if (countryName.toLowerCase() == "bangladesh") {
+		countryCode = "BD";
+	} else if (countryName.toLowerCase() == "bhutan") {
+		countryCode = "BT";
+	} else if (countryName.toLowerCase() == "brunei") {
+		countryCode = "BN";
+	} else if (countryName.toLowerCase() == "china") {
+		countryCode = "CN";
+	} else if (countryName.toLowerCase() == "cyprus") {
+		countryCode = "CY";
+	} else if (countryName.toLowerCase() == "timor-leste") {
+		countryCode = "TL";
+	} else if (countryName.toLowerCase() == "egypt") {
+		countryCode = "EG";
+	} else if (countryName.toLowerCase() == "guam") {
+		countryCode = "GU";
+	} else if (countryName.toLowerCase() == "india") {
+		countryCode = "IN";
+	} else if (countryName.toLowerCase() == "iraq") {
+		countryCode = "IQ";
+	} else if (countryName.toLowerCase() == "israel") {
+		countryCode = "IL";
+	} else if (countryName.toLowerCase() == "jordan") {
+		countryCode = "JO";
+	} else if (countryName.toLowerCase() == "south korea") {
+		countryCode = "KR";
+	} else if (countryName.toLowerCase() == "kuwait") {
+		countryCode = "KW";
+	} else if (countryName.toLowerCase() == "lebanon") {
+		countryCode = "LB";
+	} else if (countryName.toLowerCase() == "malaysia") {
+		countryCode = "MY";
+	} else if (countryName.toLowerCase() == "mongolia") {
+		countryCode = "MN";
+	} else if (countryName.toLowerCase() == "nepal") {
+		countryCode = "NP";
+	} else if (countryName.toLowerCase() == "new zealand") {
+		countryCode = "NZ";
+	} else if (countryName.toLowerCase() == "oman") {
+		countryCode = "OM";
+	} else if (countryName.toLowerCase() == "pakistan") {
+		countryCode = "PK";
+	} else if (countryName.toLowerCase() == "phillipines") {
+		countryCode = "PH";
+	} else if (countryName.toLowerCase() == "qatar") {
+		countryCode = "QA";
+	} else if (countryName.toLowerCase() == "saudi arabia") {
+		countryCode = "SA";
+	} else if (countryName.toLowerCase() == "sri lanka") {
+		countryCode = "LK";
+	} else if (countryName.toLowerCase() == "syria") {
+		countryCode = "SY";
+	} else if (countryName.toLowerCase() == "thailand") {
+		countryCode = "TH";
+	} else if (countryName.toLowerCase() == "turkey") {
+		countryCode = "TR";
+	} else if (countryName.toLowerCase() == "united arab emirates") {
+		countryCode = "AE";
+	} else if (countryName.toLowerCase() == "vietnam") {
+		countryCode = "VN";
+	} else if (countryName.toLowerCase() == "yemen") {
+		countryCode = "YE";
+	}
+	return countryCode;
+}

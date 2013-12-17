@@ -1,0 +1,20 @@
+<iscontent type="text/html " charset="UTF-8"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<iscomment>The "subject" tag contains the mail subject and can contain dynamic information, like the order number.</iscomment>
+<subject>Church Registration</subject>
+
+<body>
+	<isif condition="${!empty(pdict.regNumber)}">
+		Registration Number: <isprint value="${pdict.regNumber}"/><br/>
+	</isif>
+	First Name: <isprint value="${pdict.Order.shipments[0].shippingAddress.firstName}"/><br/>
+	Last Name: <isprint value="${pdict.Order.shipments[0].shippingAddress.lastName}"/><br/>
+	Address Line 1: <isprint value="${pdict.Order.shipments[0].shippingAddress.address1}"/><br/>
+	Address Line 2: <isprint value="${pdict.Order.shipments[0].shippingAddress.address2}"/><br/>
+	City: <isprint value="${pdict.Order.shipments[0].shippingAddress.city}"/><br/>
+	Province: <isprint value="${pdict.Order.shipments[0].shippingAddress.stateCode}"/><br/>
+	Postal Code: <isprint value="${pdict.Order.shipments[0].shippingAddress.postalCode}"/><br/>
+	EMail: <isprint value="${pdict.Order.customerEmail}"/><br/>
+	Phone: <isprint value="${pdict.Order.shipments[0].shippingAddress.phone}"/>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<iscomment>
+	This template renders a static breadcrumb navigation. The template
+	can be called with two optional breadcrumb steps. Each breadcrumb
+	step consists of two value, one for the display text and one
+	for the URL to call.
+</iscomment>
+
+<div class="breadcrumb">
+
+	<div class="fl"><a href="${URLUtils.url('Home-Shop')}" title="${Resource.msg('global.store','locale',null)}">${Resource.msg('global.store','locale',null)}</a></div>
+	
+	<isif condition="${pdict.bcurl1 != null}">
+		<div class="divider"></div>
+		<div class="fl"><a href="${pdict.bcurl1}" title="${pdict.bctext1}">${pdict.bctext1}</a></div>
+	<iselseif condition="${pdict.bcurl1 == null && pdict.bctext1 != null}">
+		<div class="divider"></div>
+		<div class="fl" style="line-height:22px;">${pdict.bctext1}</div>
+	</isif>
+
+	<isif condition="${pdict.bcurl2 != null}">
+		<div class="divider"></div>
+		<div class="fl"><a href="${pdict.bcurl2}" title="${pdict.bctext2}">${pdict.bctext2}</a></div>
+	<iselseif condition="${pdict.bcurl2 == null && pdict.bctext2 != null}">
+		<div class="divider"></div>
+		<div class="fl" style="line-height:22px;">${pdict.bctext2}</div>
+	</isif>
+	<div class="clear"></div>
+	
+</div>

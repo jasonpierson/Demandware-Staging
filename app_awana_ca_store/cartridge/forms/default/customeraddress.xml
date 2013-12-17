@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	<field formid="addressid" label="forms.customeraddress.addressid.label" type="string" mandatory="true" binding="ID" max-length="20"
+		missing-error="forms.customeraddress.addressid.missing-error"
+		value-error="forms.customeraddress.addressid.value-error"/>
+	<field formid="firstname" label="forms.customeraddress.firstname.label" type="string" mandatory="false" binding="firstName" max-length="50" 
+		missing-error="forms.customeraddress.firstname.missing-error"/>
+	<field formid="lastname" label="forms.customeraddress.lastname.label" type="string" mandatory="true" binding="lastName" max-length="50"
+		missing-error="forms.customeraddress.lastname.missing-error"/>
+	<field formid="address1" label="forms.customeraddress.address1.label" type="string" mandatory="true" binding="address1" max-length="50"
+		description="forms.customeraddress.address1.description" 
+		missing-error="forms.customeraddress.address1.missing-error"/>
+	<field formid="address2" label="forms.customeraddress.address2.label" type="string" mandatory="false" binding="address2" max-length="50"
+		description="forms.customeraddress.address2.description" />
+	<field formid="city" label="forms.city" type="string" mandatory="true" binding="city" max-length="50"
+		missing-error="forms.customeraddress.city.missing-error"/>
+
+	<!-- use global state list -->
+	<include formid="states" name="states"/>
+
+	<field formid="zip" label="forms.customeraddress.zip.label" type="string" mandatory="true" min-length="5" max-length="10" regexp="[ABCEGHJKLMNPRSTVXY]\d[A-Z] \d[A-Z]\d" binding="postalCode"
+		missing-error="forms.customeraddress.zip.missing-error"/>
+		
+	<field formid="country" label="forms.country" type="string" mandatory="true" binding="countryCode"
+		missing-error="forms.customeraddress.country.missing-error">
+		<options>
+			<option optionid="" 	label="forms.customeraddress.selectone"	value=""/>
+			<option optionid="US" 	label="country.unitedstates"	value="US"/>
+			<!--<option optionid="DE" 	label="country.germany" 	value="DE"/>-->
+			<option optionid="CA" 	label="country.canada" 	value="CA"/>
+		</options>	
+	</field>
+	<!-- we provide both a mandatory and an optional phone field - either one can be used
+	     depending on the specific requirements -->
+	<field formid="phone" label="forms.customeraddress.phone.label" type="string" mandatory="false" binding="phone" max-length="50"/>
+	<!-- all possible actions performed on an address -->
+	<action formid="cancel" valid-form="false"/>
+	<action formid="remove" valid-form="false"/>
+	<action formid="confirm" valid-form="true"/>
+	<action formid="create" valid-form="true"/>
+</form>
