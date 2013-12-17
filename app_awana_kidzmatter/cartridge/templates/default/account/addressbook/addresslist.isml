@@ -1,0 +1,34 @@
+<isdecorate template="account/pt_account">
+	<iscomment>
+		Check to see if this is a b2b user or a b2c, only b2c and commander can edit these values here.  
+		Commander can only set preferred addresses
+	</iscomment>
+	<isset name="allowSetDefault" value="${true}" scope="page"/>
+	<isset name="allowEdit" value="${false}" scope="page"/>
+	
+	<div class="accounteditaddress">
+		<isslot id="account-banner" description="Banner for My Account pages" context="global" />
+		<isif condition="${allowEdit}">
+			<!--  <a class="createaddress" href="${URLUtils.url('Address-Add')}" title="${Resource.msg('addresslist.create','account',null)}"><span>${Resource.msg('addresslist.create','account',null)}</span></a> -->
+			<button class="createaddress" type="button" name="${address.ID}"><span>${Resource.msg('addresslist.create','account',null)}</span></button>
+		</isif>
+		<h4>${Resource.msg('addresslist.header','account',null)}</h4>
+
+		<div id="address_list" class="address_list">
+			<isinclude template="account/addressbook/addressinclude"/>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	<!--
+	    jQuery(document).ready(function() {
+	    	jQuery("button.createaddress").css({float:'right',position:'relative',top:'5px'});
+		    //jQuery(".createaddress").colorbox({title:true, width:650, scrolling:false});
+	    	jQuery("button.createaddress").click(function() {
+	    		window.location.href = "${URLUtils.url('Address-Add')}";
+	    	});
+		});
+	//-->
+	</script>
+	
+</isdecorate>

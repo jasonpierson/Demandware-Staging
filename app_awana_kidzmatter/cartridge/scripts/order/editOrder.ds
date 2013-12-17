@@ -1,0 +1,32 @@
+/*
+*   @input orderNum : String
+*   @input taxRate : String  
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.object );
+importPackage( dw.rpc );
+importPackage( dw.crypto );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+    
+	try {
+		var orderObj : object = dw.object.SystemObjectMgr.querySystemObject("Order", "orderNo = {0}", args.orderNum);
+		
+		if (!empty(orderObj)) {
+			var so : String = args.taxRate;
+		}
+	}
+	
+	catch(e) {
+		if(e instanceof Fault){
+			Logger.error("Actor " + e.faultActor+" caused fault '"+e.faultCode +"' ("+e.faultString+" - "+e.faultDetail+")");
+		}else{
+			Logger.error(e.toString());
+		}
+		return PIPELET_ERROR;
+	}
+ 	return PIPELET_NEXT;
+}

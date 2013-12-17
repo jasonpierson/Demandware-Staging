@@ -1,0 +1,9 @@
+<!--- TEMPLATENAME: freeideaslanding.isml --->
+<isinclude template="util/modules"/>
+<isinclude template="util/reporting/ReportSearch.isml"/>
+<isif condition="${pdict.CurrentHttpParameterMap.get('fdid').isEmpty()}">
+	<isset name="folderID" value="free-ideas" scope="page" />
+<iselse>
+	<isset name="folderID" value="${pdict.CurrentHttpParameterMap.get('fdid').stringValue}" scope="page" />
+</isif>
+<isinclude url="${URLUtils.url('FreeIdeas-Show','fdid', folderID)}">

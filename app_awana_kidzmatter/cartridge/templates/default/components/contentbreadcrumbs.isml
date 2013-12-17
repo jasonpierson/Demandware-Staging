@@ -1,0 +1,33 @@
+<isset name="showPageLink" value="${true}" scope="page" />
+
+<div class="breadcrumb">
+	
+	<div class="fl">
+		<a href="${URLUtils.httpHome()}" class="home" title="${Resource.msg('global.home','locale',null)}">${Resource.msg('global.home','locale',null)}</a>
+	</div>
+	
+	<iscomment>Only show content category if it was set contentpage.isml</iscomment>
+	<isif condition="${!empty(contentFolder)}">
+	
+		<isif condition="${contentFolder.custom.showInMenu.valueOf()}">
+			<isset name="contentCatHome" value="${contentFolder}" scope="page" />
+		<iselseif condition="${!empty(contentPagesFolder) && contentPagesFolder.ID == 'free-ideas'}">
+			<isset name="contentCatHome" value="${contentPagesFolder.parent}" scope="page" />
+		</isif>
+		
+		<isif condition="${!empty(contentCatHome)}">
+			<div class="divider">:</div>
+			<div class="fl"><a href="${URLUtils.url('Page-Show','cid',contentCatHome.ID+'-home')}" title="${contentCatHome.displayName}">${contentCatHome.displayName}</a></div>
+			<isif condition="${(contentCatHome.ID+'-home') != pdict.Content.ID && !empty(pdict.Content)}">
+				<div class="divider">:</div>
+				<div class="fl"><a href="${URLUtils.url('Page-Show','cid',pdict.Content.ID)}" title="${pdict.Content.name}">${pdict.Content.name}</a></div>
+			<iselseif condition="${contentPagesFolder.ID == 'free-ideas'}">
+				<div class="divider">:</div>
+				<div class="fl"><a href="${URLUtils.url('Page-Show','cid',contentPagesFolder.ID)}" title="${contentPagesFolder.displayName}">${contentPagesFolder.displayName}</a></div>
+			</isif>
+		</isif>
+		
+	</isif>
+	<div class="clear"></div>
+	
+</div>

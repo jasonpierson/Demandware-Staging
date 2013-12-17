@@ -1,0 +1,47 @@
+<iscache type="relative" hour="24"/>
+<isdecorate template="content/home/pt_main">
+	<div class="homepage" style="position:relative;display:block;">		
+		<isslot id="home-top-left" description="Homepage Top Left (contains main slider)" context="global" />	
+		<isslot id="home-top-right" description="Homepage Top Right (contains callout)" context="global" />
+		<div class="clear" ><!-- FLOAT CLEAR --></div>
+		<isinclude url="${URLUtils.url('Page-Include', 'cid', 'mini-banners')}" />	
+		<isslot id="home-featured" description="Homepage Featured Products" context="global" />
+		<div class="clear"></div>		
+	</div>
+	<script type="text/javascript">
+	
+		function mycarousel_initCallback(carousel) {
+			jQuery("#hf_pagination a").bind("click", function() {
+				var num = jQuery(this).text();
+				carousel.scroll(jQuery.jcarousel.intval(num));
+				return false;
+			});
+		
+		};
+		
+		function makeActive( carousel, item, num, state ) {
+			var par = jQuery("#hf_pagination").eq(0);
+			
+			jQuery(".page-trigger", par).removeClass("active");
+			jQuery(".trigger-"+num, par).addClass("active");
+			
+			jQuery(par).attr("target", num );
+		}
+
+		var target = jQuery("#homefeatures");
+		target.jcarousel({
+			initCallback: mycarousel_initCallback,
+			itemVisibleInCallback: {
+				onBeforeAnimation: makeActive
+			},
+			wrap: "last",
+			scroll: 1,
+			auto: 3
+		});
+
+		jQuery(document).ready(function() {
+			app.producttile.initAll();
+		});
+			
+	</script>
+</isdecorate>

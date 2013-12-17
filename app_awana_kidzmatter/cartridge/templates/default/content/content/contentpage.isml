@@ -1,0 +1,64 @@
+<isscript>
+	//finding which template to use based on which type of content we are viewing
+	//defaults to customer service template
+	var decoratorTemplate : String = "content/pt_customerservice";
+	
+	//if it's a content search result 
+	if (!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0){
+	
+		decoratorTemplate = "search/pt_contentsearchresult";
+	
+	} else {
+	
+		if (!pdict.CurrentHttpParameterMap.get('cid').isEmpty()) {
+	
+			//we are on a content page
+			var contentID	  : String = pdict.CurrentHttpParameterMap.get('cid').stringValue;
+			var contentFolder : Folder = dw.content.ContentMgr.getContent(contentID).getClassificationFolder();
+			
+			//whether the content left navigation in pt_content.isml
+			var showLeftNav : Boolean = false;
+	
+			//find top level folder id
+			while (!contentFolder.isRoot()){
+				//if it's the top level folder for this site's page content
+				if (contentFolder.parent.ID == 'kidzmatter'){
+					decoratorTemplate = "content/content/pt_content";
+					if(contentFolder.custom.showInMenu.valueOf()){ showLeftNav = true; }
+					break;
+				} else {
+					contentFolder = contentFolder.parent;
+				}		
+			}
+			
+			//initialize variables for the content section nav
+			var sectionName 	   : String = contentFolder.displayName;
+			var sectionNavInclude  : String = contentFolder.ID+'-nav';
+			var contentPagesFolder : Folder = dw.content.ContentMgr.getFolder(contentFolder.ID+'-pages');
+			
+		}
+	}
+</isscript>
+
+<isdecorate template="${decoratorTemplate}">
+<iscomment>
+	Use the decorator template based on the page context. If
+	the content page was requested from a search result the
+	decorator search/pt_contentsearchresult is used. The default 
+	decorator for the content page is content/content/pt_content.
+</iscomment>
+
+<iscache type="relative" hour="24"/>
+<div class="contentpage">
+
+<iscomment>Render a "back" link and the article title based on the page context.</iscomment>
+<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0}">
+	<div class="back"><a href="${pdict.ContentSearchResult.url('Search-ShowContent')}">${Resource.msg('foldercontenthits.backtoresults','rendering',null)}</a></div>
+	<h1><isprint value="${pdict.Content.name}"/></h1>
+</isif>
+
+<iscomment>This content piece must deliver a valid wrapping div!</iscomment>
+<isinclude template="content/content/htmlcontentasset"/>
+<div class="clear"></div>
+</div>
+</isdecorate>

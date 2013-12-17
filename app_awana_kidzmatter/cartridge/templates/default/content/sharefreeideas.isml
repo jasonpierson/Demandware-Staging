@@ -1,0 +1,140 @@
+<isinclude template="util/modules"/>
+<div class="sharefreeideas">
+	<isif condition="${!empty(pdict.ConfirmationMessage)}">
+		<div class="sharefreeideas messagesent">
+			<p>${Resource.msg('forms.sharefreeideas.thankyouforsharing','forms',null)}</p>
+		</div>	
+		<div class="formactions">
+			<button id="closeBtn" type="button"><span>${Resource.msg('global.close','locale',null)}</span></button>
+		</div>
+	<iselse/>
+	<p><span>${Resource.msg('forms.sharefreeideas.pleasecomplete','forms',null)}</span></p>
+	<form action="${URLUtils.continueURL()}" method="post" name="ShareFreeIdeasForm" id="ShareFreeIdeasForm">
+		<fieldset>
+			<div class="formfields">
+				<div class="formfield">
+					<div class="fr"><span class="requiredmessage">${Resource.msg('global.requiredfield','locale',null)}</span></div>
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.sharefreeideas.name}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.sharefreeideas.email}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.sharefreeideas.categories}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<isinputfield formfield="${pdict.CurrentForms.sharefreeideas.ideatitle}" type="select">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield sfidescriptions">
+					<isinputfield attribute1="rows" value1="8" formfield="${pdict.CurrentForms.sharefreeideas.descriptions}" type="textarea">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield">
+					<div class="agreementcheckbox">
+						<isinputfield formfield="${pdict.CurrentForms.sharefreeideas.agreement}" type="checkbox" label="false" class="checkinput"/>
+					</div>	
+					<div class="agreement">
+						<span>${Resource.msg('forms.sharefreeideas.agreement.label','forms',null)}</span>
+					</div>
+					<div class="clear"><!-- FLOAT CLEAR --></div>
+				</div>
+				<div class="formactions">
+					<button id="submitBtn" type="button"><span>${Resource.msg('global.submit','locale',null)}</span></button>
+				</div>
+			</div><!-- END: formfields -->
+		</fieldset>
+	</form>
+	</isif>
+	<script type="text/javascript">
+	<!--
+	
+		jQuery(document).ready(function() {	
+	
+			// init left character count and max characters
+			var max = 500;
+			var text = jQuery(".sfidescriptions span.caption").html();
+			var count = jQuery(".sfidescriptions textarea").val().length;
+			jQuery(".sfidescriptions span.caption").html( text.replace("XXX", "<span class=\"count\"><\/span>").replace("YYY", max) );	
+			var left = max - count;
+			jQuery(".sfidescriptions span.count").text(left);
+			
+			jQuery('#submitBtn').click( function() {
+
+				//Check to see if the user agrees to the terms
+				if (!jQuery("input[name=${pdict.CurrentForms.sharefreeideas.agreement.htmlName}]").attr("checked")) {
+					alert("You must agree to the terms by checking the box before submitting your idea.");
+				} else {
+					var submitURL = '${URLUtils.httpContinue()}';
+		
+					jQuery('.sharefreeideas .formactions').append("<input name='${pdict.CurrentForms.sharefreeideas.submit.htmlName}' type='hidden' />");
+					
+					var post = jQuery('#ShareFreeIdeasForm').serialize();
+				 			
+					jQuery.ajax({
+						type: "POST",
+						url: submitURL,
+						data: post,
+						dataType: 'html',
+						success: function(data){ 
+							jQuery("#dialogcontainer").dialog('option', 'title', "${Resource.msg('forms.sharefreeideas.thankyou','forms',null)}").empty().html(data);
+							jQuery('#closeBtn').click( function() {
+					            jQuery('#dialogcontainer').dialog('close');      
+					      	});   				
+										
+						},
+						failure: function(data) {
+							alert("${Resource.msg('global.serverconnection','locale',null)}");		
+						}
+					});		
+				}
+			});
+	
+			
+			// message character limitation
+			jQuery(".sfidescriptions textarea").bind("keyup keydown", function() {
+				var max = 500;
+				var value = jQuery(this).val();
+		
+				var left = max - value.length;
+				if(left < 0) {
+					jQuery(this).val( value.slice(0, left) );
+					left = 0;
+				}
+				jQuery(".sfidescriptions span.count").text(left);
+	
+			});	
+
+							
+		});
+		
+		if(!jQuery('#dialogcontainer').dialog('isOpen'))
+		{	
+			jQuery('#dialogcontainer').dialog({
+				bgiframe: true,
+				autoOpen: false,
+				open : function() {			
+					jQuery(document).trigger('dialogopen');
+				},
+				modal: true,
+				overlay: {
+		    		opacity: 0.5,
+		     		background: "black"
+				},
+		    	height: 'auto',
+		    	width: '475px',
+		    	title: '${Resource.msg('forms.sharefreeideas.title','forms',null)}',
+		    	resizable: false
+			});
+			jQuery('#dialogcontainer').dialog('open');
+		}
+		
+	//-->
+	</script>
+</div>

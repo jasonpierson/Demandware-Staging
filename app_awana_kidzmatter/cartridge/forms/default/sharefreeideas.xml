@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+	
+	<field formid="name" label="forms.sharefreeideas.name.label" type="string" mandatory="true" binding="name" max-length="70"/>
+	<field formid="email" label="forms.sharefreeideas.email.label" type="string" mandatory="true" regexp="^[\w-\.]{1,}\@([\da-zA-Z-]{1,}\.){1,}[\da-zA-Z-]{2,3}$" parse-error="forms.sharefreeideas.email.parse-error" binding="email" max-length="50"/>	
+	<field formid="categories" label="forms.sharefreeideas.ideatitle.label" type="string" mandatory="false" binding="ideaTitle" max-length="100"/>		
+
+	<field formid="ideatitle" label="forms.sharefreeideas.categories.label" type="string" mandatory="false" binding="ideaCategories">
+		<options>
+			<option optionid="Christmas" value="Christmas" label="Christmas"/>
+			<option optionid="Crafts" value="Crafts" label="Crafts"/>
+			<option optionid="Easter" value="Easter" label="Easter"/>
+			<option optionid="FallFestival" value="FallFestival" label="Fall Festival"/>
+			<option optionid="GamesForAnywhere" value="GamesForAnywhere" label="Games For Anywhere"/>
+			<option optionid="GamesForBigRooms" value="GamesForBigRooms" label="Games For Big Rooms"/>
+			<option optionid="GamesForOutside" value="GamesForOutside" label="Games For Outside"/>
+			<option optionid="GamesForUpFront" value="GamesForUpFront" label="Games For Up Front"/>
+			<option optionid="Icebreakers" value="Icebreakers" label="Icebreakers"/>
+			<option optionid="Illusions" value="Illusions" label="Illusions"/>
+			<option optionid="MissionFundraiser" value="MissionFundraiser" label="Mission Fundraiser"/>
+			<option optionid="NewYearsFun" value="NewYearsFun" label="New Year's Fun"/>
+			<option optionid="ObjectLessons" value="ObjectLessons" label="Object Lessons"/>
+			<option optionid="ScriptureMemory" value="ScriptureMemory" label="Scripture Memory"/>
+			<option optionid="SpecialDays" value="SpecialDays" label="Special Days"/>
+			<option optionid="Stories" value="Stories" label="Stories"/>
+			<option optionid="ValentinesDay" value="ValentinesDay" label="Valentines Day"/>
+		</options>	
+	</field>
+	<field formid="descriptions" label="forms.sharefreeideas.descriptions.label" type="string" mandatory="false" binding="descriptions" max-length="50" description="forms.sendtofriend.personalMessage.hint"/>
+
+	<field formid="agreement" label="forms.sharefreeideas.agreement.label" type="boolean" mandatory="true" />
+			
+	<action formid="submit" label="forms.sharefreeideas.submit" valid-form="true"/>
+</form>

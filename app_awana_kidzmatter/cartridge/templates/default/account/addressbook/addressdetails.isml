@@ -1,0 +1,136 @@
+<isdecorate template="account/pt_account">
+<isinclude template="util/modules"/>
+
+<div class="colorboxDialogHeader">
+	<h3>Add Address</h3>
+	<div id="colorboxDialogCloseButton"></div>
+</div>
+
+<div id="AddressForm" class="edit_address_form" style="margin:20px; padding:20px; border:solid 2px #FFC324; -moz-border-radius:8px; -webkit-border-radius:8px;">	
+	<!-- <form method="post" name="EditAddressForm" id="EditAddressForm"> -->
+	<form action="${URLUtils.httpsContinue()}" method="post" name="EditAddressForm" id="${pdict.CurrentForms.profile.address.htmlName}">
+
+			<div id="editprofile" class="editaddress">	
+			
+				<isif condition="${pdict.Status != null && pdict.Status.isError()}">				 
+				 	<!--- Use the error code value to build an appropriate error message --->
+					<span class="error">
+						<isprint value="${Resource.msg('addressdetails.' + pdict.Status.code, 'account',null)}">
+					</span>
+				</isif>
+				<!---
+				<div class="requiredcaption">
+					<span class="requiredindicator">*</span><strong>${Resource.msg('global.requiredfield','locale',null)}</strong>
+				</div>
+				--->
+				<div class="formfield addressid">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.addressid}" type="input">
+					<div class="clear"></div>
+				</div>										
+				<div class="formfield firstname">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.firstname}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield lastname">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.lastname}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield address1">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.address1}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield address2">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.address2}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield country">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.country}" type="select">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield state">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.states.state}" type="select">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield city">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.city}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield zip">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.zip}" type="input">
+					<div class="clear"></div>
+				</div>
+				<div class="formfield phone">
+					<isinputfield formfield="${pdict.CurrentForms.profile.address.phone}" type="input">
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="actions">	
+				<div id="addressformaction"></div>		
+				<!-- <button id="applyBtn" type="button" value="${Resource.msg('global.apply','locale',null)}"><span>${Resource.msg('global.apply','locale',null)}</span></button> -->
+				<button id="applyBtn" name="${pdict.CurrentForms.profile.address.create.htmlName}" type="submit" value="${Resource.msg('global.apply','locale',null)}"><span>${Resource.msg('global.apply','locale',null)}</span></button>
+				<!-- <button id="cancelBtn" type="button" value="${Resource.msg('global.cancel','locale',null)}"><span>${Resource.msg('global.cancel','locale',null)}</span></button>
+				<isif condition="${!empty(pdict.EditMode)}">
+					<button id="deleteBtn" type="button" value="${Resource.msg('global.delete','locale',null)}"><span>${Resource.msg('global.delete','locale',null)}</span></button>
+				</isif> -->
+			</div>
+			<div class="clear"></div>
+
+	</form>
+</div>
+
+<script type="text/javascript">
+<!--
+	app.URLs.submitDialogURL = '${URLUtils.httpContinue()}';
+
+	jQuery(document).ready(function() {
+		
+		// execute unobtrusive js code
+		app.execUjs();
+
+		jQuery('#applyBtn').click( function() {
+			action = "${pdict.CurrentForms.profile.address.create.htmlName}";
+			postData(action);			
+		});
+
+		jQuery('#deleteBtn').click( function() { 			
+			var accepted = confirm("${Resource.msg('forms.customeraddress.deleteaddressconfirm','forms',null)}");		
+			
+			if( accepted ) {
+	   			action = "${pdict.CurrentForms.profile.address.remove.htmlName}";
+				postData(action);
+			}	
+		});
+		
+		function postData(action) {			
+			jQuery('#addressformaction').append("<input name='" + action + "' type='hidden' />");
+			var post = jQuery('#EditAddressForm').serialize();
+
+	  		jQuery.ajax({
+			   type: "POST",
+			   url: app.URLs.submitDialogURL,
+			   data: post,
+			   dataType: 'html',
+			   success: function(data){
+			   		jQuery("#cboxLoadedContent").empty().html(data);
+			   },
+			   failure: function(data) {
+			   		alert("${Resource.msg('global.serverconnection','locale',null)}");		
+			   }
+			});
+		}
+
+		jQuery("#colorboxDialogCloseButton").click(function() {
+			window.location.href = "${URLUtils.url('Address-List')}";
+		});
+		
+		jQuery("#cboxClose").hide();
+
+		jQuery("#cancelBtn").click(function() {
+			$.fn.colorbox.close();
+		});
+
+	});
+	
+//-->
+</script>
+</isdecorate>

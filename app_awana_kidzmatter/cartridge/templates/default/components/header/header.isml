@@ -1,0 +1,164 @@
+<div id="header">
+	<div class="logo">
+		<a href="http://kidzmatter.com" title="${Resource.msg('global.storename','locale',null)}"></a>
+	</div>
+	 
+    <div class="generalnav">
+    	<div class="general_top">
+			<isinclude url="${URLUtils.url('Home-IncludeHeaderCustomerInfo')}" />
+			<a href="${URLUtils.http('CustomerService-Show')}" title="${Resource.msg('global.helplink','locale',null)}">
+				${Resource.msg('global.helplink','locale',null)}
+			</a>
+			<a title="Contact Us" href="${URLUtils.url('CustomerService-ContactUs')}">Contact Us</a>
+			<span style="font-weight:bold;">Customer Service: 877.568.2437</span>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<div class="general_bottom">
+   			<div id="minicart" class="minicart">
+   				<isinclude url="${URLUtils.url('Cart-MiniCart')}" />
+   			</div>
+			<div class="headerbar">
+				<isslot id="header-bar" description="Header bar slot below the Category Navigation" context="global" />				
+			</div>				
+	        <div class="clear"></div>
+        </div>
+		<div class="clear"></div>
+    </div>
+	<div class="clear"></div>
+    <isinclude url="${URLUtils.url('Home-IncludeHeaderMenu')}"/>
+    
+</div>
+
+<iscomment>Cookies and Javascript enabled check</iscomment>
+<isinclude template="components/browsertoolscheck"/>
+
+<iscomment>Top menu navigation initialization</iscomment>
+<isscript>
+	//finding the navigation classes based on http parameters 
+	var topNavClass : string = null;
+	var subNavClass : string = null;
+	
+	if (!pdict.CurrentHttpParameterMap.get('cid').isEmpty()) {
+
+		//we are on a content page
+		var contentID	  : String = pdict.CurrentHttpParameterMap.get('cid').stringValue;
+		var contentFolder : Folder = dw.content.ContentMgr.getContent(contentID).getClassificationFolder();
+
+		//find top level folder id
+		while (!contentFolder.isRoot()){
+			//if it's the top level folder for kidmatter page content
+			if (!empty(contentFolder.parent) && contentFolder.parent.ID == 'kidzmatter'){
+				topNavClass = contentFolder.ID;
+				break;
+			} else {
+				contentFolder = contentFolder.parent;
+			}		
+		}
+		
+	} else if (!pdict.CurrentHttpParameterMap.get('cgid').isEmpty()) {
+		
+		//the category id has been set, so we can safely assume we are in the store
+		topNavClass = 'store';
+		
+		//category id
+		var catID : String   = pdict.CurrentHttpParameterMap.get('cgid').stringValue;
+		var cat   : Category = dw.catalog.CatalogMgr.getCategory(catID);
+		
+		if (!empty(cat.parent) && catID != 'root'){
+			while ( cat.parent.ID != 'root' ) { 
+				cat = cat.parent; 
+			}
+		}
+		
+		subNavClass = cat.ID;
+			
+	} else if (!pdict.CurrentHttpParameterMap.get('pid').isEmpty()) {
+		
+		//the category id has been set, so we can safely assume we are in the store
+		topNavClass = 'store';
+		
+		var productID : String   = pdict.CurrentHttpParameterMap.get('pid').stringValue;
+		var cat       : Category = dw.catalog.ProductMgr.getProduct(productID).getClassificationCategory();
+		
+		while (!empty(cat.parent) && cat.parent.ID != 'root' ) { 
+			cat = cat.parent; 
+		}
+		
+		subNavClass = cat.ID;
+		
+		
+	}
+</isscript>
+<script type="text/javascript"><!--
+
+<isif condition="${!empty(topNavClass)}">
+	//set default menu items
+	var topNavClass = ".top-cat-${topNavClass}";
+	<isif condition="${!empty(subNavClass)}">
+	var subNavClass = ".sub-cat-${subNavClass}";
+	</isif>
+</isif>
+
+	//check if default menu items have been set and matching element exists in the DOM
+	var showTopNav = (typeof topNavClass === 'string' && jQuery(topNavClass).length);	
+	var showSubNav = (typeof subNavClass === 'string' && jQuery(subNavClass).length);
+		
+
+	jQuery(document).ready(function() {
+		
+		if (showTopNav){
+			
+			//show default menu items
+			jQuery(topNavClass).addClass("hovered");
+			jQuery(topNavClass).parent().addClass("shownav");		
+			if (showSubNav){ jQuery(subNavClass).children("a:first").addClass("hovered"); }
+			
+		}		
+	
+		var mouseInNav = function(){
+			
+			//hide default menu items if appropriate
+			if (showTopNav && !jQuery(this).is(".shownav, .shownav *") ) {
+				jQuery(topNavClass).removeClass("hovered");
+				jQuery(topNavClass).parent().removeClass("shownav");
+			} 
+			else if ( showSubNav && jQuery(this).is(".sub-cat-links *") ) {
+				if ( !jQuery(this).is(subNavClass+", "+subNavClass+" *") ) {
+					jQuery(subNavClass).children("a:first").removeClass("hovered");
+				}		
+			}
+			
+			//show hovered menu item
+			jQuery(this).children("a:first").addClass("hovered");
+			jQuery(this).addClass("shownav");	
+			
+		}
+		
+		var mouseOutNav = function(){
+			
+			//hide hovered menu item
+			jQuery(this).children("a:first").removeClass("hovered");
+			jQuery(this).removeClass("shownav");
+			
+			if (showTopNav && !jQuery(this).is(".shownav, .shownav *")){
+				//show default menu item
+				jQuery(topNavClass).addClass("hovered");
+				jQuery(topNavClass).parent().addClass("shownav");	
+				if (showSubNav){ jQuery(subNavClass).children("a:first").addClass("hovered"); }		
+			}
+		}
+
+		//bind behavior to menu items
+		jQuery(".top-cat-links > li, .sub-cat-links > li").hover(mouseInNav, mouseOutNav);
+
+		//position sub menus
+		jQuery(".sub-cat-links").each(function(){
+			var topNavPos = jQuery(".top-menu-nav").offset();
+			var subNavPos = jQuery(this).offset();
+			var newLeft   = topNavPos.left - subNavPos.left;
+			jQuery(this).css({"left": newLeft});
+		});
+
+	});
+//--></script>

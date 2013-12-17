@@ -1,0 +1,9 @@
+<html>
+<head>
+<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM}">
+	<script type="text/javascript" src="http://cdn.powerreviews.com/repos/15380/pr/pwr/engine/js/resize.js"></script>
+<iselse>
+	<script type="text/javascript" src="http://cdn.powerreviews.com/repos/15469/pr/pwr/engine/js/resize.js"></script>
+</isif>
+</head>
+</html>

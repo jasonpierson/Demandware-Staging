@@ -1,0 +1,77 @@
+<isdecorate template="account/pt_account">
+	
+	<isinclude template="util/modules"/>
+	
+	<isset name="allowSetDefault" value="${true}" scope="page"/>
+	<isset name="allowEdit" value="${true}" scope="page"/>
+	
+	<div class="accountpaymentinstruments">
+	
+		<isslot id="account-banner2" description="Banner for My Account pages" context="global" />
+		
+		<h4>${Resource.msg('paymentinstrumentlist.header','account',null)}</h4>
+		<isif condition="${allowEdit}">
+			<a class="add" id="AddCreditCard" href="${URLUtils.url('PaymentInstruments-Add')}" title="${Resource.msg('paymentinstrumentlist.addcard','account',null)}"><span>${Resource.msg('paymentinstrumentlist.addcard','account',null)}</span></a>
+		</isif>
+		
+		<div class="paymentinstruments">
+			<isif condition="${pdict.PaymentInstruments.size() > 0}">
+				<isset name="paymentCounter" value="${0}" scope="page" />
+				<isloop items="${pdict.CurrentForms.paymentinstruments.creditcards.storedcards}" var="creditcard" status="loopstate">
+					<isif condition="${paymentCounter == 0}" />
+						<div class="paymentsline">
+					</isif>
+						<div class="creditcard">
+							<div class="defaultselection">
+								<input class="selectDefault"<isif condition="${!allowSetDefault}"> disabled</isif> type="radio" <isif condition="${(pdict.CurrentCustomer.profile.custom.PreferredPaymentUUID!=null) && (pdict.CurrentCustomer.profile.custom.PreferredPaymentUUID == creditcard.object.creditCardType + '-' + creditcard.object.UUID)}">checked="checked"</isif> value="${creditcard.object.creditCardType + '-' + creditcard.object.UUID}" /> ${Resource.msg('paymentinstrumentlist.defaultcard','account',null)}
+							</div>
+							<isminicreditcard p_card="${creditcard.object}" p_show_expiration="${false}">
+							<isif condition="${allowEdit}">
+								<div class="actions">
+									<form action="${URLUtils.url('PaymentInstruments-Delete')}"  method="post" id="creditcards_${loopstate.count}">
+										<fieldset>
+											<input style="display:none" type="submit" value="${Resource.msg('paymentinstrumentlist.deletecard','account',null)}" name="${creditcard.remove.htmlName}"/>	
+											<a class="remove" title="${Resource.msg('paymentinstrumentlist.deletecard','account',null)}">${Resource.msg('paymentinstrumentlist.deletecard','account',null)}</a>
+										</fieldset>
+									</form>			
+								</div>
+							</isif>			
+							<div class="clear"></div>
+						</div>
+					<isif condition="${paymentCounter == 3 || loopstate.last}" />
+						</div>
+						<isset name="paymentCounter" value="${0}" scope="page" />
+					<iselse>
+						<isset name="paymentCounter" value="${++paymentCounter}" scope="page" />
+					</isif>
+		    	</isloop>
+			    <div class="clear"></div>
+			    
+			</isif>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	<!--
+	
+		jQuery(document).ready(function() {
+			jQuery(".selectDefault").click(function() {
+				var setDefaultURL = app.util.appendParamToURL("${URLUtils.url('PaymentInstruments-SetDefault')}", "CCID", this.value);
+				window.location.href = setDefaultURL;
+			});
+			
+			jQuery(".remove").click(function() {	
+				var accepted = confirm("${Resource.msg('paymentinstrumentlist.deletecardconfirm','account',null)}");
+				if(accepted) {
+					var inputButton = jQuery(this).prev();
+					inputButton.click();
+				};	
+			});	
+
+			jQuery(".add").colorbox({title:true, width:630, scrolling:false});
+		});
+
+	//-->
+	</script>
+	
+</isdecorate>

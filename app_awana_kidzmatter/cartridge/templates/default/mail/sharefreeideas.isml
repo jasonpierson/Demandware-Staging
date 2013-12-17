@@ -1,0 +1,58 @@
+<iscontent type="text/html" charset="UTF-8"/>
+<isinclude template="util/modules"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<subject><isprint value="${Resource.msg('forms.sharefreeideas.emailsubject','forms',null)}"/></subject>
+<head>
+</head>
+<body style="background-color:#d7d5d0;">
+<table style="margin:20px auto;width:590px;border:5px solid #e6e6e6;background-color:#fff;">
+  <tbody>
+	<tr>
+		<td style="padding:0 20px 25px;margin:0;">
+			<table style="border-bottom:1px dotted #b4b4b4;width:100%;">
+				<tr>
+					<td style="padding:0 0 10px;margin:0;vertical-align:top;">
+						<a title="${Resource.msg('global.storename','locale',null)}" href="${URLUtils.abs('Home-Show')}"><img src="${URLUtils.httpStatic('/themes/demandwarestore/images/logo.png')}" alt="${Resource.msg('global.storename','locale',null)}" /></a>
+					</td>
+					<td style="width:185px;padding:0 0 10px;margin:0;vertical-align:top;">
+						<div style="padding:0;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;font-weight:bold;">Customer Service: 877.568.2437</div>
+						<div style="padding:0;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">A customer support representative is available to help you Monday through Friday from 8:30 am to 4:30 pm EST.</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+  <tr>
+	<td style="padding:0 20px;margin:0;font-family: Arial,Helvetica,Verdana,sans-serif;font-size:18px;font-weight:bold;color:#da2128;margin-bottom:25px;">
+		<isprint value="${Resource.msg('forms.sharefreeideas.emailsubject','forms',null)}"/>
+	</td>
+  </tr>
+  <tr>
+	<td style="padding:0 20px;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">
+		Name: <isprint value="${pdict.CurrentForms.sharefreeideas.name.value}"/>
+	</td>
+  </tr>
+  <tr>
+	<td style="padding:0 20px;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">		
+		Email: <isprint value="${pdict.CurrentForms.sharefreeideas.email.value}"/>		
+	</td>
+  </tr>
+  <tr>
+	<td style="padding:0 20px;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">	
+		Categories: <isprint value="${pdict.CurrentForms.sharefreeideas.categories.value}"/>	
+	</td>
+  </tr>
+    <tr>
+	<td style="padding:0 20px;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">		
+		Idea Title: <isprint value="${pdict.CurrentForms.sharefreeideas.ideatitle.value}"/>
+	</td>
+  </tr>
+  <tr>
+	<td style="padding:0 20px;margin:0;color:#595959;font-size:11px;line-height:16px;font-family: Arial,Helvetica,Verdana,sans-serif;">
+		Descriptions: <isprint value="${pdict.CurrentForms.sharefreeideas.descriptions.value}"/>
+	</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

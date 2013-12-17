@@ -1,0 +1,29 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+<isinclude template="util/modules"/>
+<div id="product_1x5" class="productlisting product_1x5">
+	<h1 class="ourpicks">Our Picks</h1>
+	<isloop items="${slotcontent.content}" var="product" begin="0" end="4" status="loopstatus">
+		<isif condition="${loopstatus.last}">
+			<isset name="isend" value="${true}" scope="PDICT" />
+		</isif>
+		<isobject object="${product}" view="recommendation">
+			<isproducttile product="${product}" showswatches="${true}" showpricing="${true}" showpromotion="${true}" showrating="${true}">
+		</isobject>
+	</isloop>
+	<div class="clear"></div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function() {	
+	jQuery("#product_1x5 div.productquickviewbtn").hide();
+	jQuery("#product_1x5 div.product div.image").hover(
+		function(e) {
+			jQuery(this).children("#product_1x5 div.productquickviewbtn").show();
+			return false;
+		},
+		function(e) {
+			jQuery(this).children("#product_1x5 div.productquickviewbtn").hide();
+			return false;
+		}
+	);
+});
+</script>

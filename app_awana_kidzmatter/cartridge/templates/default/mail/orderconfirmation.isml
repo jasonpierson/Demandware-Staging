@@ -1,0 +1,45 @@
+<iscontent type="text/html " charset="UTF-8"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<iscomment>The "subject" tag contains the mail subject and can contain dynamic information, like the order number.</iscomment>
+<subject><isprint value="${Resource.msg('order.orderconfirmation-email.001','order',null)}" encoding="off"/> <isprint value="${pdict.Order.externalOrderNo}"/></subject>
+
+<iscomment>
+	The "to" tag contains the email address of the recipient, the "from" tag the email address of the sender. 
+	Each tag is to be specified max. once. Multiple email address can be separated by "," (see RFC2822).
+</iscomment>
+<to>${pdict.Order.customerEmail}</to>
+<from>${dw.system.Site.getCurrent().getCustomPreferenceValue('NoReplyEmail')}</from>
+
+<head>
+
+<isinclude template="util/modules"/>
+</head>
+<body>
+<table>
+  <tbody>
+  <tr>
+	<td style="width:315px">
+		<h1>${Resource.msg('global.storename','locale',null)}</h1>
+	</td>
+	<td style="float:right;text-align:right;width:315px;font-size:10pt;"><strong>${Resource.msg('global.storename','locale',null)}</strong><br />
+		${Resource.msg('order.orderconfirmation-email.storeaddress','order',null)}<br />
+		${Resource.msg('order.orderconfirmation-email.storelocation','order',null)}<br />
+		<a href="${URLUtils.httpHome()}" title="${Resource.msg('order.orderconfirmation-email.jumptostore','order',null)}"><span>${Resource.msg('global.storenameurl','locale',null)}</span></a><br />
+		${Resource.msg('order.orderconfirmation-email.storephone','order',null)}</td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="orderconfirmation">
+	<div class="thankyoumessage">
+		<h2>${Resource.msg('mail.thankyou','checkout',null)}</h2>
+		<p>${Resource.msg('confirmation.message','checkout',null)}</p>
+		<p>${Resource.msg('confirmation.contact','checkout',null)}</p>
+	</div><!-- END: thankyoumessage -->
+
+	<div class="orderconfirmation_details">
+		<isorderdetails order="${pdict.Order}" show_download="true">
+	</div>
+</div><!-- END: orderconfirmation -->
+</body>
+</html>

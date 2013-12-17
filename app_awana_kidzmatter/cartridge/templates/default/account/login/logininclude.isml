@@ -1,0 +1,55 @@
+<iscomment>Login Unsuccessful Error Message</iscomment>
+<isif condition="${!pdict.CurrentForms.login.loginsucceeded.valid}">
+	<div class="errorform">${Resource.msg('logininclude.loginerror','account',null)}</div>
+</isif>
+
+<div class="logincustomers">
+	<div class="rightcolumn_top"></div>
+	<div class="rightcolumn_mid">
+		<h3>${Resource.msg('logininclude.customersheader','account',null)}</h3>
+		<div class="returningcustomers">
+			<p>${Resource.msg('logininclude.registered','account',null)}</p>
+			<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.login.htmlName}">
+				<fieldset>
+					<div class="formfield username">
+						<isinputfield formfield="${pdict.CurrentForms.login.username}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield password">
+						<isinputfield formfield="${pdict.CurrentForms.login.password}" type="password">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield rememberme">
+						<isinputfield formfield="${pdict.CurrentForms.login.rememberme}" type="checkbox">
+					</div>
+					<div class="formactions">
+						<button class="login" type="submit" value="${Resource.msg('global.login','locale',null)}" name="${pdict.CurrentForms.login.login.htmlName}">${Resource.msg('global.login','locale',null)}</button>
+					</div>
+					<div class="forgotpassword">
+						<a id="PasswordReset" title="${Resource.msg('logininclude.forgotpassword','account',null)}">${Resource.msg('logininclude.forgotpassword','account',null)}</a>
+					</div>
+					<input type="hidden" name="${pdict.CurrentForms.login.secureKeyHtmlName}" value="${pdict.CurrentForms.login.secureKeyValue}"/>
+				</fieldset>
+			</form>
+			
+		</div>
+		
+	</div>
+	<div class="rightcolumn_btm"></div>
+</div>
+
+<script type="text/javascript"><!--
+	jQuery(document).ready(function() {
+		// see if we have password reset dialog div
+		// we need to add this dynamically as login panel can be present multiple times in the window
+		// but we want to use only 1 password reset dialog
+		if (jQuery(".PasswordResetDialog").length <=0) {
+	   		// create this div only once
+	   		jQuery("<div/>").attr("class", "PasswordResetDialog").appendTo(document.body);
+	   	}
+	  	jQuery('.forgotpassword a').click(function() {
+	    	app.ajax.load({selector: ".PasswordResetDialog", url: '${URLUtils.url('Account-PasswordResetDialog')}'});
+	  	});
+
+	});
+//--></script>

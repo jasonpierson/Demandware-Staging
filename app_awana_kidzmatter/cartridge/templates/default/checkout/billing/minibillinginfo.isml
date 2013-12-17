@@ -1,0 +1,82 @@
+<iscomment>
+	This template renders the billing address and a list of all payment
+	methods (more precessively payment instruments) used for the payment
+	of the basket. It is displayed in the order summary at the right hand
+	side in the checkout process.
+</iscomment>
+<isset name="billingAddress" value="${pdict.Basket.billingAddress}" scope="page"/>
+<isset name="paymentInstruments" value="${pdict.Basket.paymentInstruments}" scope="page"/>
+
+<isif condition="${!empty(billingAddress)}">
+
+	<div class="minibillingaddress">
+
+		<div class="header">
+			<div class="fl">${Resource.msg('minibillinginfo.billingaddress','checkout',null)}</div>
+			<div class="edit fr"><a href="${URLUtils.https('COBilling-Start')}">${Resource.msg('global.edit','locale',null)}</a></div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="details">
+			<div><isprint value="${billingAddress.firstName}"/> <isprint value="${billingAddress.lastName}"/></div>
+			<div><isprint value="${billingAddress.address1}"/></div>
+			<isif condition="${!empty(billingAddress.address2)}">
+				<div><isprint value="${billingAddress.address2}"/></div>
+			</isif>
+			<div><isprint value="${billingAddress.city}"/>, <isprint value="${billingAddress.stateCode}"/> <isprint value="${billingAddress.postalCode}"/></div>
+			<div><isprint value="${billingAddress.countryCode}"/></div>
+		</div>
+
+	</div>
+		
+</isif>
+
+<isif condition="${!empty(paymentInstruments)}">
+
+	<iscomment>render a box per payment instrument</iscomment>
+	<isloop items="${paymentInstruments}" var="paymentInstr" status="loopstate">
+		<div class="minipaymentinstrument">
+
+			<div class="header">
+				<div class="fl">${Resource.msg('minibillinginfo.paymentmethod','checkout',null)}</div>
+				<div class="edit fr"><a href="${URLUtils.https('COBilling-Start')}">${Resource.msg('global.edit','locale',null)}</a></div>
+				<div class="clear"></div>
+			</div>
+
+			<div class="details">
+				<iscomment>
+					render the detail section depending on the type of the payment instrument
+				</iscomment>
+				<isif condition="${dw.order.PaymentInstrument.METHOD_CREDIT_CARD.equals(paymentInstr.paymentMethod)}">
+					<iscomment>a credit card</iscomment>
+					<div><isprint value="${paymentInstr.creditCardHolder}"/></div>
+					<div><isprint value="${paymentInstr.creditCardType}"/></div>
+					<div><isprint value="${paymentInstr.maskedCreditCardNumber}"/></div>
+					<div>${Resource.msg('minibillinginfo.expiration','checkout',null)} <isprint value="${paymentInstr.creditCardExpirationMonth}" formatter="00"/>.<isprint value="${paymentInstr.creditCardExpirationYear}" formatter="0000"/></div>
+					<div>${Resource.msg('minibillinginfo.amount','checkout',null)}: <isprint value="${paymentInstr.paymentTransaction.amount}"/></div>
+				<iselseif condition="${dw.order.PaymentInstrument.METHOD_BML.equals(paymentInstr.paymentMethod)}"/>
+					<iscomment>bill me later</iscomment>
+					${Resource.msg('forms.checkout.paymentmethods.bml','forms',null)}
+					<div>${Resource.msg('minibillinginfo.amount','checkout',null)}: <isprint value="${paymentInstr.paymentTransaction.amount}"/></div>
+				<iselseif condition="${dw.order.PaymentInstrument.METHOD_GIFT_CERTIFICATE.equals(paymentInstr.paymentMethod)}"/>
+					<iscomment>gift certificate</iscomment>
+					<div>${Resource.msg('minibillinginfo.giftcertificate','checkout',null)}: <isprint value="${paymentInstr.maskedGiftCertificateCode}"/></div>
+					<div>${Resource.msg('minibillinginfo.amount','checkout',null)}: <isprint value="${paymentInstr.paymentTransaction.amount}"/></div>
+				<iselseif condition="${'PayPal'.equals(paymentInstr.paymentMethod)}"/>
+					<iscomment>pay pal</iscomment>
+					<div>${Resource.msg('forms.checkout.paymentmethods.paypal','forms',null)}</div>
+					<div>${Resource.msg('minibillinginfo.amount','checkout',null)}: <isprint value="${paymentInstr.paymentTransaction.amount}"/></div>
+				<iselseif condition="${'PURCHASE_ORDER'.equals(paymentInstr.paymentMethod)}"/>
+					<iscomment>Purchase order</iscomment>
+					<div>${Resource.msg('forms.checkout.paymentmethods.purchaseorder','forms',null)}</div>
+					<div>${Resource.msg('minibillinginfo.purchaseorder','checkout',null)}: <isprint value="${paymentInstr.custom.poAccountID}"/></div>
+					<div>${Resource.msg('minibillinginfo.amount','checkout',null)}: <isprint value="${paymentInstr.paymentTransaction.amount}"/></div>
+				<iselse/>
+					<iscomment>n/a</iscomment>
+					Unknown payment method
+				</isif>
+			</div>
+		</div>
+	</isloop>
+	
+</isif>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<isinclude template="util/modules"/>
+	<head>
+		<iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
+		<isinclude template="components/header/htmlhead">
+	</head>
+	<body>
+		<div id="container" class="pt_account">
+			<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+			<div id="main">
+				<isbreadcrumbs bcurl1="${URLUtils.https('Account-Show')}" bctext1="My Account">
+				<div id="leftcolumn">
+					<div class="accountnav">
+						<div class="accountnavheader">${Resource.msg('account.header','account',null)}</div>
+						<div class="accountnavlinks">
+							<isinclude url="${URLUtils.url('Account-IncludeNavigation')}"/>
+						</div>
+						<div class="accountnavtext">							
+							<iscontentasset aid="account-nav-text">
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div id="content">
+					<isreplace/>
+				</div>
+				
+				<div class="clear"></div>
+				
+			</div>
+			<isinclude template="components/footer/footer"/>
+		</div>
+	</body>
+</html>

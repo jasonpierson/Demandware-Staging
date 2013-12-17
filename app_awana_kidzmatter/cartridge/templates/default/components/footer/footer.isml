@@ -1,0 +1,53 @@
+<iscomment>
+	This is the footer for all pages. Be careful caching it if it contains
+	user dependent information. Cache its elements instead if necessary (do not forget
+	to change the isinclude into a pipeline include for that).
+</iscomment>
+<div id="footer">
+	<div class="footer-kmag fl">
+		<h4>K! Magazine</h4>
+		<iscontentasset aid="footer-kmag"/>
+	</div>
+	<div class="footer-aboutus fl">
+		<h4>About Us</h4>
+		<iscontentasset aid="footer-aboutus"/>
+	</div>
+	<div class="footer-store fl">
+		<h4>Store</h4>
+		<ul>
+		  <isscript>
+			// get root category of current site's navigation catalog
+			var siteCatalog = dw.catalog.CatalogMgr.getSiteCatalog();
+			var root = null;
+			if(siteCatalog!=null) {root = siteCatalog.getRoot();}
+		  </isscript>
+		  <isif condition="${root != null}">
+		  	<isloop items="${root.getOnlineSubCategories()}" var="topCat">
+		  		<isif condition="${('showInMenu' in topCat.custom) && topCat.custom.showInMenu.valueOf()}">
+		  			<li><a href="${URLUtils.http('Search-Show', 'cgid', topCat.getID())}"><isprint value="${topCat.getDisplayName()}"/></a></li>
+		  		</isif>
+		  	</isloop>
+		  </isif>
+		</ul>
+	</div>
+	<div class="footer-contactus fl">
+		<h4>Contact Us</h4>
+		<iscontentasset aid="footer-contactus"/>
+	</div>
+	<div class="footer-connect fl">
+		<iscontentasset aid="footer-connect"/>
+	</div>
+	<p class="clear"></p>
+</div>
+<div class="footer-bottomcopy">
+	<div class="fr">
+		<iscontentasset aid="footer-bottomcopy"/>
+	</div>
+</div>
+
+<iscomment>
+	Customer registration can happen everywhere in the page flow. As special tag in the pdict
+	is indicating it. So we have to check on every page, if we have to report this event for
+	the reporting engine.
+</iscomment>
+<isinclude template="util/reporting/ReportUserRegistration.isml"/>

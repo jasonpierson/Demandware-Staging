@@ -1,0 +1,26 @@
+<iscache status="off">
+
+<isset name="_FirstName" value="${pdict.CurrentCustomer.profile != null ? pdict.CurrentCustomer.profile.firstName : ''}" scope="PAGE" />
+<isset name="_LastName" value="${pdict.CurrentCustomer.profile != null ? pdict.CurrentCustomer.profile.lastName : ''}" scope="PAGE" />
+
+<div class="headercustomerinfo">
+
+    <isif condition="${pdict.CurrentCustomer.registered}">
+    	<isif condition="${pdict.CurrentCustomer.profile.custom.AccountOnHold}">
+			<b><span class="welcomemessage">${Resource.msg('headercustomerinfo.accounthold','components',null)}</span></b>
+		</isif> 
+        <span class="welcomemessage">${Resource.msg('headercustomerinfo.welcome','components',null)}</span>
+        <a href="${URLUtils.https('Account-Show')}" title="${Resource.msg('global.accountlink','locale',null)} ${_FirstName} ${_LastName}" class="username">
+        	<span class="username"><isprint value="${_FirstName}">&nbsp;<isprint value="${_LastName}"></span>
+        </a>
+         <isif condition="${!pdict.CurrentCustomer.authenticated}">
+            <span class="unauthenticated">(<a title="${Resource.msg('global.login','locale',null)}${_FirstName} ${_LastName}" href="${URLUtils.https('Account-Show')}" class="userlogin">${Resource.msg('headercustomerinfo.pleaselogin','components',null)}</a>)</span>
+        </isif>
+        <!-- (<a title="${Resource.msg('headercustomerinfo.not','components',null)} ${_FirstName} ${_LastName}" href="${URLUtils.url('Login-Logout')}" class="usernot">${Resource.msg('headercustomerinfo.not','components',null)} ${_FirstName}</a>?) -->
+        <span class="logout_parens">(<a title="Logout" href="${URLUtils.url('Login-Logout')}" class="usernot">Logout</a>)</span>	
+    <iselse>
+        <a title="${Resource.msg('global.login','locale',null)}" href="${URLUtils.https('Account-Show')}" class="userlogin">${Resource.msg('global.login','locale',null)}</a>
+        <a title="${Resource.msg('global.register','locale',null)}" href="${URLUtils.https('Account-StartRegister')}" class="userregister">${Resource.msg('global.register','locale',null)}</a>
+    </isif>
+    
+</div>

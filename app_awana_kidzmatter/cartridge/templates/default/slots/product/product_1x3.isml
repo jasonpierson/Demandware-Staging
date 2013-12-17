@@ -1,0 +1,168 @@
+<iscache type="relative" minute="30" varyby="price_promotion"/>
+<isinclude template="util/modules"/>
+<div id="product_1x3" class="productlisting product_1x3">
+	<h1 class="featuredresources">Featured Resources</h1>
+	<isloop items="${slotcontent.content}" var="Product" begin="0" end="2" status="loopstatus">
+		<isobject object="${Product}" view="recommendation">
+			<iscomment>START PRODUCT TILE</iscomment>		
+			
+			<isif condition="${!empty(Product)}">
+			
+				<iscomment>
+					Get the colors selectable from the current product master.
+				</iscomment>
+				<isscript>
+					var selectableColors : dw.util.Collection = new dw.util.ArrayList();
+					if( Product.master )
+					{
+						var varModel : dw.catalog.ProductVariationModel = Product.variationModel;
+						var varAttrColor : dw.catalog.ProductVariationAttribute = varModel.getProductVariationAttribute("color");
+				
+						if( varAttrColor != null )
+						{
+							var allColors : dw.util.Collection = varModel.getAllValues( varAttrColor );
+							
+							// filter out colors with not orderable variants
+							for each( var color in allColors )
+							{
+								if( varModel.hasOrderableVariants( varAttrColor, color ) )
+								{
+									selectableColors.add( color );
+								}
+							}
+						}
+					}
+				</isscript>
+				
+				<iscomment>
+					Generate link to product detail page. If a color variation is available, the first color is used as link url.
+				</iscomment>
+				<isset name="productUrl" value="${URLUtils.http('Product-Show', 'pid', Product.ID)}" scope="page"/>
+				<isif condition="${!empty(selectableColors) && selectableColors.size() > 0}">
+					<isset name="colorVarAttr" value="${Product.variationModel.getProductVariationAttribute('color')}" scope="page"/>
+					<isset name="productUrl" value="${Product.variationModel.urlSelectVariationValue('Product-Show', colorVarAttr, selectableColors.get(0))}" scope="page"/>
+				</isif>
+				
+				<div class="product <isif condition="${loopstatus.last}"> end</isif>">
+					<div class="producttile">
+						<div class="pad">
+							<div class="image">
+								
+								<iscomment>Render the thumbnail</iscomment>
+								<div class="thumbnail">
+									
+									<iscomment>Determine the correct image, either first displayed color variation or default product thumbnail</iscomment>
+									<isif condition="${!empty(selectableColors) && selectableColors.size() > 0}">
+										<isset name="firstColorVariation" value="${selectableColors.get(0)}" scope="page"/>
+										<isset name="image" value="${firstColorVariation.getImage('medium')}" scope="page"/>					
+									<iselse/>
+										<isset name="image" value="${Product.getImage('medium',0)}" scope="page"/>					
+									</isif>
+									
+									<iscomment>If image couldn't be determined, display a "no image" thumbnail</iscomment>
+									<isif condition="${!empty(image)}">
+										<isset name="thumbnailUrl" value="${image.url}" scope="page"/>
+										<isset name="imageAlt" value="${image.alt}" scope="page"/>
+										<isset name="imageTitle" value="${image.title}" scope="page"/>
+									<iselse/>
+										<isset name="thumbnailUrl" value="${URLUtils.staticURL('/images/noimagemedium.png')}" scope="page"/>
+										<isset name="imageAlt" value="${Product.name}" scope="page"/>
+										<isset name="imageTitle" value="${Product.name}" scope="page"/>
+									</isif>
+									
+									<p class="productimage">					
+										<a href="${URLUtils.url('Product-Show','pid', Product.ID)}" title="${Product.name}"><img src="${thumbnailUrl}" width="153" height="153" alt="${imageAlt}" title="${imageTitle}" /></a>
+									</p>
+									<!-- IE Hack to Collaspe DIV with display:none -->
+								</div>
+					
+								<div class="productquickviewbtn">
+									<a class="productquickview" href="${URLUtils.url('Product-Show','pid', Product.ID) + '&source=quickview'}" title="${Product.name}"></a>
+								</div>
+					
+							</div>
+							<div class="productdetails">
+								<a href="${productUrl}" title="${Product.name}">
+									<isprint value="${Product.name}"/>
+								</a>
+								
+								<iscomment>Renders pricing information depending on the option or variation model, as well as scaled prices and so on.</iscomment>
+								
+								<isif condition="${Product.productSet}">
+									<iscomment>Product set pricing</iscomment>
+									<span class="pricing">${Resource.msg('global.buyall','locale',null)}</span>
+								<iselseif condition="${Product.master && Product.priceModel.isPriceRange()}"/>
+									<iscomment>Product master price range depending on the variants</iscomment>
+									<span class="pricing"><isprint value="${Product.priceModel.minPrice}"/> - <isprint value="${Product.priceModel.maxPrice}"/></span>
+								<iselse/>
+									<iscomment>For Product master without a price range get the pricing from its first variant </iscomment>
+									<isif condition="${Product.master && !Product.priceModel.isPriceRange()}"/>
+										<iscomment>Preserve current product instance</iscomment>
+										<isset name="OrgProduct" value="${Product}" scope="page"/>
+										<isset name="Product" value="${OrgProduct.variationModel.variants[0]}" scope="page"/>
+									</isif>
+									<iscomment>
+										Regular pricing through price model of the product. If the product is an option product, 
+										we have to initialize the product price model with the option model.
+									</iscomment>
+									<isif condition="${Product.optionProduct}">
+										<isset name="PriceModel" value="${Product.getPriceModel(Product.getOptionModel())}" scope="page"/>
+									<iselse/>
+										<isset name="PriceModel" value="${Product.getPriceModel()}" scope="page"/>
+									</isif>
+					
+									<iscomment>
+										Check whether the product has price in the sale pricebook. If so, then
+										display two prices: crossed-out standard price and sales price.
+									</iscomment>
+									<isinclude template="product/components/standardprice"/>
+									<isset name="SalesPrice" value="${PriceModel.getPrice()}" scope="page"/>
+									<isset name="ShowStandardPrice" value="${StandardPrice.available && SalesPrice.available && StandardPrice.compareTo(SalesPrice) == 1}" scope="page"/>
+									
+									<isif condition="${ShowStandardPrice}">
+										<span class="price strikethrough"><isprint value="${StandardPrice}"/></span><span class="saleprice"><isprint value="${SalesPrice}"/></span>
+									<iselse/>
+										<span class="price"><isprint value="${SalesPrice}"/></span>
+									</isif>
+									<isif condition="${!empty(pdict.OrgProduct)}">
+										<iscomment>Restore current product instance</iscomment>
+										<isset name="Product" value="${OrgProduct}" scope="page"/>
+									</isif>
+								</isif>	
+													
+								<div class="short-desc">
+									<isprint value="${Product.shortDescription}" encoding="off">
+								</div>
+								
+								<a class="redbutton" href="${productUrl}" title="${Product.name}"><span>Buy Now!</span></a>
+								
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+					
+			<iselse/>
+				<!-- Product was not in dictionary, so blank. -->
+			</isif>					
+				
+			<iscomment>END PRODUCT TILE</iscomment>
+		</isobject>
+	</isloop>
+	<div class="clear"></div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function() {	
+	jQuery("#product_1x3 div.productquickviewbtn").hide();
+	jQuery("#product_1x3 div.product div.image").hover(
+		function(e) {
+			jQuery(this).children("#product_1x5 div.productquickviewbtn").show();
+			return false;
+		},
+		function(e) {
+			jQuery(this).children("#product_1x5 div.productquickviewbtn").hide();
+			return false;
+		}
+	);
+});
+</script>

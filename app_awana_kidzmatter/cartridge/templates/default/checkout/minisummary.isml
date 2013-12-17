@@ -1,0 +1,99 @@
+<isinclude template="util/modules"/>
+<iscomment>
+	This template renders the summary of the current basket at the right hand side
+	of all checkout pages. It includes an order summary including order totals,
+	a list of all included shipments as well as the payment methods used to pay
+	the basket.
+</iscomment>
+
+<isif condition="${!empty(pdict.checkoutstep)}">
+	<isset name="checkoutstep" value="${pdict.checkoutstep}" scope="page"/>
+</isif>
+
+<isif condition="${!empty(checkoutstep) && (checkoutstep >= 2)}">
+
+	<div class="checkoutminisummary">
+
+		<div class="checkoutsummaryheader">
+			<iscomment>
+				The edit link depends on the basket content: if there is just one gift 
+				certificate in the basket the edit link leads to the gift certificate purchase page
+				offering to edit the gift certificate settings.
+			</iscomment>
+			Order Summary
+			<isif condition="${checkoutstep < 5}">
+				<isset name="editUrl" value="${URLUtils.url('Cart-Show')}" scope="page"/>
+				<isif condition="${pdict.Basket.productLineItems.size() == 0 && pdict.Basket.giftCertificateLineItems.size() == 1}">
+					<isset name="editUrl" value="${URLUtils.url('GiftCert-Edit','GiftCertificateLineItemID', pdict.Basket.giftCertificateLineItems[0].UUID)}" scope="page"/>
+				</isif>
+				<a href="${editUrl}" class="orderedit">${Resource.msg('global.edit','locale',null)}</a>
+			</isif>
+		</div>
+			
+		<isif condition="${checkoutstep < 5}">		
+			<div class="checkoutminicart">
+				<isminilineitems p_lineitemctnr="${pdict.Basket}">
+				<script type="text/javascript"><!--
+					jQuery(document).ready(function() {
+						jQuery(".checkoutminisummary .productminidetails:first").css("width", "100px");			
+						jQuery(".checkoutminisummary .imageexpanded").click(function() {
+							jQuery(this).parent().css("width", "80px");
+							jQuery(this).parent().children(".imagecollapsed").show();
+							jQuery(this).parent().parent().children(".productminidetails").css("width", "100px");
+							jQuery(this).hide();
+						});
+			
+						jQuery(".checkoutminisummary .imagecollapsed").click(function() {
+							jQuery(this).parent().css("width", "15px");
+					  		jQuery(this).parent().children(".imageexpanded").show();
+							jQuery(this).parent().parent().children(".productminidetails").css("width", "160px");
+							jQuery(this).hide();
+						});
+					});
+				//--></script>				
+			</div>
+		</isif>
+
+		<isset name="CallingTemplate" value="${'MiniSummary'}" scope="page"/>
+		<iscomment>render the order totals</iscomment>
+		<div class="checkoutordertotals">
+			<isset name="showTax" value="${false}" scope="page"/>
+			<isif condition="${!empty(checkoutstep) && checkoutstep > 4}">
+				<isif condition="${!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')) && dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')}">
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${true}" p_shipmenteditable="${true}" p_totallabel="Estimated Total" p_hidetax="${false}">
+				<iselse/>
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${true}" p_shipmenteditable="${true}" p_totallabel="Estimated Total" p_hidetax="${true}">
+				</isif>
+			<iselse>
+				<isif condition="${!empty(pdict.Basket.shipments)}">
+					<isloop items="${pdict.Basket.shipments}" var="shipment" status="loopstate">
+						<isif condition="${shipment.shippingAddress != null}">
+							<isset name="showTax" value="${true}" scope="page"/>
+							<isbreak/>
+						</isif>
+					</isloop>
+				</isif>
+				<isif condition="${!empty(dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary')) && dw.system.Site.getCurrent().getCustomPreferenceValue('DisplayTaxOnMiniSummary') && showTax==true}">
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${false}" p_shipmenteditable="${false}" p_totallabel="Estimated Total" p_hidetax="${false}">
+				<iselse>
+					<isordertotals p_lineitemctnr="${pdict.Basket}" p_showshipmentinfo="${false}" p_shipmenteditable="${false}" p_totallabel="Estimated Total" p_hidetax="${true}">
+				</isif>
+			</isif>
+		</div>
+	</div>
+
+	<iscomment>render single shipment boxes</iscomment>
+	<isif condition="${!empty(checkoutstep) && (checkoutstep > 3)}">
+		<div class="minishipments">
+			<isinclude template="checkout/shipping/minishipments"/>
+		</div>
+	</isif>
+	
+	<iscomment>render billing information: billing address and payment instruments</iscomment>
+	<isif condition="${!empty(checkoutstep) && (checkoutstep > 4)}">
+		<div class="minibillinginfo">
+			<isinclude template="checkout/billing/minibillinginfo"/>
+		</div>
+	</isif>
+
+</isif>

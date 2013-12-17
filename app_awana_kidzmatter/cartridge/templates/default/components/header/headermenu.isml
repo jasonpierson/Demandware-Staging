@@ -1,0 +1,61 @@
+<iscache type="relative" hour="24"/>
+
+<iscomment>
+	This template displays a 3-level category tree as top navigation.
+	Only categories marked with showInMenu are shown.
+</iscomment>
+
+<isscript>
+	// get root category of current site's navigation content
+	var kmContent = null;
+	if(dw.content.ContentMgr.getFolder('kidzmatter')!=null) {kmContent = dw.content.ContentMgr.getFolder('kidzmatter');}
+
+	// get root category of current site's navigation catalog
+	var siteCatalog = dw.catalog.CatalogMgr.getSiteCatalog();
+	var catRoot = null;
+	if(siteCatalog!=null) {catRoot = siteCatalog.getRoot();}
+</isscript>
+<isif condition="${catRoot != null || kmContent != null}">	
+	<div class="top-menu-nav">
+		<ul class="top-cat-links">
+			<isloop items="${kmContent.getOnlineSubFolders()}" var="subFolder" status="loopstate">
+				<isif condition="${('showInMenu' in subFolder.custom) && subFolder.custom.showInMenu.valueOf()}">
+					<li<isif condition="${loopstate.first}"> class="first"</isif>>
+						<a class="top-cat-<isprint value="${subFolder.getID()}" />" href="<isprint value="${URLUtils.http('Page-Show', 'cid', subFolder.getID()+'-home')}" />"><span><isprint value="${subFolder.getDisplayName()}" /></span></a>
+						<isif condition="${subFolder.getID() == 'store'}">
+							<ul class="sub-cat-links">
+							<isloop items="${catRoot.getOnlineSubCategories()}" var="subCat">
+								<isif condition="${('showInMenu' in subCat.custom) && subCat.custom.showInMenu.valueOf()}">						
+									<isset name="subCount" value="${0}" scope="page"/>	
+									<isloop items="${subCat.getOnlineSubCategories()}" var="subCatsub">
+										<isif condition="${('showInMenu' in subCatsub.custom) && subCatsub.custom.showInMenu.valueOf()}">
+											<isset name="subCount" value="${1}" scope="page"/>
+											<isbreak>
+										</isif>
+									</isloop>			
+									<li class="sub-cat-${subCat.getID()}">						
+										<a href="${URLUtils.http('Search-Show', 'cgid', subCat.getID())}"><isprint value="${subCat.getDisplayName()}"/></a>					
+									<isif condition="${subCount > 0}">
+										<ul class="subsub-cat-links">
+										<isset name="addFirstClass" value="${'first'}" scope="page"/>
+										<isloop items="${subCat.getOnlineSubCategories()}" var="subCatsub">
+											<li><a href="${URLUtils.http('Search-Show', 'cgid', subCatsub.getID())}"  class="<isprint value="${addFirstClass}"/>"><isprint value="${subCatsub.getDisplayName()}"/></a></li>
+											<isset name="addFirstClass" value="" scope="page"/>
+										</isloop>
+										</ul>
+									</isif>
+									</li>
+								</isif>
+							</isloop>
+							</ul>
+						</isif>
+					</li>
+				</isif>
+			</isloop>		
+		</ul>
+		<div class="fl">
+	   		<isinclude template="search/simplesearch" />
+	   	</div>	  	
+	    <div class="clear"><!-- FLOAT CLEAR --></div>
+	</div><!-- END: categorymenu -->
+</isif>

@@ -1,0 +1,80 @@
+<iscomment>This template renders the breadcrumb navigation for content search results</iscomment>
+
+<div class="breadcrumb">
+	<iscomment>HOME BREADCRUMB</iscomment>
+	<div class="fl">
+		<a href="${URLUtils.httpHome()}" class="home">${Resource.msg('global.home','locale',null)}</a>
+	</div>
+
+	<iscomment>SEARCH PHRASE INFO </iscomment>
+	<isif condition="${!empty(pdict.ContentSearchResult) && !empty(pdict.ContentSearchResult.searchPhrase)}">
+		<div class="divider">:</div>
+		<div class="resultstext fl">${Resource.msg('searchbreadcrumbs.resultstext','search',null)}</div>
+		<div class="resultstext fl"><a href="${URLUtils.url('Search-ShowContent','q',pdict.ContentSearchResult.searchPhrase)}" title="${pdict.ContentSearchResult.searchPhrase}">&ldquo;${pdict.ContentSearchResult.searchPhrase}&rdquo;</a></div>
+	</isif>
+
+	<iscomment>FOLDER PATH INFO</iscomment>
+	<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.folder != null}">
+		<isscript>
+			var path = new dw.util.ArrayList();
+			var folder = pdict.ContentSearchResult.folder;
+			while( folder.parent != null )
+			{
+				if( folder.online ) path.addAt( 0, folder );
+				folder = folder.parent;
+			}
+		</isscript>
+
+		<isloop items="${path}" var="folder" status="loopstate">
+			<isif condition="${loopstate.first && !pdict.ContentSearchResult.folderSearch}">
+				<div class="resultstext fl">${Resource.msg('searchbreadcrumbs.in','search',null)}</div>
+			<iselse>			
+				<div class="divider">:</div>
+			</isif>
+			<div class="resultstext fl"><a href="${pdict.ContentSearchResult.urlRefineFolder('Search-ShowContent',folder.ID)}" title="${folder.displayName}">${folder.displayName}</a></div>
+		</isloop>
+	</isif>
+
+	<iscomment>REFINEMENT INFO</iscomment>
+	<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.refinedByAttribute}">
+
+		
+		<span class="refinedby">${Resource.msg('searchbreadcrumbs.refinedby','search',null)}</span>
+
+		<iscomment>attributes</iscomment>
+		<isloop items="${pdict.ContentSearchResult.refinements.refinementDefinitions}" var="definition" status="attributes">
+
+			<iscomment>refined by this attribute</iscomment>
+			<isif condition="${definition.isAttributeRefinement() && pdict.ContentSearchResult.isRefinedByAttribute(definition.attributeID)}">
+
+				<span class="refinementname"><isprint value="${definition.displayName}"></span>
+
+				<isloop items="${pdict.ContentSearchResult.refinements.getRefinementValues(definition)}" var="value" status="values">
+
+					<isif condition="${pdict.ContentSearchResult.isRefinedByAttributeValue(definition.attributeID, value.value)}">
+						<isif condition="${!values.first}">
+							<span>${Resource.msg('pagecomponents.breadcrumbs.refinements.valuedevider','pagecomponents',null)}</span>
+						</isif>
+						<span class="refinementvalue">
+							<isprint value="${value.displayValue}">
+							<a class="relax" href="${pdict.ContentSearchResult.urlRelaxAttributeValue('Search-Show', definition.attributeID, value.value)}">(X)</a>
+						</span>
+
+					</isif>
+
+				</isloop>
+
+			</isif>
+
+		</isloop>
+		
+	</isif>
+	
+	<iscomment>CONTENT PAGE INFO</iscomment>
+	<isif condition="${!empty(pdict.Content.name)}">
+		<div class="divider">:</div>
+		<isprint value="${pdict.Content.name}"/>
+	</isif>
+	<div class="clear"><!-- FLOAT CLEAR --></div>
+</div>
+

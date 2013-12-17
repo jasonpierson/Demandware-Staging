@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<isinclude template="util/modules"/>
+<head>
+	<isinclude template="components/header/htmlhead"/>
+</head>
+<body>
+<div id="container" class="pt_content">
+	<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	<div id="main">
+		<isinclude template="components/contentbreadcrumbs"/>
+		<iscomment>
+			Only show left column if showLeftNav was set to true in 
+			the template we are decorating, as the needed variables 
+			for	building the content navigation will be set there
+		</iscomment>
+		<isif condition="${showLeftNav && !empty(contentFolder)}">
+			<div id="leftcolumn" style="width:236px;margin-right:25px;">
+				<div class="contentnav">
+					<div class="contentnavheader">
+						<isprint value="${sectionName}" />
+					</div>
+					<div class="contentnavsections">
+						<div class="contentnavlinks">
+							<ul>
+							<isif condition="${contentPagesFolder.ID == 'free-ideas'}">
+								<isloop iterator="${contentPagesFolder.onlineSubFolders}" var="contentSubFolder">
+									<li><a href="<isprint value="${URLUtils.http('FreeIdeas-Show', 'fdid', contentSubFolder.ID)}" />" class="<isprint value="${contentSubFolder.ID+'-link'}" />"><span><isprint value="${contentSubFolder.displayName}" /></span></a></li>
+								</isloop>
+							<iselse>
+								<isloop iterator="${contentPagesFolder.content}" var="contentPage">
+									<isif condition="${contentPage.custom.showInLeftNav.valueOf()}">
+										<li><a href="<isprint value="${URLUtils.http('Page-Show', 'cid', contentPage.ID)}" />" class="<isprint value="${contentPage.ID+'-link'}" />"><span><isprint value="${contentPage.name}" /></span></a></li>
+									</isif>
+								</isloop>
+							</isif>
+							</ul>
+						</div>
+						<div class="contentnavslot">
+							<iscomment>The content nav slot must contain a wrapping div</iscomment>
+							<iscontentasset aid="${sectionNavInclude}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</isif>
+		<div id="content" style="width:<isif condition="${showLeftNav}">718px<iselse>100%</isif>;">	
+			<isreplace/>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<isinclude template="components/footer/footer"/>
+</div>
+</body>
+</html>

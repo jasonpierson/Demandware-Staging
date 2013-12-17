@@ -1,0 +1,59 @@
+<isdecorate template="content/pt_customerservice">
+<isinclude template="util/modules"/>
+<div class="contactus-banner"><isslot id="contactus-banner" description="Contact Us Banner" context="global"/></div>
+<div class="contactus">
+	<isif condition="${!empty(pdict.ConfirmationMessage)}">
+		<div class="contactus messagesent">
+			<h3>${Resource.msg('forms.contactus.messagesent','forms',null)}</h3>
+			<p>${Resource.msg('forms.contactus.messagerequires','forms',null)}</p>
+		</div>	
+	<iselse/>
+		<h1><span>${Resource.msg('global.contactus','locale',null)}</span></h1>
+		<form action="${URLUtils.httpsContinue()}" method="post" id="RegistrationForm">
+			<fieldset>
+				<div class="formfields">
+					<div class="formfield">
+						<div class="fr"><span class="requiredmessage">${Resource.msg('global.requiredfield','locale',null)}</span></div>
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.firstname}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.lastname}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.email}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.phone}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.ordernumber}" type="input">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield formfield="${pdict.CurrentForms.contactus.myquestion}" type="select">
+						<div class="clear"></div>
+					</div>
+					<div class="formfield">
+						<isinputfield attribute1="rows" value1="8" attribute2="cols" value2="40" formfield="${pdict.CurrentForms.contactus.comment}" type="textarea">
+						<div class="clear"></div>
+					</div>
+					<div class="formactions">
+						<button id="sendBtn" type="submit" value="${Resource.msg('global.send','locale',null)}" name="${pdict.CurrentForms.contactus.send.htmlName}"><span>${Resource.msg('global.send','locale',null)}</span></button>
+					</div>
+				</div><!-- END: formfields -->
+				<div id="formaction"></div>	
+			</fieldset>
+		</form>
+	</isif>
+</div>
+<div class="contactus-details">
+	<isslot id="contactus-details" description="Contact Us Details" context="global"/>
+</div>	
+</isdecorate>

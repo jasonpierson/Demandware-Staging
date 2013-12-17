@@ -1,0 +1,86 @@
+<isdecorate template="checkout/pt_orderconfirmation">
+<isinclude template="util/modules"/>
+<isinclude template="util/reporting/ReportOrder.isml"/>
+<iscomment>
+	This template visualizes the order confirmation page. Note, that it
+	uses a different decorator template.
+	It displays the order related information, such as the order number,
+	creation date, payment information, order totals and shipments of
+	the order.
+</iscomment>
+
+<div class="orderconfirmation">
+	<div class="thankyoumessage">
+		<h2>${Resource.msg('confirmation.thankyou','checkout',null)}</h2>
+		<p>${Resource.msg('confirmation.message','checkout',null)} ${Resource.msg('confirmation.contact','checkout',null)} (<a class="printme" href="javascript:window.print();"><span>${Resource.msg('confirmation.print','checkout',null)}</span></a>)</p>
+	</div>
+	<div class="orderconfirmation_details">
+		<isorderdetails order="${pdict.Order}">
+	</div>
+	<div class="actions">
+		<a href="${URLUtils.http('Cart-ContinueShopping')}">${Resource.msg('confirmation.returnshop','checkout',null)}</a>
+	</div>
+</div>
+<script type="text/javascript">
+	<!--
+	jQuery(document).ready(function() {
+		jQuery("a.printpage").click(function() {
+			window.print();
+		});
+	});
+	//-->
+</script>
+
+        <!-- Put your HTML Body Here -->
+        <!-- ExactTarget Conversion Tracking Script Here-->
+        <script language="javascript">
+        
+        //Set the following parameters for your conversion parameters
+        var convid="10182011";
+        var displayorder="1";
+        var linkalias="Thank You Page";
+        var dataset="<data amt=\""+$(".ordersubtotal .value").html()+"\" unit=\"Dollars\" accumulate=\"true\" />";
+
+        //For additional datasets, simply add them to the concatenation:
+        //dataset=dataset+"<data amt=\"1\" unit=\"Dollars\" accumulate=\"true\">
+        //Do not change anything below
+        function getCookie(cookiename)
+        {
+            if(document.cookie.length >0)
+            {
+                startC = document.cookie.indexOf(cookiename+"=");
+                if (startC != -1)
+                {
+                    startC += cookiename.length+1;
+                    endC = document.cookie.indexOf(";",startC);
+                    if(endC ==-1) endC = document.cookie.length;
+                    return unescape(document.cookie.substring(startC,  endC));                               }
+             }
+             return null;
+        }
+        var jobid = getCookie("JobID");
+        var emailaddr = getCookie("EmailAddr");
+        var listid = getCookie("ListID");
+        var batchid = getCookie("BatchID");
+        var urlid = getCookie("UrlID");
+        var memberid = getCookie("MemberID");
+        //Debug
+        //document.write("<textarea rows=5 cols=80>");
+        document.write("<img src='");
+        document.write("http://click.exacttarget.com/conversion.aspx?xml=<system><system_name>tracking</system_name><action>conversion</action>");
+        document.write("<member_id>"+memberid+"</member_id>");
+        document.write("<job_id>"+jobid+"</job_id>");
+        document.write("<email>"+emailaddr+"</email>");
+        document.write("<list>"+listid+"</list>");
+        document.write("<BatchID>"+batchid+"</BatchID>");
+        document.write("<original_link_id>"+urlid+"</original_link_id>");
+        document.write("<conversion_link_id>"+convid+"</conversion_link_id>");
+        document.write("<link_alias>"+linkalias+"</link_alias>");
+        document.write("<display_order>"+displayorder+"</display_order>");
+        document.write("<data_set>"+dataset+"</data_set>");
+        document.write("</system>'");
+        document.write(" width='1' height='1'>");
+        //Debug  //document.write("</textarea>");
+        </script>
+
+</isdecorate>

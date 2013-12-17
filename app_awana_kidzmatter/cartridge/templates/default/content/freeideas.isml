@@ -1,0 +1,159 @@
+<isdecorate template="content/content/pt_content">
+<isinclude template="util/modules"/>
+<isinclude template="util/reporting/ReportSearch.isml"/>
+	
+	<isscript>
+		
+		if (!pdict.CurrentHttpParameterMap.get('fdid').isEmpty()) {
+		
+			//we are on a free ideas page
+			var folderID	  : String = pdict.CurrentHttpParameterMap.get('fdid').stringValue;
+			var contentFolder : Folder = dw.content.ContentMgr.getFolder(folderID);
+			
+			//whether the content left navigation in pt_content.isml
+			var showLeftNav : Boolean = true;
+			
+			//initialize variables for the content section nav
+			var contentPagesFolder : Folder = dw.content.ContentMgr.getFolder('free-ideas');
+			var sectionName 	   : String = contentPagesFolder.displayName;
+			var sectionNavInclude  : String = contentPagesFolder.parent.ID+'-nav';
+					
+		}
+
+		/*
+			Small function to realize odd and even recognition of rows across multiple
+		   	loops
+		*/
+		function RowClass()
+		{
+			// define the counter
+			var rowCounter = 0;
+	
+			RowClass.prototype.getName = function()
+			{
+				// increase counter
+				rowCounter++;
+	
+				if (rowCounter % 2 == 0)
+				{
+					return 'even';
+				}
+				else
+				{
+					return 'odd';
+				}
+			}
+		};
+	
+		/* create a new instance to name our rows 'odd' or 'even' */
+		var rowNaming = new RowClass();
+	</isscript>
+	
+	<div class="freeideashits">
+		
+		<h1>${contentFolder.displayName}</h1>
+	
+		<isif condition="${!pdict.ContentPagingModel.empty}">
+				
+		<div class="pagingheadline">		
+			<iscomment>hits info</iscomment>
+			<isif condition="${!empty(pdict.ContentSearchResult.url('FreeIdeas-Show')) && !pdict.ContentPagingModel.empty}">
+				<div class="resultshits">
+					${Resource.msg('paginginformation.showing','search',null)} <isprint value="${pdict.ContentPagingModel.start+1}" formatter="#"/> - <isprint value="${pdict.ContentPagingModel.end+1}" formatter="#"/> 
+					<isif condition="${pdict.ContentPagingModel.pageCount > 1}">
+						${Resource.msg('paginginformation.of','search',null)} <isprint value="${pdict.ContentPagingModel.count}"/> ${Resource.msg('paginginformation.results','search',null)}
+					<iselse/>
+						${Resource.msg('paginginformation.items','search',null)}
+					</isif>
+				</div>
+			</isif>						
+			<iscomment>pagination</iscomment>		
+			<ispagingbar pageurl="${pdict.ContentSearchResult.url('FreeIdeas-Show')}"  pagingmodel="${pdict.ContentPagingModel}">
+			<div class="clear"></div>
+		</div>
+			
+		<iscomment>calculated correct index position to separate the result columns</iscomment>
+		<isscript>
+			var count = pdict.ContentPagingModel.end + 1;
+			var cutIndex = Math.ceil( count / 2 ) - 1;
+			var endIndex = cutIndex + (cutIndex + 1);
+		</isscript>
+
+		<iscomment>render the results as two column layout</iscomment>
+		<isloop items="${pdict.ContentPagingModel.pageElements}" var="asset" status="loopstate" end="${endIndex}">
+			<div class="freeIdeasWrapper">
+				<div class="article ${rowNaming.getName()}"<isif condition="${loopstate.index < 2}">style="border-top:none;"</isif>>
+					<div class="articlename"><isprint value="${asset.name}"/></div>
+					<div class="description"><isprint value="${asset.description}"/></div>
+					<div class="articlelink">
+						<a href="${URLUtils.url('Page-Include','cid', asset.ID)}" class="greybutton">${Resource.msg('global.viewidea','locale',null)}</a>
+					</div>
+				</div>
+			</div>
+		</isloop>
+		<div class="clear"></div>
+
+		<div class="pagingheadline bottom">
+			<iscomment>hits info</iscomment>
+			<isif condition="${!empty(pdict.ContentSearchResult.url('FreeIdeas-Show')) && !pdict.ContentPagingModel.empty}">
+				<div class="resultshits">
+					${Resource.msg('paginginformation.showing','search',null)} <isprint value="${pdict.ContentPagingModel.start+1}" formatter="#"/> - <isprint value="${pdict.ContentPagingModel.end+1}" formatter="#"/> 
+					<isif condition="${pdict.ContentPagingModel.pageCount > 1}">
+						${Resource.msg('paginginformation.of','search',null)} <isprint value="${pdict.ContentPagingModel.count}"/> ${Resource.msg('paginginformation.results','search',null)}
+					<iselse/>
+						${Resource.msg('paginginformation.items','search',null)}
+					</isif>
+				</div>
+			</isif>						
+			<iscomment>pagination</iscomment>
+			<ispagingbar pageurl="${pdict.ContentSearchResult.url('FreeIdeas-Show')}"  pagingmodel="${pdict.ContentPagingModel}">
+			<div class="clear"></div>
+		</div>
+
+	</isif>
+	</div>
+	<script type="text/javascript">
+	<!--	
+		jQuery(document).ready(function(){
+			//free idea dialog div
+			jQuery("<div/>").attr("id", "FreeIdeaDialog").html(" ").appendTo(document.body).hide();
+			
+			jQuery(".articlelink a").click(function(e) {	
+							
+				 // create a local copy of the selected options
+				var tempURL   = jQuery(this).attr('href');
+				var tempTitle = jQuery(this).parent().parent().children('.articlename').text();
+
+				app.ajax.load({
+					selector: "#FreeIdeaDialog", 
+					url: tempURL, 
+					callback: function(responseText, textStatus){
+					//initialize dialog
+						app.createDialog({
+							id: 'FreeIdeaDialog', 
+							options: {
+								width: 500,
+								height: 'auto',
+						    	resizable: false,
+						    	draggable: false,
+								closeText: 'Close',
+						    	position: ['center',50],
+							}	
+						});	
+						jQuery('#FreeIdeaDialog').dialog('option','title',tempTitle).css({
+							'padding':'10px 25px',
+							'overflow-y':'auto',
+							'max-height': 400
+						}).dialog('open');
+					}
+				});
+				
+				return false;
+				
+			} );
+		});
+	
+	//-->
+	</script>
+	
+</isdecorate>

@@ -1,0 +1,128 @@
+<isdecorate template="account/orderhistory/pt_orderhistory">
+<isinclude template="util/modules"/>
+
+<div class="orders">
+	<isif condition="${pdict.OrderPagingModel.empty}">
+		<div class="no_orders">${Resource.msg('orders.noorders','account',null)}</div><!-- END: no_orders -->
+	<iselse/>
+		<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.orders.htmlName}">
+		<ispagingbar pageurl="${URLUtils.https('Order-History')}" pagingmodel="${pdict.OrderPagingModel}">
+		<isloop items="${pdict.CurrentForms.orders.orderlist}" var="order" status="orderloopstate">
+			<div class="order">
+				<div class="orderheader">
+					<button type="submit" value="${Resource.msg('orders.orderdetail','account',null)}" name="${order.show.htmlName}"><span>${Resource.msg('orders.orderdetail','account',null)}</span></button>
+					<div class="orderdate">
+						<span class="label">${Resource.msg('orders.datelabel','account',null)}</span>
+						<span class="value"><isprint value="${order.object.creationDate}"/></span>
+					</div><!-- END: orderdate -->
+
+					<isset name="Order" value="${order.object}" scope="page"/>
+					<isinclude template="account/orderhistory/orderstatusinclude" />
+
+					<div class="ordernumber">
+						<span class="label">${Resource.msg('orders.numberlabel','account',null)}</span>
+						<span class="value"><isprint value="${order.object.externalOrderNo}"/></span>
+					</div><!-- END: ordernumber -->
+				</div><!-- END: orderheader -->
+				<div class="orderinfo">
+					<table class="orderinfotable" summary="Order History Table">
+						<iscomment>For each shipment, render shipped to, items and order total </iscomment>
+						<isloop items="${order.object.shipments}" var="Shipment" status="shipmentloopstate">
+							<iscomment>display order total in first row only</iscomment>
+							<isif condition="${shipmentloopstate.first}">
+								<tr>
+									<td class="ordershippedto"><span class="label">${Resource.msg('orders.shippedto','account',null)}</span></td>
+									<td class="orderitems"><span class="label">${Resource.msg('orders.items','account',null)}</span></td>
+									<td class="ordertotalprice"><span class="label">${Resource.msg('orders.ordertotal','account',null)}</span></td>
+								</tr>
+							<iselse/>
+								<tr>
+									<td><span class="label">${Resource.msg('orders.shippedto','account',null)}</span></td>
+									<td><span class="label">${Resource.msg('orders.items','account',null)}</span></td>
+									<td></td>
+								</tr>
+							</isif>
+							<tr>
+								<td>
+									<iscomment>Gift Certificates are in there own shipment. So if we have a shipment that contains
+										just a Gift Certificate, we want to render the email address of the recipient</iscomment>
+									<isif condition="${Shipment.giftCertificateLineItems.size() == 1}">
+										<isset name="theGiftCert" value="${Shipment.giftCertificateLineItems.iterator().next()}" scope="page"/>
+										<span class="value"><ismask p_string="${theGiftCert.recipientEmail}" p_maskchars="${6}"></span>
+									<iselse/>
+										<span class="value"><isprint value="${Shipment.shippingAddress.fullName}" /></span>
+									</isif>
+
+								</td>
+								<td>
+									<ul class="listitems">
+									<isloop items="${Shipment.productLineItems}" var="PLI" status="pliloopstate">
+										<iscomment>if we have more than product line items than the max page size, display view all link and create hidden div</iscomment>
+										<isif condition="${pliloopstate.count == (pdict.OrderPagingModel.pageSize + 1)}">
+											<isset name="divId" value="${'order_' + orderloopstate.count + 'shipment_' + shipmentloopstate.count + '_pli_' + pliloopstate.count}" scope="page" />										
+											<div class="clear"><!-- FLOAT CLEAR --></div>
+											<div class="viewall" id="ViewAll<isprint value="${divId}"/>"><span class="viewalltext">${Resource.msg('orders.viewall','account',null)}</span></div>
+										    <div id="HiddenElement<isprint value="${divId}"/>" style="display:none" class="order_itemshidden">
+										</isif>
+											<li><isprint value="${PLI.productName}"/></li><!-- END: order_itemsvisible -->
+
+										<iscomment>close the hidden div tag if necessary</iscomment>
+										<isif condition="${pliloopstate.count >= (pdict.OrderPagingModel.pageSize + 1) && pliloopstate.last}">
+											</div><!-- END: order_itemshidden -->
+										</isif>
+									</isloop>
+
+									<isloop items="${Shipment.giftCertificateLineItems}" var="giftCertificateLineItem" status="gcliloopstate">
+										<li>${Resource.msg('global.giftcertificate','locale',null)}</li>
+									</isloop>
+									</ul>						
+								</td>
+								<td class="totalpriceamt">
+									<iscomment>Display total price for order</iscomment>
+									<isif condition="${shipmentloopstate.first}">
+										<span class="value"><isprint value="${order.object.totalGrossPrice}"/></span>
+									<iselse/>
+										&nbsp;
+									</isif>
+								</td>
+							</tr>
+						</isloop>
+					</table>
+				</div><!-- END: orderinfo -->
+			</div><!-- END: order -->
+			<iscomment>if we have more than five orders, we use the paging bar</iscomment>
+			<isif condition="${orderloopstate.count >= (pdict.OrderPagingModel.pageSize + 1)}">
+				<isbreak/>
+			</isif>
+		</isloop>
+		<ispagingbar pageurl="${URLUtils.https('Order-History')}" pagingmodel="${pdict.OrderPagingModel}">
+		</form>
+	</isif>
+</div><!-- END: orders -->
+<script type="text/javascript"><!--
+	jQuery(document).ready(function() {
+
+		<isloop items="${pdict.CurrentForms.orders.orderlist}" var="Order" status="orderloopstate">
+			<isloop items="${Order.object.shipments}" var="Shipment" status="shipmentloopstate">
+				<isloop items="${Shipment.productLineItems}" var="PLI" status="pliloopstate">
+						<isif condition="${pliloopstate.count == (pdict.OrderPagingModel.pageSize + 1)}">
+							<isset name="divId" value="${'order_' + orderloopstate.count + 'shipment_' + shipmentloopstate.count + '_pli_' + pliloopstate.count}" scope="page"/>
+
+		<iscomment>Generate a JQuery function based on the hidden div ID. The id is generated based on its location in the list of orders, shipments, and plis.</iscomment>
+
+	  	jQuery('#ViewAll<isprint value="${divId}">').click(function() {
+	
+			var hiddenElement = jQuery('#HiddenElement<isprint value="${divId}">');
+			hiddenElement.show();
+			var viewAllElement = jQuery('#ViewAll<isprint value="${divId}">');
+			viewAllElement.hide();
+		});
+
+						</isif>
+				</isloop>
+			</isloop>
+		</isloop>
+
+	});
+//--></script>
+</isdecorate>

@@ -1,0 +1,157 @@
+<isset name="DecoratorTemplate" value="search/pt_productsearchresult" scope="page"/>
+
+<isif condition="${pdict.CurrentHttpParameterMap.format.stringValue == 'ajax'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+
+<isdecorate template="${DecoratorTemplate}">
+	<iscomment>
+		Use the decorator template based on the requested output. If
+		a partial page was requested an empty decorator is used.
+		The default decorator for the product hits page is
+		search/pt_productsearchresult.
+	</iscomment>
+	
+	<iscache type="relative" minute="30" varyby="price_promotion"/>
+	<isinclude template="util/modules"/>
+	
+	<iscomment>
+		Configured as default template for the product search results.
+		Displays a global slot with static html and the product search
+		result grid.
+	</iscomment>
+	
+	<iscomment>create reporting event</iscomment>
+	<isinclude template="util/reporting/ReportSearch.isml"/>
+	<!---<isinclude template="search/components/productsearchbreadcrumbs"/>--->
+	
+	<iscomment>suggest similar search phrase below the breadcrumb</iscomment>
+	<isif condition="${!empty(pdict.ProductSearchResult.getSuggestedSearchPhrase())}">
+		<div class="didyoumean">
+			${Resource.msg('search.nohits.didyoumeanex','search',null)}
+			<a title="${pdict.ProductSearchResult.suggestedSearchPhrase}" href="<isprint value="${URLUtils.http('Search-Show','q',pdict.ProductSearchResult.suggestedSearchPhrase)}"/>"><isprint value="${pdict.ProductSearchResult.suggestedSearchPhrase}"/></a>
+		</div>
+	</isif>
+	
+	<div class="producthits">
+		<iscomment>
+			Render promotional content at the top of search results as global slot.
+			This content is only displayed if the search result is refined by a category.
+			If the search result is not refined by a category a global default is displayed.
+		</iscomment>
+		<div class="hitsbanner">
+		<isif condition="${!empty(pdict.ProductSearchResult.category)}">
+			<isslot id="cat-banner" context="category" description="Category Banner" context-object="${pdict.ProductSearchResult.category}"/>
+		<iselse/>
+			<isslot id="search-result-banner" description="Promotional Search Result Banner" context="global"/>
+		</isif>
+		</div>
+	
+		<div id="search" class="search">
+	
+			<isif condition="${!empty(pdict.ProductSearchResult) && !empty(pdict.ProductSearchResult.searchPhrase)}">
+				<h1>
+				<span class="resultstext">Search Results for</span>
+				&ldquo;<isprint value="${pdict.ProductSearchResult.searchPhrase}">&rdquo;
+				</h1>
+			</isif>
+
+			<isscript>
+				var selectedString = 'selected="selected"';
+			</isscript>
+	
+			<isif condition="${!pdict.ProductPagingModel.empty}">
+	
+				<div class="searchresultsheader">
+					<div class="sorthitscontainer">
+		                
+						<div class="searchresult-left">
+							<isif condition="${!empty(pdict.ProductSearchResult.url('Search-Show')) && !pdict.ProductPagingModel.empty}">
+								<div class="resultshits">
+									${Resource.msg('paginginformation.showing','search',null)} <isprint value="${pdict.ProductPagingModel.start+1}" formatter="#"/> - <isprint value="${pdict.ProductPagingModel.end+1}" formatter="#"/> 
+									<isif condition="${pdict.ProductPagingModel.pageCount > 1}">
+										${Resource.msg('paginginformation.of','search',null)} <isprint value="${pdict.ProductPagingModel.count}"/> ${Resource.msg('paginginformation.results','search',null)}
+									<iselse/>
+										${Resource.msg('paginginformation.items','search',null)}
+									</isif>
+								</div>
+							</isif>						
+							<ispagingbar pageurl="${pdict.ProductSearchResult.url('Search-Show')}" pagingmodel="${pdict.ProductPagingModel}">	               							
+		                </div>
+		                
+		                <div class="searchresult-right">
+		                	<iscomment>pagination</iscomment>
+		                	<ispaginginformation pagingmodel="${pdict.ProductPagingModel}" pageurl="${pdict.ProductSearchResult.url('Search-Show')}">
+							<iscomment>sort by</iscomment>
+			                <isproductsortingoptions productsearchmodel="${pdict.ProductSearchResult}" pagingmodel="${pdict.ProductPagingModel}">
+				        </div>
+		            	<div class="clear"></div>
+		            	
+		            	<iscomment>render compare controls if we present in a category context</iscomment>
+				        <isif condition="${!empty(pdict.ProductSearchResult) && !empty(pdict.ProductSearchResult.category)}">
+				        	<iscomparecontrols category="${pdict.ProductSearchResult.category}">
+				        </isif>
+				        
+		            </div>
+				</div>
+	
+				<div class="productresultarea">
+			    	<isproductgrid producthits="${pdict.ProductPagingModel.pageElements}" productrows="${1000}" productstoskip="${0}" productsperrow="${4}" pagingmodel="${pdict.ProductPagingModel}" scope="search">
+				</div>
+	
+				<div class="searchresultsfooter">
+					<div class="sorthitscontainer">
+		                
+						<div class="searchresult-left">
+							<isif condition="${!empty(pdict.ProductSearchResult.url('Search-Show')) && !pdict.ProductPagingModel.empty}">
+								<div class="resultshits">
+									${Resource.msg('paginginformation.showing','search',null)} <isprint value="${pdict.ProductPagingModel.start+1}" formatter="#"/> - <isprint value="${pdict.ProductPagingModel.end+1}" formatter="#"/> 
+									<isif condition="${pdict.ProductPagingModel.pageCount > 1}">
+										${Resource.msg('paginginformation.of','search',null)} <isprint value="${pdict.ProductPagingModel.count}"/> ${Resource.msg('paginginformation.results','search',null)}
+									<iselse/>
+										${Resource.msg('paginginformation.items','search',null)}
+									</isif>
+								</div>
+							</isif>						
+							<ispagingbar pageurl="${pdict.ProductSearchResult.url('Search-Show')}" pagingmodel="${pdict.ProductPagingModel}">	               							
+		                </div>
+		                
+		                <div class="searchresult-right">
+		                	<iscomment>pagination</iscomment>
+		                	<ispaginginformation pagingmodel="${pdict.ProductPagingModel}" pageurl="${pdict.ProductSearchResult.url('Search-Show')}">
+							<iscomment>sort by</iscomment>
+			                <isproductsortingoptions productsearchmodel="${pdict.ProductSearchResult}" pagingmodel="${pdict.ProductPagingModel}">
+				        </div>
+		            	<div class="clear"></div>
+		            	
+		            	<iscomment>render compare controls if we present in a category context</iscomment>
+				        <isif condition="${!empty(pdict.ProductSearchResult) && !empty(pdict.ProductSearchResult.category)}">
+				        	<iscomparecontrols category="${pdict.ProductSearchResult.category}">
+				        </isif>
+				        
+		            </div>
+				</div>
+			<iselse/>
+	
+				<iscomment>display no results</iscomment>
+				<div class="noresults">
+					${Resource.msg('productresultarea.noresults','search',null)}
+				</div>
+	
+			</isif>
+			
+			<iscomment>show top content hits</iscomment>
+			<isif condition="${!pdict.ProductSearchResult.refinedSearch && !empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0}">
+				<!--  <div class="searchinformation top">
+					<span class="bold">${Resource.msgf('contenthitcount.yoursearch','search',null,pdict.ContentSearchResult.count)}.&nbsp;</span>
+					<a href="${'#relatedarticles'}" class="bold">${Resource.msg('contenthitcount.goto','search',null)}</a>
+				</div> -->
+				<isinclude template="search/topcontenthits"/>
+			</isif>
+			
+		</div>		
+	</div>
+	
+	<iscomment>Include inline JS to update the refinements</iscomment>
+	<isinclude template="search/components/jsrefinementsupdate"/>
+</isdecorate>

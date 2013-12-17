@@ -1,0 +1,23 @@
+<isscript>
+	var expDate : dw.util.Calendar = new dw.util.Calendar(new Date());
+	var productDownloadURL : String = "";
+	var message : String = "";
+	var pubKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6B2rA4cnLZg2fL0K1SHpAXiIvufUlMu7V0UkMfaa6+sXI152tgZbL98SDG8WvIYGflDX8uS8j6UbQVj3aUEsldRVVyEL75O/OfS2m9x2vHk2P+sBoOOq8moNXce6CQFM1HqOwwIOd+gS1rfdu5OW9NmbVTwjPoARZSek3X/XPa5VgXLDeoLpIYfgKw4N7kewfwPqzJ0uE8cR+w+j/uAe5y60dQfGFKUhVFfP3+Ay0GxcmHkD9HdlsCVZO6RruCBABapVVOewMfpEj6Sbe96wyvveuaZZ3Aj8dwCcGpy2eA91c60IhwD70XyvXVulA3A10lqUO0DwR4/tQKAslScXZwIDAQAB';
+	var cipher : dw.crypto.Cipher = new dw.crypto.Cipher();
+	var encodedMsg : String;
+	
+	// Add 3 days to the date for download expiration
+	expDate.add(dw.util.Calendar.DAY_OF_MONTH, 3);
+	
+    // add pid and last download date to the encrypted parameter
+	message = productLineItem.productID + "|" + dw.util.StringUtils.formatCalendar(expDate, "MM/dd/yyyy");
+	encodedMsg = cipher.encrypt(message, pubKey, 'RSA', '', 0);
+	productDownloadURL = dw.web.URLUtils.http('Product-DownloadProduct', 'xx', cipher.encrypt(message, pubKey, 'RSA', '', 0)).toString();
+</isscript>
+
+<isif condition="${productDownloadURL!=''}">
+	<iscomment>Probably need to style this or something, for now just plain text</iscomment>
+	<div>
+		<a href="${productDownloadURL}">Click Here to Download</a>
+	</div>
+</isif>

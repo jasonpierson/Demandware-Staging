@@ -1,0 +1,23 @@
+<isdecorate template="account/orderhistory/pt_orderhistory">
+<isinclude template="util/modules"/>
+<div class="orderdetails">
+	<isif condition="${!empty(pdict.Order)}">
+		<div class="formactionstop">
+			<isif condition="${pdict.CurrentCustomer.authenticated}">
+				<a href="${URLUtils.https('Order-History')}" title="">${Resource.msg('orderdetails.returnorder','account',null)}</a>
+			</isif>
+		</div><!-- END: formactions -->
+		<isorderdetails order="${pdict.Order}" orderstatus="true" show_download="true">
+		<div class="formactions">
+			<isif condition="${pdict.CurrentCustomer.authenticated}">
+				<a href="${URLUtils.https('Order-History')}" title="">${Resource.msg('orderdetails.returnorder','account',null)}</a>
+			</isif>
+		</div><!-- END: formactions -->
+	<iselse/>
+		<isif condition="${pdict.CurrentCustomer.authenticated}">
+			<div class="back"><a href="${URLUtils.https('Order-History')}" title="">${Resource.msg('orderdetails.returnorder','account',null)}</a></div>
+		</isif>
+		<div class="notfound">${Resource.msg('orders.notfound','account',null)}</div>
+	</isif>
+</div><!-- END: orderdetails -->
+</isdecorate>

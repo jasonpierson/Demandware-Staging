@@ -1,0 +1,40 @@
+<!--- TEMPLATENAME: downloadorderconfirmation.isml --->
+<h2>Thank you for your order.</h2><br/>
+<strong>Please follow the instructions below to download your purchase. </strong><br/><br/>
+
+<p>If you have questions about your order, we're happy to take your call<br/>
+(877-568-2437) Monday - Friday 8AM CST - 4:30PM CST<br />
+<b>Order Placed</b> <isprint value="${pdict.Order.creationDate}"/><br/>
+<b>Order Number</b> <isprint value="${pdict.Order.externalOrderNo}"/> 
+</p>
+
+<p>To download your purchase, please click the link below or paste it in your web browser.<br/>
+The link below will expire after 3 days.</p>
+
+<isscript>
+	importPackage( dw.system );
+	var expDate : dw.util.Calendar = new dw.util.Calendar(new Date());
+	var productDownloadURL : String = "";
+	var message : String = "";
+	var pubKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6B2rA4cnLZg2fL0K1SHpAXiIvufUlMu7V0UkMfaa6+sXI152tgZbL98SDG8WvIYGflDX8uS8j6UbQVj3aUEsldRVVyEL75O/OfS2m9x2vHk2P+sBoOOq8moNXce6CQFM1HqOwwIOd+gS1rfdu5OW9NmbVTwjPoARZSek3X/XPa5VgXLDeoLpIYfgKw4N7kewfwPqzJ0uE8cR+w+j/uAe5y60dQfGFKUhVFfP3+Ay0GxcmHkD9HdlsCVZO6RruCBABapVVOewMfpEj6Sbe96wyvveuaZZ3Aj8dwCcGpy2eA91c60IhwD70XyvXVulA3A10lqUO0DwR4/tQKAslScXZwIDAQAB';
+	var cipher : dw.crypto.Cipher = new dw.crypto.Cipher();
+	var encodedMsg : String;
+	
+	// Add 3 days to the date for download expiration for KM products
+	expDate.add(dw.util.Calendar.DAY_OF_MONTH, 3);
+</isscript>
+
+<isloop items="${pdict.Order.getProductLineItems()}" var="lineItem">
+	<isif condition="${lineItem.product.custom.downloadableProductURL != null && lineItem.product.custom.downloadableProductURL != ''}">
+		<isscript>
+		    // add pid and last download date to the encrypted parameter 
+			message = lineItem.productID + "|" + dw.util.StringUtils.formatCalendar(expDate, "MM/dd/yyyy");
+			encodedMsg = cipher.encrypt(message, pubKey, 'RSA', '', 0);
+			productDownloadURL = dw.web.URLUtils.http('Product-DownloadProduct', 'xx', cipher.encrypt(message, pubKey, 'RSA', '', 0)).toString();
+		</isscript>
+		<isprint value="${lineItem.productName}"/> <a href="${productDownloadURL}">Click Here to Download</a><br/>
+	</isif>
+</isloop>
+
+<br/><br/><p><b>Trouble downloading?</b><br/>
+Right click the link(s) above, choose the best option:  "Save File As", "Save Target As", or "Download Linked File." Or try downloading in a different browser like Firefox, Chrome or Safari.</p>

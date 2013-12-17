@@ -1,0 +1,32 @@
+<isdecorate template="error/pt_error">
+<iscache type="relative" hour="24"/>
+<isinclude template="util/modules"/>
+<div class="notfound">
+
+	<isslot id="404-banner" description="Banner for error pages" context="global"/>
+	<div class="errorpage">
+		<div class="errorpagemessage">
+			<iscontentasset aid="404-callout">
+		</div><!-- END: errorpagemessage -->
+		
+		<div class="errorsearch">
+		 	<form action="${URLUtils.url('Search-Show')}" method="get">
+				<fieldset>
+					<label>${Resource.msg('nohits.searchlabel','search',null)}</label>
+					<input type="text" name="q" value="" />
+					<button type="submit" value="${Resource.msg('global.go','locale',null)}" name="simplesearch"><span>${Resource.msg('global.go','locale',null)}</span></button>
+				</fieldset>
+			</form>
+		</div><!-- END: errorssearch -->
+		
+		<div class="errorfooter">
+			<div class="errorfooterbottom">
+				<iscontentasset aid="404-service">
+			</div><!-- END: errorfooterbottom -->
+			<div class="errorfooterbottomslot">
+				<isslot id="404-promo" description="Banner for 404 error" context="global" />
+			</div><!-- END: errorfooterbottomslot -->
+		</div><!-- END: errorfooter -->
+	</div><!-- END: errorpage -->
+</div><!-- END: notfound -->
+</isdecorate>

@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<form xmlns="http://www.demandware.com/xml/form/2008-04-19">
+
+	<field formid="firstName" label="forms.orderaddress.001" type="string" mandatory="false" binding="firstName" max-length="50" missing-error="forms.address.firstname.missing" range-error="forms.address.field.invalid" />
+	<field formid="lastName" label="forms.orderaddress.002" type="string" mandatory="true" binding="lastName" max-length="50" missing-error="forms.address.lastname.missing" range-error="forms.address.field.invalid" />
+	<field formid="address1" label="forms.orderaddress.003" type="string" mandatory="true" binding="address1" max-length="50" missing-error="forms.address.address1.missing" range-error="forms.address.field.invalid" />
+	<field formid="address2" label="forms.orderaddress.005" type="string" mandatory="false" binding="address2" max-length="50" range-error="forms.address.field.invalid" />
+	<field formid="city" label="forms.city" type="string" mandatory="true" binding="city" max-length="50" missing-error="forms.address.city.missing" range-error="forms.address.field.invalid" />
+	<field formid="zip" label="forms.orderaddress.015" type="string" mandatory="true" min-length="4" max-length="10" binding="postalCode" missing-error="forms.address.zip.missing" range-error="forms.address.field.invalid" parse-error="forms.address.field.invalid" />
+
+	<!-- use set of supported billing countries -->
+	<field formid="country" label="forms.country" type="string" default="US" mandatory="true" binding="countryCode" missing-error="forms.address.country.missing" value-error="forms.address.field.invalid">
+		<options>
+			<option class="selectoption" 	label="forms.select.pleaseselect"	value=""/>
+			<option class="selectoption" 	label="country.unitedstates"		value="US"/>
+			<option class="selectoption" 	label="country.canada"				value="CA"/>
+			<option class="selectoption" 	label="country.germany"				value="DE"/>
+			<option class="selectoption" 	label="country.anguilla" 			value="AI"/>
+			<option class="selectoption" 	label="country.antiguaandbarbuda" 	value="AG"/>
+			<option class="selectoption" 	label="country.aruba" 				value="AW"/>
+			<option class="selectoption" 	label="country.australia" 			value="AU"/>
+			<option class="selectoption" 	label="country.austria" 			value="AT"/>
+			<option class="selectoption" 	label="country.bahamas" 			value="BS"/>
+			<option class="selectoption" 	label="country.barbados" 			value="BB"/>
+			<option class="selectoption" 	label="country.belgium" 			value="BE"/>
+			<option class="selectoption" 	label="country.bermuda" 			value="BM"/>
+			<option class="selectoption" 	label="country.britishvirginislands" value="VG"/>
+			<option class="selectoption" 	label="country.caymanislands" 		value="KY"/>
+			<option class="selectoption" 	label="country.denmark" 			value="DK"/>
+			<option class="selectoption" 	label="country.dominica" 			value="DM"/>
+			<option class="selectoption" 	label="country.dominicanrepublic" 	value="DO"/>
+			<option class="selectoption" 	label="country.faroeislands" 		value="FO"/>
+			<option class="selectoption" 	label="country.finland" 			value="FI"/>
+			<option class="selectoption" 	label="country.france" 				value="FR"/>
+			<option class="selectoption" 	label="country.greece" 				value="GR"/>
+			<option class="selectoption" 	label="country.greenland" 			value="GL"/>
+			<option class="selectoption" 	label="country.grenada" 			value="GD"/>
+			<option class="selectoption" 	label="country.guadeloupe" 			value="GP"/>
+			<option class="selectoption" 	label="country.haiti" 				value="HT"/>
+			<option class="selectoption" 	label="country.hongkong" 			value="HK"/>
+			<option class="selectoption" 	label="country.iceland" 			value="IS"/>
+			<option class="selectoption" 	label="country.ireland" 			value="IRELAND"/>
+			<option class="selectoption" 	label="country.italy" 				value="IT"/>
+			<option class="selectoption" 	label="country.jamaica" 			value="JM"/>
+			<option class="selectoption" 	label="country.japan" 				value="JP"/>
+			<option class="selectoption" 	label="country.liechtenstein" 		value="LI"/>
+			<option class="selectoption" 	label="country.luxembourg" 			value="LU"/>
+			<option class="selectoption" 	label="country.macau" 				value="MO"/>
+			<option class="selectoption" 	label="country.martinique" 			value="MQ"/>
+			<option class="selectoption" 	label="country.monaco" 				value="MC"/>
+			<option class="selectoption" 	label="country.montserrat" 			value="MS"/>
+			<option class="selectoption" 	label="country.netherlands" 		value="NL"/>
+			<option class="selectoption" 	label="country.netherlandsantilles" value="AN"/>
+			<option class="selectoption" 	label="country.norway" 				value="NO"/>
+			<option class="selectoption" 	label="country.portugal" 			value="PT"/>
+			<option class="selectoption" 	label="country.sanmarino" 			value="SM"/>
+			<option class="selectoption" 	label="country.singapore" 			value="SG"/>
+			<option class="selectoption" 	label="country.spain" 				value="ES"/>
+			<option class="selectoption" 	label="country.stlucia" 			value="LC"/>
+			<option class="selectoption" 	label="country.stbarthelemy" 		value="BL"/>
+			<option class="selectoption" 	label="country.stkittsandnevis" 	value="KN"/>
+			<option class="selectoption" 	label="country.stmartin" 			value="MF"/>
+			<option class="selectoption" 	label="country.stvincentandthegrenadines" value="VC"/>
+			<option class="selectoption" 	label="country.sweden" 				value="SE"/>
+			<option class="selectoption" 	label="country.switzerland" 		value="CH"/>
+			<option class="selectoption" 	label="country.taiwan" 				value="TW"/>
+			<option class="selectoption" 	label="country.trinidadandtobego" 	value="TT"/>
+			<option class="selectoption" 	label="country.turksandcaicosislands" value="TC"/>
+			<option class="selectoption" 	label="country.usvirginislands" 	value="VI"/>
+			<option class="selectoption" 	label="country.bahrain" 			value="BH"/>
+			<option class="selectoption" 	label="country.bangladesh" 			value="BD"/>
+			<option class="selectoption" 	label="country.bhutan" 				value="BT"/>
+			<option class="selectoption" 	label="country.brunei" 				value="BN"/>
+			<option class="selectoption" 	label="country.china" 				value="CN"/>
+			<option class="selectoption" 	label="country.cyprus" 				value="CY"/>
+			<option class="selectoption" 	label="country.timor-leste" 		value="TL"/>
+			<option class="selectoption" 	label="country.egypt" 				value="EG"/>
+			<option class="selectoption"	label="country.guam" 				value="GU"/>
+			<option class="selectoption"	label="country.india" 				value="IN"/>
+			<option class="selectoption" 	label="country.iraq" 				value="IQ"/>
+			<option class="selectoption" 	label="country.israel" 				value="IL"/>
+			<option class="selectoption" 	label="country.jordan" 				value="JO"/>
+			<option class="selectoption" 	label="country.southkorea" 			value="KR"/>
+			<option class="selectoption" 	label="country.kuwait" 				value="KW"/>
+			<option class="selectoption" 	label="country.lebanon" 			value="LB"/>
+			<option class="selectoption" 	label="country.malaysia" 			value="MY"/>
+			<option class="selectoption" 	label="country.mongolia" 			value="MN"/>
+			<option class="selectoption" 	label="country.nepal" 				value="NP"/>
+			<option class="selectoption" 	label="country.newzealand" 			value="NZ"/>
+			<option class="selectoption" 	label="country.oman" 				value="OM"/>
+			<option class="selectoption" 	label="country.pakistan" 			value="PK"/>
+			<option class="selectoption" 	label="country.phillipines" 		value="PH"/>
+			<option class="selectoption" 	label="country.qatar" 				value="QA"/>
+			<option class="selectoption" 	label="country.saudiarabia" 		value="SA"/>
+			<option class="selectoption" 	label="country.srilanka" 			value="LK"/>
+			<option class="selectoption" 	label="country.syria" 				value="SY"/>
+			<option class="selectoption" 	label="country.thailand" 			value="TH"/>
+			<option class="selectoption" 	label="country.turkey" 				value="TR"/>
+			<option class="selectoption" 	label="country.unitedarabemirates" 	value="AE"/>
+			<option class="selectoption" 	label="country.vietnam" 			value="VN"/>
+			<option class="selectoption" 	label="country.yemen" 				value="YE"/>
+		</options>	
+	</field>
+
+	<!-- use global state list -->
+	<include formid="states" name="states"/>
+
+	<!-- phone is optional for billing addresses -->
+	<field formid="phone" label="forms.orderaddress.021" type="string" mandatory="false" binding="phone" max-length="20" missing-error="forms.address.phone.missing" range-error="forms.address.field.invalid" />
+
+	<!-- actions provided by the edit billing address dialog -->
+	<action formid="apply" valid-form="true"/>
+	<action formid="remove" valid-form="false"/>
+</form>

@@ -1,0 +1,62 @@
+<isset name="DecoratorTemplate" value="content/content/pt_content" scope="page"/>
+<!--- 
+<isif condition="${pdict.CurrentHttpParameterMap.source.stringValue == 'search'}">
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+</isif>
+--->
+<isdecorate template="${DecoratorTemplate}">
+	<!---
+	<isinclude url="${pdict.Location + '&pwr=true'}"/>
+	--->
+	<iscomment>
+		This template implements the write product recommendation page (similar to the productdetails page). It includes
+		the basic product information template (product/product-*), and
+		shows less additional product information, such as attributes, accessories,
+		bundled products, but a product recommendation form.
+	</iscomment>
+	
+	<isinclude template="util/modules"/>
+	
+	<div id="pwrwritediv">
+		<isset name="image" value="${pdict.Product.getImage('medium',0)}" scope="page"/>
+		<isif condition="${!empty(image)}">
+			<isset name="imageUrl" value="${image.url}" scope="page"/>
+			<isset name="imageAlt" value="${image.alt}" scope="page"/>
+		<iselse/>
+			<isset name="imageUrl" value="${URLUtils.staticURL('/images/noimagemedium.png')}" scope="page"/>
+			<isset name="imageAlt" value="${pdict.Product.name}" scope="page"/>
+		</isif>
+		<img src="${imageUrl}" alt="${imageAlt}" />
+		
+		<h1 class="productname">
+			<isprint value="${pdict.Product.name}"/>
+		</h1>
+
+		<div class="clear"></div>
+		<isscript>
+			var source = "web";
+			if (pdict.CurrentHttpParameterMap.source.stringValue == "email") {
+				source = "email";
+			}
+		</isscript>
+		<iframe src="http://services.powerreviews.com/SubmitReview.do?pageId=${pdict.Product.ID}&merchantId=262569&source=${source}&merchantUserEmail=${pdict.CurrentCustomer.profile.email}&promoCode=coupon&pr_locale=" frameborder="0" height="2000" width="590px" scrolling="no"/></iframe>
+	</div>
+
+	<script type="text/javascript">
+	<!---
+		jQuery(document).ready(function(){			
+			/*if (!jQuery('#pwrwritediv').dialog('isOpen')) {
+			app.createDialog({id: 'pwrwritediv', options: {
+				autoOpen: true,
+		    	height: 750,
+		    	width: 650,
+		    	dialogClass: 'writereview',
+		    	title: 'Product Review',
+		    	resizable: false
+			}});*/
+			jQuery.fn.colorbox({width:"600px", height:"600px", inline:true, href:"#pwrwritediv"});
+		//}
+		});
+	//--->
+	</script>		
+</isdecorate>

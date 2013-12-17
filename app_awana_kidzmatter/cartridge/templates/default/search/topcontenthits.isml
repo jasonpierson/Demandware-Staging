@@ -1,0 +1,72 @@
+<isinclude template="util/modules"/>
+<isif condition="${!empty(pdict.ContentSearchResult) && pdict.ContentSearchResult.count > 0}">
+	<!-- SCRIPT TO RUN THROUGH ODD/EVEN ROWS  -->
+	<isscript>
+		/*
+			Small function to realize odd and even recognition of rows across multiple
+		   	loops
+		*/
+		function RowClass()
+		{
+			// define the counter
+			var rowCounter = 0;
+
+			RowClass.prototype.getName = function()
+			{
+				// increase counter
+				rowCounter++;
+
+				if (rowCounter % 2 == 0)
+				{
+					return 'even';
+				}
+				else
+				{
+					return 'odd';
+				}
+			}
+		};
+	</isscript>
+	<isscript>
+		/* create a new instance to name our rows 'odd' or 'even' */
+		var rowNaming = new RowClass();
+	</isscript>
+<div class="contenthits">
+	<a name="relatedarticles"><!-- Articles Anchor --></a>
+	<h6>${Resource.msg('topcontenthits.relatedarticles','search',null)}</h6>
+	<iscomment>calculated correct index position to separate the result columns</iscomment>
+	<isscript>
+		var count = pdict.ContentSearchResult.count;
+		if(count > 4)
+		{
+			count = 4;
+		}
+		var cutIndex = Math.ceil( count / 2 ) - 1;
+		var endIndex = cutIndex + (cutIndex + 1);
+	</isscript>
+
+	<iscomment>render the results as two column layout</iscomment>
+	<isloop items="${pdict.ContentSearchResult.content}" var="asset" status="loopstate" end="${endIndex}">
+
+
+	<iscomment>append the search parameters to the article URL</iscomment>
+	<isset name="articleURL" value="${pdict.ContentSearchResult.url( URLUtils.url('Page-Show','cid', asset.ID) )}" scope="page"/>
+
+	<div class="article ${rowNaming.getName()}">
+		<div class="articlename">
+			<a href="${articleURL}" title="${asset.name}"><isprint value="${asset.name}"></a>
+		</div>
+		<div class="description">
+			<isprint value="${asset.description}"><span class="articlelink">&nbsp;<a href="${articleURL}" class="readmore">${Resource.msg('topcontenthits.readmore','search',null)}</a></span>
+		</div>
+	</div><!-- END: article -->
+	</isloop>
+	<form action="${pdict.ContentSearchResult.url('Search-ShowContent')}" method="get">
+		<div class="formactions">
+			<button type="submit" class="darkgrey" value="${Resource.msgf('topcontenthits.viewall','search',null,pdict.ContentSearchResult.count)}"><span>${Resource.msgf('topcontenthits.viewall','search',null,pdict.ContentSearchResult.count)}</span></button>
+			<div class="clear"></div>
+		</div><!-- END: formactions -->
+		<input type="hidden" name="q" value="${pdict.ContentSearchResult.searchPhrase}" />
+	</form>
+</div><!-- END: contenthits -->
+</isif>

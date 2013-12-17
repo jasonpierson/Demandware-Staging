@@ -1,0 +1,48 @@
+<isdecorate template="content/content/pt_content">
+	<isinclude template="util/modules"/>
+	
+	<div class="accountlogin">
+		
+		<isinclude template="account/login/logininclude"/>
+		<div class="logingeneral">
+			<h3>${Resource.msg('accountlogin.orderheader','account',null)}</h3>
+			<div class="checkorder">
+				<p>${Resource.msg('accountlogin.checkmessage','account',null)}</p>
+				<iscomment>Order Not Found Error Message</iscomment>
+				<isif condition="${pdict.OrderNotFound != null}">
+					<div class="errorform">${Resource.msg('accountlogin.ordererror','account',null)}</div>
+				</isif>
+				<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.ordertrack.htmlName}">
+					<fieldset>
+						<div class="formfield">
+							<isinputfield formfield="${pdict.CurrentForms.ordertrack.orderNumber}" type="input">
+							<div class="clear"></div>
+						</div>
+						<div class="formfield">
+							<isinputfield formfield="${pdict.CurrentForms.ordertrack.postalCode}" type="input">
+							<div class="clear"></div>
+						</div>
+						<div class="formactions">
+							<button type="submit" value="${Resource.msg('accountlogin.orderbutton','account',null)}" name="${pdict.CurrentForms.ordertrack.findorder.htmlName}"><span>${Resource.msg('accountlogin.orderbutton','account',null)}</span></button>
+						</div>
+					</fieldset>
+				</form>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="logincreate">
+			<h3>${Resource.msg('globalaccount.createheader','locale',null)}</h3>
+			<div class="createaccount">
+				<p>${Resource.msg('globalaccount.createmessage','locale',null)}</p>
+				<form action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.login.htmlName}_register">
+					<fieldset>
+						<div class="createaccountbutton">
+							<button type="submit" value="${Resource.msg('global.createbutton','locale',null)}" name="${pdict.CurrentForms.login.register.htmlName}"><span>${Resource.msg('global.createbutton','locale',null)}</span></button>
+						</div>
+					</fieldset>
+				</form>
+				<div class="clear"></div>
+			</div>
+		</div>		
+	</div>
+</isdecorate>

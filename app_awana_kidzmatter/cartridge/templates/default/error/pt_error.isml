@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<iscomment>This page must never be cached!! This page tries to avoid having too much logic or includes to avoid any followup errors!!</iscomment>
+<head>
+	<iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
+	<isinclude template="components/header/htmlhead"/>
+</head>
+<body>
+<div id="container" class="pt_error">
+	<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	<div id="main">
+		<isinclude template="components/contentbreadcrumbs"/>
+		<div id="leftcolumn">
+			<div class="customerserviceleftnav">
+				<div class="customerserviceleftnavheader"><isprint value="${Resource.msg('global.helplink', 'locale', null)}" /></div>
+				<div class="customerserviceleftnavlinks">
+				
+					<isinclude template="content/customerserviceaccountnav"/>
+					<isinclude url="${URLUtils.url('CustomerService-LeftNav')}"/>
+					<div class="clear"><!-- FLOAT CLEAR --></div>
+				</div>
+			</div>
+		</div><!-- END: leftcolumn -->
+		<div id="content">
+			<isreplace/>
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div><!-- END: content -->
+		<div class="clear"><!-- FLOAT CLEAR --></div>
+	</div><!-- END: main -->
+	<isinclude template="components/footer/footer"/>
+</div><!-- END: container -->
+
+	<iscomment>Live chat js include, only activate in production or staging??</iscomment>
+	<isif condition="${dw.system.System.getInstanceType() == dw.system.System.PRODUCTION_SYSTEM || dw.system.System.getInstanceType() == dw.system.System.STAGING_SYSTEM}">
+		<!-- START Salesforce Live Agent Deployment Code: MUST BE PLACED DIRECTLY ABOVE THE CLOSING BODY TAG and AFTER/OUTSIDE ALL HTML -->
+		<script type="text/javascript">
+		var __ALC_Deployment = 10437;
+		document.write(unescape("%3Cscript src='"+document.location.protocol+"//depot.liveagentforsalesforce.com/app/js/lt.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<!-- END Salesforce Live Agent Deployment Code -->
+	</isif>	
+</body>
+</html>

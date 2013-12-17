@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<isinclude template="util/modules"/>
+
+<head>
+	<iscomment>Include all important information globally , e.g. meta-data, link information, and javascript.</iscomment>
+	<isinclude template="components/header/htmlhead"/>
+</head>
+<body>
+<div id="container" class="pt_customerservice">
+	<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+	<div id="main">
+		<isinclude template="components/contentbreadcrumbs"/>
+		<div id="leftcolumn">
+			<div class="customerserviceleftnav">
+				<div class="customerserviceleftnavheader"><isprint value="${Resource.msg('global.helplink', 'locale', null)}" /></div>
+				<div class="customerserviceleftnavlinks">
+					<isinclude template="content/customerserviceaccountnav"/>
+					<isinclude url="${URLUtils.url('CustomerService-LeftNav')}"/>
+					<div class="clear"><!-- FLOAT CLEAR --></div>
+				</div>
+			</div>
+		</div><!-- END: leftcolumn -->
+		<div id="content">
+			<isreplace/>
+			<div class="clear"><!-- FLOAT CLEAR --></div>
+		</div><!-- END: content -->
+		<div class="clear"><!-- FLOAT CLEAR --></div>
+	</div><!-- END: main -->
+	<isinclude template="components/footer/footer"/>
+</div><!-- END: container -->
+</body>
+</html>
+
+
+
